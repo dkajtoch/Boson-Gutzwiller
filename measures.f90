@@ -4,10 +4,12 @@ module measures
 
    interface MeanA
       module procedure c1d_MeanA
+      module procedure c2d_MeanA
    end interface
 
    interface MeanB
       module procedure c1d_MeanB
+      module procedure c2d_MeanB
    end interface
 
    interface MeanAB
@@ -66,6 +68,25 @@ contains
 
    end function
 
+   function c2d_MeanA( f, i, j )
+
+      implicit none
+      complex( kind = dp ), intent(in), allocatable :: f(:,:,:,:)
+      integer, intent(in) :: i, j
+      real( kind = dp ) :: c2d_MeanA
+
+      ! local variables
+      integer  na, nb
+
+      c2d_MeanA = 0.0_dp
+      do na = 0, ubound(f,3)
+         do nb = 0, ubound(f,4)
+            c2d_MeanA = c2d_MeanA + real( na,dp ) * abs(f(i,j,na,nb))**2
+         enddo
+      enddo
+
+   end function
+
 !  | ----------------------------------- |
 !  | Mean number of particles in comp. B |
 !  | ----------------------------------- |
@@ -83,6 +104,25 @@ contains
       do na = 0, ubound(f,2)
          do nb = 0, ubound(f,3)
             c1d_MeanB = c1d_MeanB + real( nb,dp ) * abs(f(i,na,nb))**2
+         enddo
+      enddo
+
+   end function
+
+   function c2d_MeanB( f, i, j )
+
+      implicit none
+      complex( kind = dp ), intent(in), allocatable :: f(:,:,:,:)
+      integer, intent(in) :: i, j
+      real( kind = dp ) :: c2d_MeanB
+
+      ! local variables
+      integer  na, nb
+
+      c2d_MeanB = 0.0_dp
+      do na = 0, ubound(f,3)
+         do nb = 0, ubound(f,4)
+            c2d_MeanB = c2d_MeanB + real( nb,dp ) * abs(f(i,j,na,nb))**2
          enddo
       enddo
 
