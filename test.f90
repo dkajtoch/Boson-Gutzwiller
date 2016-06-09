@@ -2,6 +2,7 @@ program test
 
    use solvers
    use measures
+   use parameters
    implicit none
    complex( kind = dp ), allocatable :: f(:,:,:)
    integer M, nmax
@@ -20,13 +21,13 @@ program test
    ub = 0.95_dp
    uab = 2.0_dp
 
-   allocate( f(1:M,0:nmax,0:nmax) )
+   allocate( f(0:nmax,0:nmax,1:M) )
 
-   dj = 0.01_dp
-   filename='constmean_M=10_Na=8_Nb=8_Uab=2p0_Ua=1p0_Ub=0p95.dat' 
+   !dj = 0.01_dp
+   !filename='constmean_M=10_Na=8_Nb=8_Uab=2p0_Ua=1p0_Ub=0p95.dat' 
 
-   open(21, file=filename, action='write', status='replace')
-   close(21)
+   !open(21, file=filename, action='write', status='replace')
+   !close(21)
 
    mna = 0.2_dp*M
    mnb = 0.8_dp*M
@@ -50,10 +51,10 @@ program test
          en1 = TotEnergy( f, ja, jb, ua, ub, uab )
 
 
-         open(21, file=filename, action='write', position='append')
-            write(21,*)  ja, mna/M, mea, meb, meab, flua, flub, real(orda), &
-                   real(ordb), en1
-         close(21)
+         !open(21, file=filename, action='write', position='append')
+         !   write(21,*)  ja, mna/M, mea, meb, meab, flua, flub, real(orda), &
+         !          real(ordb), en1
+         !close(21)
 
 
          ja = ja + dj

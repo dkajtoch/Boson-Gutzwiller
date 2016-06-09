@@ -1,4 +1,4 @@
-FC=gfrotran
+FC=gfortran
 CFLAGS= -O3 -Wall -m64
 LFLAGS=
 CDEBUG= -g -O0
