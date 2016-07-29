@@ -960,6 +960,8 @@ module solvers
       integer :: i, j, na
       real :: ran(2)
 
+      call init_random_seed()
+
       do na = 0, ubound(f,1)
          do i = 1, ubound(f,2)
             do j = 1, ubound(f,3)
@@ -980,6 +982,8 @@ module solvers
 
       integer :: i, j, k, na
       real :: ran(2)
+
+      call init_random_seed()
 
       do na = 0, ubound(f,1)
          do i = 1, ubound(f,2)
@@ -1072,6 +1076,8 @@ module solvers
       integer :: i, j, na
       real :: ran(2)
 
+      call init_random_seed()
+
       do na = 0, ubound(f,1)
          do i = 1, ubound(f,2)
             do j = 1, ubound(f,3)
@@ -1094,6 +1100,8 @@ module solvers
 
       integer :: i, j, k, na
       real :: ran(2)
+
+      call init_random_seed()
 
       do na = 0, ubound(f,1)
          do i = 1, ubound(f,2)
