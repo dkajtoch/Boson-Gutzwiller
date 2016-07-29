@@ -45,6 +45,12 @@ module measures
       module procedure c3d_TotEnergy
    end interface  
 
+   interface ChemPot
+      module procedure c1d_ChemPot
+      module procedure c2d_ChemPot
+      module procedure c3d_ChemPot
+   end interface
+
 contains
 
 !  | ----------------------------------- |
@@ -518,6 +524,203 @@ contains
             enddo
          enddo
       enddo
+
+   end function
+
+! | -------------------------------------------------------- |
+! | Definition of the chemical potential based on Gutzwiller |
+! | -------------------------------------------------------- |
+   function c1d_ChemPot( f, ja, u )
+
+      implicit none
+      complex( kind = dp ), intent(in), allocatable :: f(:,:)
+      real( kind = dp ), intent(in) :: ja, u
+      real( kind = dp ) :: c1d_ChemPot
+
+      integer :: i, n
+      complex( kind = dp ) :: ord, phi, xi
+      complex( kind = dp ), allocatable :: ArrayOrder(:)
+      real( kind = dp ) :: sum1, sum2, sum3, tot1, tot2, tot3
+
+      allocate( ArrayOrder( size(f,2) ) )
+
+      ! collect order parameters
+      do i = 1, ubound(f,2)
+         ArrayOrder(i) = c1d_Order( f, i )
+      enddo
+
+      tot1 = 0.0_dp
+      tot2 = 0.0_dp
+      tot3 = 0.0_dp
+
+      do i = lbound(f,2), ubound(f,2)
+         ! nearest neighbour order parameter
+         if( i == 1 ) then
+            ord = ArrayOrder( i+1 ) + ArrayOrder( ubound(f,2) )
+         elseif( i == ubound(f,2) ) then
+            ord = ArrayOrder( 1 ) + ArrayOrder( i-1 )
+         else 
+            ord = ArrayOrder( i-1 ) + ArrayOrder( i+1 )
+         endif
+
+         sum1 = 0.0_dp; sum2 = 0.0_dp; sum3 = 0.0_dp; phi = 0.0_dp; xi = 0.0_dp
+         do n = 0, ubound(f,1)
+            sum1 = sum1 + real(n,dp) * abs(f(n,i))**2
+            sum2 = sum2 + real(n,dp)**2 * abs(f(n,i))**2
+            sum3 = sum3 + real(n,dp)**3 * abs(f(n,i))**2
+            if (n > 0) then
+               phi = phi + sqrt(real(n,dp)) * f(n,i) * conjg(f(n-1,i))
+               xi  = xi + real(n,dp)*sqrt(real(n,dp)) * f(n,i) * conjg(f(n-1,i))
+            endif
+         enddo
+         tot1 = tot1 + (sum2 - sum1**2)
+         tot2 = tot2 + (sum3 + sum1**2 - sum2 - sum2*sum1)
+         tot3 = tot3 + real(conjg(ord)*(phi + 2.0_dp*phi*sum1 - 2.0_dp*xi))
+      enddo
+
+      c1d_ChemPot = 1.0_dp/tot1 * (u/2.0_dp*tot2 + ja*tot3)
+
+   end function
+
+   function c2d_ChemPot( f, ja, u )
+
+      implicit none
+      complex( kind = dp ), intent(in), allocatable :: f(:,:,:)
+      real( kind = dp ), intent(in) :: ja, u
+      real( kind = dp ) :: c2d_ChemPot
+
+      integer :: i, j, n
+      complex( kind = dp ) :: ord, phi, xi
+      complex( kind = dp ), allocatable :: ArrayOrder(:,:)
+      real( kind = dp ) :: sum1, sum2, sum3, tot1, tot2, tot3
+
+      allocate( ArrayOrder( size(f,2), size(f,3) ) )
+
+      ! collect order parameters
+      do i = 1, ubound(f,2)
+         do j = 1, ubound(f,3)
+            ArrayOrder(i,j) = c2d_Order( f, i, j )
+         enddo
+      enddo
+
+      tot1 = 0.0_dp
+      tot2 = 0.0_dp
+      tot3 = 0.0_dp
+
+      do i = 1, ubound(f,2)
+      do j = 1, ubound(f,3)
+
+         ! nearest neighbour order parameter
+         if( i == 1 ) then
+            ord = ArrayOrder( i+1,j ) + ArrayOrder( ubound(f,2),j )
+         elseif( i == ubound(f,2) ) then
+            ord = ArrayOrder( 1,j ) + ArrayOrder( i-1,j )
+         else 
+            ord = ArrayOrder( i-1,j ) + ArrayOrder( i+1,j )
+         endif
+
+         if( j == 1 ) then
+            ord = ord + ArrayOrder( i, j+1 ) + ArrayOrder( i, ubound(f,3) )
+         elseif( j == ubound(f,3) ) then
+            ord = ord + ArrayOrder( i, 1 ) + ArrayOrder( i, j-1 )
+         else 
+            ord = ord + ArrayOrder( i, j-1 ) + ArrayOrder( i, j+1 )
+         endif
+
+         sum1 = 0.0_dp; sum2 = 0.0_dp; sum3 = 0.0_dp; phi = 0.0_dp; xi = 0.0_dp
+         do n = 0, ubound(f,1)
+            sum1 = sum1 + real(n,dp) * abs(f(n,i,j))**2
+            sum2 = sum2 + real(n,dp)**2 * abs(f(n,i,j))**2
+            sum3 = sum3 + real(n,dp)**3 * abs(f(n,i,j))**2
+            if (n > 0) then
+               phi = phi + sqrt(real(n,dp)) * f(n,i,j) * conjg(f(n-1,i,j))
+               xi  = xi + real(n,dp)*sqrt(real(n,dp)) * f(n,i,j) * conjg(f(n-1,i,j))
+            endif
+         enddo
+         tot1 = tot1 + (sum2 - sum1**2)
+         tot2 = tot2 + (sum3 + sum1**2 - sum2 - sum2*sum1)
+         tot3 = tot3 + real(conjg(ord)*(phi + 2.0_dp*phi*sum1 - 2.0_dp*xi))
+      enddo ! i
+      enddo ! j
+
+      c2d_ChemPot = 1.0_dp/tot1 * (u/2.0_dp*tot2 + ja*tot3)
+
+   end function
+
+   function c3d_ChemPot( f, ja, u )
+
+      implicit none
+      complex( kind = dp ), intent(in), allocatable :: f(:,:,:,:)
+      real( kind = dp ), intent(in) :: ja, u
+      real( kind = dp ) :: c3d_ChemPot
+
+      integer :: i, j, k, n
+      complex( kind = dp ) :: ord, phi, xi
+      complex( kind = dp ), allocatable :: ArrayOrder(:,:,:)
+      real( kind = dp ) :: sum1, sum2, sum3, tot1, tot2, tot3
+
+      allocate( ArrayOrder( size(f,2), size(f,3), size(f,4) ) )
+
+      ! collect order parameters
+      do i = 1, ubound(f,2)
+         do j = 1, ubound(f,3)
+            do k = 1, ubound(f,4)
+               ArrayOrder(i,j,k) = c3d_Order( f, i, j, k )
+            enddo
+         enddo
+      enddo
+
+      tot1 = 0.0_dp
+      tot2 = 0.0_dp
+      tot3 = 0.0_dp
+
+      do i = 1, ubound(f,2)
+      do j = 1, ubound(f,3)
+      do k = 1, ubound(f,4)
+
+         ! nearest neighbour order parameter
+         if( i == 1 ) then
+            ord = ArrayOrder( i+1,j,k ) + ArrayOrder( ubound(f,2),j,k )
+         elseif( i == ubound(f,2) ) then
+            ord = ArrayOrder( 1,j,k ) + ArrayOrder( i-1,j,k )
+         else 
+            ord = ArrayOrder( i-1,j,k ) + ArrayOrder( i+1,j,k )
+         endif
+
+         if( j == 1 ) then
+            ord = ord + ArrayOrder( i, j+1,k ) + ArrayOrder( i, ubound(f,3),k )
+         elseif( j == ubound(f,3) ) then
+            ord = ord + ArrayOrder( i, 1,k ) + ArrayOrder( i, j-1,k )
+         else 
+            ord = ord + ArrayOrder( i, j-1,k ) + ArrayOrder( i, j+1,k )
+         endif
+
+         if( k == 1 ) then
+            ord = ord + ArrayOrder( i,j,k+1 ) + ArrayOrder( i,j,ubound(f,4) )
+         elseif( k == ubound(f,4) ) then
+            ord = ord + ArrayOrder( i,j,1 ) + ArrayOrder( i,j,k-1 )
+         else 
+            ord = ord + ArrayOrder( i,j,k-1 ) + ArrayOrder( i,j,k+1 )
+         endif
+
+         sum1 = 0.0_dp; sum2 = 0.0_dp; sum3 = 0.0_dp; phi = 0.0_dp; xi = 0.0_dp
+         do n = 0, ubound(f,1)
+            sum1 = sum1 + real(n,dp) * abs(f(n,i,j,k))**2
+            sum2 = sum2 + real(n,dp)**2 * abs(f(n,i,j,k))**2
+            sum3 = sum3 + real(n,dp)**3 * abs(f(n,i,j,k))**2
+            if (n > 0) then
+               phi = phi + sqrt(real(n,dp)) * f(n,i,j,k) * conjg(f(n-1,i,j,k))
+               xi  = xi + real(n,dp)*sqrt(real(n,dp)) * f(n,i,j,k) * conjg(f(n-1,i,j,k))
+            endif
+         enddo
+         tot1 = tot1 + (sum2 - sum1**2)
+         tot2 = tot2 + (sum3 + sum1**2 - sum2 - sum2*sum1)
+         tot3 = tot3 + real(conjg(ord)*(phi + 2.0_dp*phi*sum1 - 2.0_dp*xi))
+      enddo ! i
+      enddo ! j
+      enddo ! k
+
+      c3d_ChemPot = 1.0_dp/tot1 * (u/2.0_dp*tot2 + ja*tot3)
 
    end function
 
