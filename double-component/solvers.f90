@@ -342,7 +342,7 @@ module solvers
                   ordB = ordB + ArrayOrderB( i, j, 2 ) + ArrayOrderB( i, j, ubound(f,5) )
                elseif( k == ubound(f,5) ) then
                   ordA = ordA + ArrayOrderA( i, j, 1 ) + ArrayOrderA( i, j, ubound(f,5)-1 )
-                  ordB = ordB + ArrayOrderB( i, j, 1 ) + ArrayOrderB( i, j, ubound(f,6)-1 )
+                  ordB = ordB + ArrayOrderB( i, j, 1 ) + ArrayOrderB( i, j, ubound(f,5)-1 )
                else
                   ordA = ordA + ArrayOrderA( i, j, k+1 ) + ArrayOrderA( i, j, k-1 )
                   ordB = ordB + ArrayOrderB( i, j, k+1 ) + ArrayOrderB( i, j, k-1 )
