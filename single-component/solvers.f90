@@ -50,13 +50,13 @@ module solvers
 !  | Update Gutzwiller coeffcients using right-hand | 
 !  | side of Gutzwiller eqution                    |
 !  | ---------------------------------------------- |
-   subroutine c1d_solve( f, k, ArrayOrder, j, u, mu, mode )
+   subroutine c1d_solve( f, k, ArrayOrder, ja, u, mu, mode )
 
       implicit none
       complex( kind = dp), intent(inout), allocatable :: f(:,:)
       complex( kind = dp ), intent(inout), allocatable :: k(:,:)
       complex( kind = dp ), intent(inout), allocatable :: ArrayOrder(:)
-      real( kind = dp ), intent(in) :: j, u, mu
+      real( kind = dp ), intent(in) :: ja, u, mu
       character(len=2), intent(in) :: mode
 
       ! local variables
@@ -114,10 +114,10 @@ module solvers
             k(na,i) = mlt * ( real(na,dp) * ( mu - u/2.0_dp * (real(na,dp) - 1.0_dp) ) * f(na,i)
 
             if( na < ubound(f,1) ) then
-               k(na,i) = k(na,i) + mlt * j * ord * SQRT( real(na+1,dp) ) * f(na+1,i)
+               k(na,i) = k(na,i) + mlt * ja * ord * SQRT( real(na+1,dp) ) * f(na+1,i)
             endif
             if( na > 0 ) then
-               k(na,i) = k(na,i) + mlt * j * ord * SQRT( real(na,dp) ) * f(na-1,i)
+               k(na,i) = k(na,i) + mlt * ja * ord * SQRT( real(na,dp) ) * f(na-1,i)
             endif
 
          enddo ! na
@@ -126,13 +126,13 @@ module solvers
 
    end subroutine
 
-   subroutine c2d_solve( f, k, ArrayOrder, j, u, mu, mode )
+   subroutine c2d_solve( f, k, ArrayOrder, ja, u, mu, mode )
 
       implicit none
       complex( kind = dp), intent(inout), allocatable :: f(:,:,:)
       complex( kind = dp ), intent(inout), allocatable :: k(:,:,:)
       complex( kind = dp ), allocatable :: ArrayOrder(:,:)
-      real( kind = dp ), intent(in) :: j, u, mu
+      real( kind = dp ), intent(in) :: ja, u, mu
       character(len=2), intent(in) :: mode
 
       ! local variables
@@ -202,10 +202,10 @@ module solvers
                k(na,i,j) = mlt * ( real(na,dp) * ( mu - u/2.0_dp * (real(na,dp) - 1.0_dp) ) * f(na,i,j)
 
                if( na < ubound(f,1) ) then
-                  k(na,i,j) = k(na,i,j) + mlt * j * ord * SQRT( real(na+1,dp) ) * f(na+1,i,j)
+                  k(na,i,j) = k(na,i,j) + mlt * ja * ord * SQRT( real(na+1,dp) ) * f(na+1,i,j)
                endif
                if( na > 0 ) then
-                  k(na,i,j) = k(na,i,j) + mlt * j * ord * SQRT( real(na,dp) ) * f(na-1,i,j)
+                  k(na,i,j) = k(na,i,j) + mlt * ja * ord * SQRT( real(na,dp) ) * f(na-1,i,j)
                endif
 
             enddo ! na
@@ -215,13 +215,13 @@ module solvers
 
    end subroutine
 
-   subroutine c3d_solve( f, kv, ArrayOrder, j, u, mu, mode )
+   subroutine c3d_solve( f, kv, ArrayOrder, ja, u, mu, mode )
 
       implicit none
       complex( kind = dp ), intent(inout), allocatable :: f(:,:,:,:)
       complex( kind = dp ), intent(inout), allocatable :: kv(:,:,:,:)
       complex( kind = dp ), intent(inout), allocatable :: ArrayOrder(:,:,:)
-      real( kind = dp ), intent(in) :: j, u, mu
+      real( kind = dp ), intent(in) :: ja, u, mu
       character(len=2), intent(in) :: mode
 
       ! local variables
@@ -302,10 +302,10 @@ module solvers
                   kv(na,i,j,k) = mlt * ( real(na,dp) * ( mu - u/2.0_dp * (real(na,dp) - 1.0_dp) ) * f(na,i,j,k)
 
                   if( na < ubound(f,1) ) then
-                     kv(na,i,j,k) = kv(na,i,j,k) + mlt * j * ord * SQRT( real(na+1,dp) ) * f(na+1,i,j,k)
+                     kv(na,i,j,k) = kv(na,i,j,k) + mlt * ja * ord * SQRT( real(na+1,dp) ) * f(na+1,i,j,k)
                   endif
                   if( na > 0 ) then
-                     kv(na,i,j,k) = kv(na,i,j,k) + mlt * j * ord * SQRT( real(na,dp) ) * f(na-1,i,j,k)
+                     kv(na,i,j,k) = kv(na,i,j,k) + mlt * ja * ord * SQRT( real(na,dp) ) * f(na-1,i,j,k)
                   endif
 
                enddo ! na
@@ -320,11 +320,11 @@ module solvers
 !  | Propagate in imaginary time to find the ground | 
 !  | state configuration                            |
 !  | ---------------------------------------------- |
-   subroutine c1d_GroundStateNC( f, j, u, mn )
+   subroutine c1d_GroundStateNC( f, ja, u, mn )
 
       implicit none
       complex( kind = dp ), intent(inout), allocatable :: f(:,:)
-      real( kind = dp ), intent(in) :: j, u, mn
+      real( kind = dp ), intent(in) :: ja, u, mn
 
       ! | -------------------- |
       ! | For Runge-Kutta step |
@@ -357,19 +357,19 @@ module solvers
          cnt = cnt + 1 
  
          ! 1st Runge-Kutta step
-         call c1d_solve( f, k1, ArrayOrder, j, u, mu, 'GS' )
+         call c1d_solve( f, k1, ArrayOrder, ja, u, mu, 'GS' )
          ! update vector to the 2nd step
          tmp(:,:) = f(:,:) + dt/2.0_dp * k1(:,:)
          ! 2nd Runge-Kutta step
-         call c1d_solve( tmp, k2, ArrayOrder, j, u, mu, 'GS' )
+         call c1d_solve( tmp, k2, ArrayOrder, ja, u, mu, 'GS' )
          ! update vector for the 3rd step
          tmp(:,:) = f(:,:) + dt/2.0_dp * k2(:,:)
          ! 3rd Runge-Kutta step
-         call c1d_solve( tmp, k3, ArrayOrder, j, u, mu, 'GS' )
+         call c1d_solve( tmp, k3, ArrayOrder, ja, u, mu, 'GS' )
          ! update vector for the 4th step
          tmp(:,:) = f(:,:) + dt * k3(:,:)
          ! 4th Runge-Kutta step
-         call c1d_solve( tmp, k4, ArrayOrder, j, u, mu, 'GS' )
+         call c1d_solve( tmp, k4, ArrayOrder, ja, u, mu, 'GS' )
          ! update vector
          f(:,:) = f(:,:) + dt/6.0_dp * ( k1(:,:) + 2.0_dp *&
                     k2(:,:) + 2.0_dp * k3(:,:) + k4(:,:) )
@@ -413,11 +413,11 @@ module solvers
 
    end subroutine
 
-   subroutine c2d_GroundStateNC( f, j, u, mn )
+   subroutine c2d_GroundStateNC( f, ja, u, mn )
 
       implicit none
       complex( kind = dp ), intent(inout), allocatable :: f(:,:,:)
-      real( kind = dp ), intent(in) :: j, u, mn
+      real( kind = dp ), intent(in) :: ja, u, mn
 
       ! | -------------------- |
       ! | For Runge-Kutta step |
@@ -450,19 +450,19 @@ module solvers
          cnt = cnt + 1 
  
          ! 1st Runge-Kutta step
-         call c2d_solve( f, k1, ArrayOrder, j, u, mu, 'GS' )
+         call c2d_solve( f, k1, ArrayOrder, ja, u, mu, 'GS' )
          ! update vector to the 2nd step
          tmp(:,:,:) = f(:,:,:) + dt/2.0_dp * k1(:,:,:)
          ! 2nd Runge-Kutta step
-         call c2d_solve( tmp, k2, ArrayOrder, j, u, mu, 'GS' )
+         call c2d_solve( tmp, k2, ArrayOrder, ja, u, mu, 'GS' )
          ! update vector for the 3rd step
          tmp(:,:,:) = f(:,:,:) + dt/2.0_dp * k2(:,:,:)
          ! 3rd Runge-Kutta step
-         call c2d_solve( tmp, k3, ArrayOrder, j, u, mu, 'GS' )
+         call c2d_solve( tmp, k3, ArrayOrder, ja, u, mu, 'GS' )
          ! update vector for the 4th step
          tmp(:,:,:) = f(:,:,:) + dt * k3(:,:,:)
          ! 4th Runge-Kutta step
-         call c2d_solve( tmp, k4, ArrayOrder, j, u, mu, 'GS' )
+         call c2d_solve( tmp, k4, ArrayOrder, ja, u, mu, 'GS' )
          ! update vector
          f(:,:,:) = f(:,:,:) + dt/6.0_dp * ( k1(:,:,:) + 2.0_dp *&
                       k2(:,:,:) + 2.0_dp * k3(:,:,:) + k4(:,:,:) )
@@ -505,11 +505,11 @@ module solvers
 
    end subroutine
 
-   subroutine c3d_GroundStateNC( f, j, u, mn )
+   subroutine c3d_GroundStateNC( f, ja, u, mn )
 
       implicit none
       complex( kind = dp ), intent(inout), allocatable :: f(:,:,:,:)
-      real( kind = dp ), intent(in) :: j, u, mn
+      real( kind = dp ), intent(in) :: ja, u, mn
 
       ! | -------------------- |
       ! | For Runge-Kutta step |
@@ -549,19 +549,19 @@ module solvers
          cnt = cnt + 1 
  
          ! 1st Runge-Kutta step
-         call c3d_solve( f, k1, ArrayOrder, j, u, mu, 'GS' )
+         call c3d_solve( f, k1, ArrayOrder, ja, u, mu, 'GS' )
          ! update vector to the 2nd step
          tmp(:,:,:,:) = f(:,:,:,:) + dt/2.0_dp * k1(:,:,:,:)
          ! 2nd Runge-Kutta step
-         call c3d_solve( tmp, k2, ArrayOrder, j, u, mu, 'GS' )
+         call c3d_solve( tmp, k2, ArrayOrder, ja, u, mu, 'GS' )
          ! update vector for the 3rd step
          tmp(:,:,:,:) = f(:,:,:,:) + dt/2.0_dp * k2(:,:,:,:)
          ! 3rd Runge-Kutta step
-         call c3d_solve( tmp, k3, ArrayOrder, j, u, mu, 'GS' )
+         call c3d_solve( tmp, k3, ArrayOrder, ja, u, mu, 'GS' )
          ! update vector for the 4th step
          tmp(:,:,:,:) = f(:,:,:,:) + dt * k3(:,:,:,:)
          ! 4th Runge-Kutta step
-         call c3d_solve( tmp, k4, ArrayOrder, j, u, mu, 'GS' )
+         call c3d_solve( tmp, k4, ArrayOrder, ja, u, mu, 'GS' )
          ! update vector
          f(:,:,:,:) = f(:,:,:,:) + dt/6.0_dp * ( k1(:,:,:,:) + 2.0_dp *&
                         k2(:,:,:,:) + 2.0_dp * k3(:,:,:,:) + k4(:,:,:,:) )
@@ -611,11 +611,11 @@ module solvers
 !  | Propagate in imaginary time to find the ground | 
 !  | state configuration                            |
 !  | ---------------------------------------------- |
-   subroutine c1d_GroundState( f, j, u, mu )
+   subroutine c1d_GroundState( f, ja, u, mu )
 
       implicit none
       complex( kind = dp ), intent(inout), allocatable :: f(:,:)
-      real( kind = dp ), intent(in) :: j, u, mu
+      real( kind = dp ), intent(in) :: ja, u, mu
 
       ! | -------------------- |
       ! | For Runge-Kutta step |
@@ -647,19 +647,19 @@ module solvers
          cnt = cnt + 1 
  
          ! 1st Runge-Kutta step
-         call c1d_solve( f, k1, ArrayOrder, j, u, mu, 'GS' )
+         call c1d_solve( f, k1, ArrayOrder, ja, u, mu, 'GS' )
          ! update vector to the 2nd step
          tmp(:,:) = f(:,:) + dt/2.0_dp * k1(:,:)
          ! 2nd Runge-Kutta step
-         call c1d_solve( tmp, k2, ArrayOrder, j, u, mu, 'GS' )
+         call c1d_solve( tmp, k2, ArrayOrder, ja, u, mu, 'GS' )
          ! update vector for the 3rd step
          tmp(:,:) = f(:,:) + dt/2.0_dp * k2(:,:)
          ! 3rd Runge-Kutta step
-         call c1d_solve( tmp, k3, ArrayOrder, j, u, mu, 'GS' )
+         call c1d_solve( tmp, k3, ArrayOrder, ja, u, mu, 'GS' )
          ! update vector for the 4th step
          tmp(:,:) = f(:,:) + dt * k3(:,:)
          ! 4th Runge-Kutta step
-         call c1d_solve( tmp, k4, ArrayOrder, j, u, mu, 'GS' )
+         call c1d_solve( tmp, k4, ArrayOrder, ja, u, mu, 'GS' )
          ! update vector
          f(:,:) = f(:,:) + dt/6.0_dp * ( k1(:,:) + 2.0_dp *&
                     k2(:,:) + 2.0_dp * k3(:,:) + k4(:,:) )
@@ -703,11 +703,11 @@ module solvers
 
    end subroutine
 
-   subroutine c2d_GroundState( f, j, u, mu )
+   subroutine c2d_GroundState( f, ja, u, mu )
 
       implicit none
       complex( kind = dp ), intent(inout), allocatable :: f(:,:,:)
-      real( kind = dp ), intent(in) :: j, u, mu
+      real( kind = dp ), intent(in) :: ja, u, mu
 
       ! | -------------------- |
       ! | For Runge-Kutta step |
@@ -739,19 +739,19 @@ module solvers
          cnt = cnt + 1 
  
          ! 1st Runge-Kutta step
-         call c2d_solve( f, k1, ArrayOrder, j, u, mu, 'GS' )
+         call c2d_solve( f, k1, ArrayOrder, ja, u, mu, 'GS' )
          ! update vector to the 2nd step
          tmp(:,:,:) = f(:,:,:) + dt/2.0_dp * k1(:,:,:)
          ! 2nd Runge-Kutta step
-         call c2d_solve( tmp, k2, ArrayOrder, j, u, mu, 'GS' )
+         call c2d_solve( tmp, k2, ArrayOrder, ja, u, mu, 'GS' )
          ! update vector for the 3rd step
          tmp(:,:,:) = f(:,:,:) + dt/2.0_dp * k2(:,:,:)
          ! 3rd Runge-Kutta step
-         call c2d_solve( tmp, k3, ArrayOrder, j, u, mu, 'GS' )
+         call c2d_solve( tmp, k3, ArrayOrder, ja, u, mu, 'GS' )
          ! update vector for the 4th step
          tmp(:,:,:) = f(:,:,:) + dt * k3(:,:,:)
          ! 4th Runge-Kutta step
-         call c2d_solve( tmp, k4, ArrayOrder, j, u, mu, 'GS' )
+         call c2d_solve( tmp, k4, ArrayOrder, ja, u, mu, 'GS' )
          ! update vector
          f(:,:,:) = f(:,:,:) + dt/6.0_dp * ( k1(:,:,:) + 2.0_dp *&
                       k2(:,:,:) + 2.0_dp * k3(:,:,:) + k4(:,:,:) )
@@ -794,11 +794,11 @@ module solvers
 
    end subroutine
 
-   subroutine c3d_GroundState( f, j, u, mu )
+   subroutine c3d_GroundState( f, ja, u, mu )
 
       implicit none
       complex( kind = dp ), intent(inout), allocatable :: f(:,:,:,:)
-      real( kind = dp ), intent(in) :: j, u, mu
+      real( kind = dp ), intent(in) :: ja, u, mu
 
       ! | -------------------- |
       ! | For Runge-Kutta step |
@@ -837,19 +837,19 @@ module solvers
          cnt = cnt + 1 
  
          ! 1st Runge-Kutta step
-         call c3d_solve( f, k1, ArrayOrder, j, u, mu, 'GS' )
+         call c3d_solve( f, k1, ArrayOrder, ja, u, mu, 'GS' )
          ! update vector to the 2nd step
          tmp(:,:,:,:) = f(:,:,:,:) + dt/2.0_dp * k1(:,:,:,:)
          ! 2nd Runge-Kutta step
-         call c3d_solve( tmp, k2, ArrayOrder, j, u, mu, 'GS' )
+         call c3d_solve( tmp, k2, ArrayOrder, ja, u, mu, 'GS' )
          ! update vector for the 3rd step
          tmp(:,:,:,:) = f(:,:,:,:) + dt/2.0_dp * k2(:,:,:,:)
          ! 3rd Runge-Kutta step
-         call c3d_solve( tmp, k3, ArrayOrder, j, u, mu, 'GS' )
+         call c3d_solve( tmp, k3, ArrayOrder, ja, u, mu, 'GS' )
          ! update vector for the 4th step
          tmp(:,:,:,:) = f(:,:,:,:) + dt * k3(:,:,:,:)
          ! 4th Runge-Kutta step
-         call c3d_solve( tmp, k4, ArrayOrder, j, u, mu, 'GS' )
+         call c3d_solve( tmp, k4, ArrayOrder, ja, u, mu, 'GS' )
          ! update vector
          f(:,:,:,:) = f(:,:,:,:) + dt/6.0_dp * ( k1(:,:,:,:) + 2.0_dp *&
                         k2(:,:,:,:) + 2.0_dp * k3(:,:,:,:) + k4(:,:,:,:) )
