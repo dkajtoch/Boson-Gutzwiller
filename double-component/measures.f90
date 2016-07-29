@@ -482,7 +482,7 @@ contains
       integer i
       real( kind = dp) nout
 
-      do i = 1, ubound(f,1)
+      do i = 1, ubound(f,3)
          nout = c1d_norm( f, i )
          f(:,:,i) = f(:,:,i)*1.0_dp/SQRT( nout )
       enddo
