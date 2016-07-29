@@ -4,24 +4,21 @@ program test
    use measures
    use parameters
    implicit none
-   complex( kind = dp ), allocatable :: f(:,:,:)
+   complex( kind = dp ), allocatable :: f(:,:)
    integer M, nmax
-   real( kind = dp ) ja, jb, ua, ub, uab
-   real( kind = dp ) mea, meb, meab, flua, flub, en1, mna, mnb
+   real( kind = dp ) j, u
+   real( kind = dp ) me, flu, en, mn
    real( kind = dp ) dj
    character(len=1024) filename
-   complex( kind = dp ) orda, ordb
-   integer i ,na, nb
+   complex( kind = dp ) ord
+   integer i, na
 
    M = 10
    nmax = 8
-   ja = 0.0_dp
-   jb = 0.0_dp
-   ua = 1.0_dp
-   ub = 0.95_dp
-   uab = 2.0_dp
+   j = 0.0_dp
+   u = 1.0_dp
 
-   allocate( f(0:nmax,0:nmax,1:M) )
+   allocate( f(0:nmax,1:M) )
 
    !dj = 0.01_dp
    !filename='constmean_M=10_Na=8_Nb=8_Uab=2p0_Ua=1p0_Ub=0p95.dat' 
@@ -29,26 +26,20 @@ program test
    !open(21, file=filename, action='write', status='replace')
    !close(21)
 
-   mna = 0.2_dp*M
-   mnb = 0.8_dp*M
+   mn = 0.2_dp*M
 
-   do while( mna <= 1.0_dp*M )
-      ja = 0.0_dp
-      jb = 0.0_dp
+   do while( mn <= 1.0_dp*M )
+      j = 0.0_dp
 
-      do while( ja <= 0.0_dp )
+      do while( j <= 0.0_dp )
 
-         call InitUniformNC( f, mna,  mnb )
-         call GroundStateNC( f, ja, jb, ua, ub, uab, mna, mnb )
+         call InitUniformNC( f, mn )
+         call GroundStateNC( f, j, u, mn )
 
-         mea = MeanA( f, 1 )
-         meb = MeanB( f, 1 )
-         meab = MeanAB( f, 1 )
-         flua = VarA( f, 1 )
-         flub = VarB( f, 1 )
-         orda = OrderA( f, 1 )
-         ordb = OrderB( f, 1 )
-         en1 = TotEnergy( f, ja, jb, ua, ub, uab )
+         me  = Mean( f, 1 )
+         flu = Var( f, 1 )
+         ord = Order( f, 1 )
+         en  = TotEnergy( f, j, u )
 
 
          !open(21, file=filename, action='write', position='append')
@@ -57,13 +48,11 @@ program test
          !close(21)
 
 
-         ja = ja + dj
-         jb = jb + dj
+         j = j + dj
 
       enddo
 
-      mna = mna + 0.05_dp*M
-      mnb = mnb - 0.05_dp*M
+      mn = mn + 0.05_dp*M
 
    enddo
 
