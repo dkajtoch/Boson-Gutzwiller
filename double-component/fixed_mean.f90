@@ -3218,7 +3218,7 @@ end subroutine
       integer i, j, k, na, nb
       real( kind = dp ), allocatable :: norm(:,:,:)
 
-      allocate( norm(lbound(f,3): ubound(f,3), lbound(f,3):ubound(f,4), lbound(f,5):ubound(f,5)) )
+      allocate( norm(lbound(f,3): ubound(f,3), lbound(f,4):ubound(f,4), lbound(f,5):ubound(f,5)) )
       
       info = 0
 
