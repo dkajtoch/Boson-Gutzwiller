@@ -47,96 +47,6 @@ module solvers
    contains
 
 !  | ---------------------------------------------- |
-!  | indexes of nearest-neighbours                  | 
-!  | ---------------------------------------------- |
-   function neighbour_1d( i, sizex )
-
-      implicit none
-      integer, intent(in) :: i, sizex
-      integer, dimension(2) :: neighbour_1d
-
-      if( i == 1 ) then
-         neighbour_1d = (/ 2, sizex /)
-      elseif( i == sizex ) then
-         neighbour_1d = (/ 1, sizex-1 /)
-      else
-         neighbour_1d = (/ i-1, i+1 /)
-      endif
-
-   end function
-
-   function neighbour_2d( i, j, sizex, sizey )
-
-      implicit none
-      integer, intent(in) :: i, j, sizex, sizey
-      integer, dimension(4) :: neighbour_2d
-
-      if( i == 1 ) then
-         neighbour_2d(1) = 2
-         neighbour_2d(2) = sizex
-      elseif( i == sizex ) then
-         neighbour_2d(1) = 1
-         neighbour_2d(2) = sizex-1
-      else
-         neighbour_2d(1) = i-1
-         neighbour_2d(2) = i+1
-      endif
-
-      if( j == 1 ) then
-         neighbour_2d(3) = 2
-         neighbour_2d(4) = sizey
-      elseif( j == sizey ) then
-         neighbour_2d(3) = 1
-         neighbour_2d(4) = sizey-1
-      else
-         neighbour_2d(3) = j-1
-         neighbour_2d(4) = j+1
-      endif
-
-   end function
-
-   function neighbour_3d( i, j, k, sizex, sizey, sizez )
-
-      implicit none
-      integer, intent(in) :: i, j, k, sizex, sizey, sizez
-      integer, dimension(6) :: neighbour_3d
-
-      if( i == 1 ) then
-         neighbour_3d(1) = 2
-         neighbour_3d(2) = sizex
-      elseif( i == sizex ) then
-         neighbour_3d(1) = 1
-         neighbour_3d(2) = sizex-1
-      else
-         neighbour_3d(1) = i-1
-         neighbour_3d(2) = i+1
-      endif
-
-      if( j == 1 ) then
-         neighbour_3d(3) = 2
-         neighbour_3d(4) = sizey
-      elseif( j == sizey ) then
-         neighbour_3d(3) = 1
-         neighbour_3d(4) = sizey-1
-      else
-         neighbour_3d(3) = j-1
-         neighbour_3d(4) = j+1
-      endif
-
-      if( k == 1 ) then
-         neighbour_3d(5) = 2
-         neighbour_3d(6) = sizez
-      elseif( k == sizez ) then
-         neighbour_3d(5) = 1
-         neighbour_3d(6) = sizez-1
-      else
-         neighbour_3d(5) = k-1
-         neighbour_3d(6) = k+1
-      endif
-
-   end function 
-
-!  | ---------------------------------------------- |
 !  | Update Gutzwiller coeffcients using right-hand | 
 !  | side of Gutzwiller equation                    |
 !  | ---------------------------------------------- |
@@ -402,15 +312,41 @@ module solvers
             do k = 1, ubound(f,5)
 
                ! calculate nearest-neighbour order parameter (periodic boundary conditions)
-               indx = neighbour_3d( i, j, k, size(f,3), size(f,4), size(f,5) )
+               ordA = (0.0_dp, 0.0_dp)
+               ordB = (0.0_dp, 0.0_dp)
 
-               ordA = ArrayOrderA( indx(1), j, k ) + ArrayOrderA( indx(2), j, k ) +&
-                      ArrayOrderA( i, indx(3), k ) + ArrayOrderA( i, indx(4), k ) +&
-                      ArrayOrderA( i, j, indx(5) ) + ArrayOrderA( i, j, indx(6) )
-               
-               ordB = ArrayOrderB( indx(1), j, k ) + ArrayOrderB( indx(2), j, k ) +&
-                      ArrayOrderB( i, indx(3), k ) + ArrayOrderB( i, indx(4), k ) +&
-                      ArrayOrderB( i, j, indx(5) ) + ArrayOrderB( i, j, indx(6) )
+               if( i == 1 ) then
+                  ordA = ordA + ArrayOrderA( 2, j, k ) + ArrayOrderA( ubound(f,3), j, k )
+                  ordB = ordB + ArrayOrderB( 2, j, k ) + ArrayOrderB( ubound(f,3), j, k )
+               elseif( i == ubound(f,3) ) then
+                  ordA = ordA + ArrayOrderA( 1, j, k ) + ArrayOrderA( ubound(f,3)-1, j, k )
+                  ordB = ordB + ArrayOrderB( 1, j, k ) + ArrayOrderB( ubound(f,3)-1, j, k )
+               else
+                  ordA = ordA + ArrayOrderA( i+1, j, k ) + ArrayOrderA( i-1, j, k )
+                  ordB = ordB + ArrayOrderB( i+1, j, k ) + ArrayOrderB( i-1, j, k )
+               endif
+
+               if( j == 1 ) then
+                  ordA = ordA + ArrayOrderA( i, 2, k ) + ArrayOrderA( i, ubound(f,4), k )
+                  ordB = ordB + ArrayOrderB( i, 2, k ) + ArrayOrderB( i, ubound(f,4), k )
+               elseif( j == ubound(f,4) ) then
+                  ordA = ordA + ArrayOrderA( i, 1, k ) + ArrayOrderA( i, ubound(f,4)-1, k )
+                  ordB = ordB + ArrayOrderB( i, 1, k ) + ArrayOrderB( i, ubound(f,4)-1, k )
+               else
+                  ordA = ordA + ArrayOrderA( i, j+1, k ) + ArrayOrderA( i, j-1, k )
+                  ordB = ordB + ArrayOrderB( i, j+1, k ) + ArrayOrderB( i, j-1, k )
+               endif
+
+               if( k == 1 ) then
+                  ordA = ordA + ArrayOrderA( i, j, 2 ) + ArrayOrderA( i, j, ubound(f,5) )
+                  ordB = ordB + ArrayOrderB( i, j, 2 ) + ArrayOrderB( i, j, ubound(f,5) )
+               elseif( k == ubound(f,5) ) then
+                  ordA = ordA + ArrayOrderA( i, j, 1 ) + ArrayOrderA( i, j, ubound(f,5)-1 )
+                  ordB = ordB + ArrayOrderB( i, j, 1 ) + ArrayOrderB( i, j, ubound(f,6)-1 )
+               else
+                  ordA = ordA + ArrayOrderA( i, j, k+1 ) + ArrayOrderA( i, j, k-1 )
+                  ordB = ordB + ArrayOrderB( i, j, k+1 ) + ArrayOrderB( i, j, k-1 )
+               endif
                                       
                do na = 0, ubound(f,1)
                   do nb = 0, ubound(f,2)
@@ -1093,6 +1029,8 @@ module solvers
 
       integer :: i, j, na, nb
       real :: ran(2)
+      
+      call init_random_seed()
 
       do na = 0, ubound(f,1)
          do nb = 0, ubound(f,2)
@@ -1116,6 +1054,8 @@ module solvers
 
       integer :: i, j, k, na, nb
       real :: ran(2)
+
+      call init_random_seed()
 
       do na = 0, ubound(f,1)
          do nb = 0, ubound(f,2)
@@ -1212,6 +1152,8 @@ module solvers
       integer :: i, j, na, nb
       real :: ran(2)
 
+      call init_random_seed()
+
       do na = 0, ubound(f,1)
          do nb = 0, ubound(f,2)
             do i = 1, ubound(f,3)
@@ -1236,6 +1178,8 @@ module solvers
 
       integer :: i, j, k, na, nb
       real :: ran(2)
+
+      call init_random_seed()
 
       do na = 0, ubound(f,1)
          do nb = 0, ubound(f,2)
