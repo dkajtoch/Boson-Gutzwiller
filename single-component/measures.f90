@@ -347,11 +347,11 @@ contains
 !  | ----------------------------------- |
 !  | Total Energy                        |
 !  | ----------------------------------- |
-   function c1d_TotEnergy( f, j, u )
+   function c1d_TotEnergy( f, ja, u )
 
       implicit none
       complex( kind = dp ), intent(in), allocatable :: f(:,:)
-      real( kind = dp ), intent(in) :: j, u
+      real( kind = dp ), intent(in) :: ja, u
       real( kind = dp ) :: c1d_TotEnergy
 
       ! local variables
@@ -379,11 +379,11 @@ contains
 
          if( i < ubound(f,2) ) then
 
-            c1d_TotEnergy = c1d_TotEnergy - 2.0_dp * j * real( conjg(ArrayOrder(i)) * ArrayOrder(i+1) )
+            c1d_TotEnergy = c1d_TotEnergy - 2.0_dp * ja * real( conjg(ArrayOrder(i)) * ArrayOrder(i+1) )
 
          else
 
-            c1d_TotEnergy = c1d_TotEnergy - 2.0_dp * j * real( conjg(ArrayOrder( ubound(f,2) )) * ArrayOrder(1) )
+            c1d_TotEnergy = c1d_TotEnergy - 2.0_dp * ja * real( conjg(ArrayOrder( ubound(f,2) )) * ArrayOrder(1) )
 
          endif
 
@@ -391,11 +391,11 @@ contains
 
    end function
 
-   function c2d_TotEnergy( f, j, u)
+   function c2d_TotEnergy( f, ja, u)
 
       implicit none
       complex( kind = dp ), intent(in), allocatable :: f(:,:,:)
-      real( kind = dp ), intent(in) :: j, u
+      real( kind = dp ), intent(in) :: ja, u
       real( kind = dp ) :: c2d_TotEnergy
 
       ! local variables
@@ -426,21 +426,21 @@ contains
 
             if( i < ubound(f,2) ) then
 
-               c2d_TotEnergy = c2d_TotEnergy - 2.0_dp * j * real( conjg(ArrayOrder(i,j)) * ArrayOrder(i+1,j) )
+               c2d_TotEnergy = c2d_TotEnergy - 2.0_dp * ja * real( conjg(ArrayOrder(i,j)) * ArrayOrder(i+1,j) )
 
             else
 
-               c2d_TotEnergy = c2d_TotEnergy - 2.0_dp * j * real( conjg(ArrayOrder( ubound(f,2), j )) * ArrayOrder(1,j) )
+               c2d_TotEnergy = c2d_TotEnergy - 2.0_dp * ja * real( conjg(ArrayOrder( ubound(f,2), j )) * ArrayOrder(1,j) )
 
             endif
 
             if( j < ubound(f,3) ) then
 
-               c2d_TotEnergy = c2d_TotEnergy - 2.0_dp * j * real( conjg(ArrayOrder(i,j)) * ArrayOrder(i,j+1) )
+               c2d_TotEnergy = c2d_TotEnergy - 2.0_dp * ja * real( conjg(ArrayOrder(i,j)) * ArrayOrder(i,j+1) )
 
            else
 
-               c2d_TotEnergy = c2d_TotEnergy - 2.0_dp * j * real( conjg(ArrayOrder( i, ubound(f,3) )) * ArrayOrder(i,1) )
+               c2d_TotEnergy = c2d_TotEnergy - 2.0_dp * ja * real( conjg(ArrayOrder( i, ubound(f,3) )) * ArrayOrder(i,1) )
 
            endif
 
@@ -449,11 +449,11 @@ contains
 
    end function
 
-   function c3d_TotEnergy( f, j, u )
+   function c3d_TotEnergy( f, ja, u )
 
       implicit none
       complex( kind = dp ), intent(in), allocatable :: f(:,:,:,:)
-      real( kind = dp ), intent(in) :: j, u
+      real( kind = dp ), intent(in) :: ja, u
       real( kind = dp ) :: c3d_TotEnergy
 
       ! local variables
@@ -487,31 +487,31 @@ contains
 
                if( i < ubound(f,2) ) then
 
-                  c3d_TotEnergy = c3d_TotEnergy - 2.0_dp * j * real( conjg(ArrayOrder(i,j,k)) * ArrayOrder(i+1,j,k) )
+                  c3d_TotEnergy = c3d_TotEnergy - 2.0_dp * ja * real( conjg(ArrayOrder(i,j,k)) * ArrayOrder(i+1,j,k) )
 
                else
 
-                  c3d_TotEnergy = c3d_TotEnergy - 2.0_dp * j * real( conjg(ArrayOrder( ubound(f,2),j,k) ) * ArrayOrder(1,j,k) )
+                  c3d_TotEnergy = c3d_TotEnergy - 2.0_dp * ja * real( conjg(ArrayOrder( ubound(f,2),j,k) ) * ArrayOrder(1,j,k) )
 
                endif
 
                if( j < ubound(f,3) ) then
 
-                  c3d_TotEnergy = c3d_TotEnergy - 2.0_dp * j * real( conjg(ArrayOrder(i,j,k)) * ArrayOrder(i,j+1,k) )
+                  c3d_TotEnergy = c3d_TotEnergy - 2.0_dp * ja * real( conjg(ArrayOrder(i,j,k)) * ArrayOrder(i,j+1,k) )
 
                else
 
-                  c3d_TotEnergy = c3d_TotEnergy - 2.0_dp * j * real( conjg(ArrayOrder( i,ubound(f,3),k) ) * ArrayOrder(i,1,k) )
+                  c3d_TotEnergy = c3d_TotEnergy - 2.0_dp * ja * real( conjg(ArrayOrder( i,ubound(f,3),k) ) * ArrayOrder(i,1,k) )
 
                endif
 
                if( k < ubound(f,4) ) then
 
-                  c3d_TotEnergy = c3d_TotEnergy - 2.0_dp * j * real( conjg(ArrayOrder(i,j,k)) * ArrayOrder(i,j,k+1) )
+                  c3d_TotEnergy = c3d_TotEnergy - 2.0_dp * ja * real( conjg(ArrayOrder(i,j,k)) * ArrayOrder(i,j,k+1) )
 
                else
 
-                  c3d_TotEnergy = c3d_TotEnergy - 2.0_dp * j * real( conjg(ArrayOrder( i,j,ubound(f,4)) ) * ArrayOrder(i,j,1) )
+                  c3d_TotEnergy = c3d_TotEnergy - 2.0_dp * ja * real( conjg(ArrayOrder( i,j,ubound(f,4)) ) * ArrayOrder(i,j,1) )
 
                endif
 
