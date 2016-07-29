@@ -111,7 +111,7 @@ module solvers
             endif
 
 
-            k(na,i) = mlt * ( real(na,dp) * ( mu - u/2.0_dp * (real(na,dp) - 1.0_dp) ) * f(na,i)
+            k(na,i) = mlt * real(na,dp) * ( mu - u/2.0_dp * (real(na,dp) - 1.0_dp) ) * f(na,i)
 
             if( na < ubound(f,1) ) then
                k(na,i) = k(na,i) + mlt * ja * ord * SQRT( real(na+1,dp) ) * f(na+1,i)
@@ -199,7 +199,7 @@ module solvers
                   f(na,i,j) = ( f(na,i,j) + conjg(f(na,i,j)) )/2.0_dp
                endif
 
-               k(na,i,j) = mlt * ( real(na,dp) * ( mu - u/2.0_dp * (real(na,dp) - 1.0_dp) ) * f(na,i,j)
+               k(na,i,j) = mlt * real(na,dp) * ( mu - u/2.0_dp * (real(na,dp) - 1.0_dp) ) * f(na,i,j)
 
                if( na < ubound(f,1) ) then
                   k(na,i,j) = k(na,i,j) + mlt * ja * ord * SQRT( real(na+1,dp) ) * f(na+1,i,j)
@@ -299,7 +299,7 @@ module solvers
                      f(na,i,j,k) = ( f(na,i,j,k) + conjg(f(na,i,j,k)) )/2.0_dp
                   endif
 
-                  kv(na,i,j,k) = mlt * ( real(na,dp) * ( mu - u/2.0_dp * (real(na,dp) - 1.0_dp) ) * f(na,i,j,k)
+                  kv(na,i,j,k) = mlt * real(na,dp) * ( mu - u/2.0_dp * (real(na,dp) - 1.0_dp) ) * f(na,i,j,k)
 
                   if( na < ubound(f,1) ) then
                      kv(na,i,j,k) = kv(na,i,j,k) + mlt * ja * ord * SQRT( real(na+1,dp) ) * f(na+1,i,j,k)
@@ -811,7 +811,7 @@ module solvers
       complex( kind = dp ), allocatable :: fpom(:,:,:,:)
       complex( kind = dp ), allocatable :: ArrayOrder(:,:,:)
       
-      real( kind = dp ) :: error, ierr, mu
+      real( kind = dp ) :: error, ierr
       integer i, j, k, na, cnt, info
 
       allocate( k1(lbound(f,1):ubound(f,1), lbound(f,2):ubound(f,2), lbound(f,3):ubound(f,3), &
