@@ -19,13 +19,13 @@ program test_c3d
    jb   = 0.5_dp
    ua   = 1.0_dp
    ub   = 0.95_dp
-   uab  = 0.879_dp
+   uab  = 0.80_dp
 
    allocate( f(0:nmax, 0:nmax, 1:M, 1:M, 1:M) )
 
    ! check random inital state preparation
-   mea = 0.2_dp * real(M**3,dp)
-   meb = 0.8_dp * real(M**3,dp)
+   mea = 0.0_dp * real(M**3,dp)
+   meb = 1.0_dp * real(M**3,dp)
    call InitRandomNC( f, mea, meb )
 
    normf = norm( f, 1, 1, 1 )
