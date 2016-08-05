@@ -95,8 +95,8 @@ contains
 
       if( abs(x) <= 1.0_dp ) then
 
-         do i = 1, ubound(f,3)
          do j = 1, ubound(f,4)
+         do i = 1, ubound(f,3)
             powa = 1.0_dp
             sum1 = 0.0_dp
             sum2 = 0.0_dp
@@ -115,13 +115,13 @@ contains
                c2d_GammaA(2) = c2d_GammaA(2) + abs(f(1,0,i,j))**2/abs(f(0,0,i,j))**2
             endif
 
-         enddo ! j
          enddo ! i
+         enddo ! j
 
       else
 
-         do i = 1, ubound(f,3)
          do j = 1, ubound(f,4)
+         do i = 1, ubound(f,3)
             powa = 1.0_dp
             sum1 = 0.0_dp
             sum2 = 0.0_dp
@@ -136,8 +136,8 @@ contains
             c2d_GammaA(1) = c2d_GammaA(1) + sum2/sum1
             c2d_GammaA(2) = c2d_GammaA(2) + ( sum3 - sum2**2/sum1 )/(x*sum1)
 
-         enddo ! j
          enddo ! i
+         enddo ! j
  
       endif
 
@@ -160,9 +160,9 @@ contains
 
       if( abs(x) <= 1.0_dp ) then
 
-         do i = 1, ubound(f,3)
-         do j = 1, ubound(f,4)
          do k = 1, ubound(f,5)
+         do j = 1, ubound(f,4)
+         do i = 1, ubound(f,3)
             powa = 1.0_dp
             sum1 = 0.0_dp
             sum2 = 0.0_dp
@@ -187,9 +187,9 @@ contains
 
       else
 
-         do i = 1, ubound(f,3)
-         do j = 1, ubound(f,4)
          do k = 1, ubound(f,5)
+         do j = 1, ubound(f,4)
+         do i = 1, ubound(f,3)
             powa = 1.0_dp
             sum1 = 0.0_dp
             sum2 = 0.0_dp
@@ -296,8 +296,8 @@ contains
 
       if( abs(x) <= 1.0_dp ) then
 
-         do i = 1, ubound(f,3)
          do j = 1, ubound(f,4)
+         do i = 1, ubound(f,3)
             powa = 1.0_dp
             sum1 = 0.0_dp
             sum2 = 0.0_dp
@@ -321,8 +321,8 @@ contains
 
       else
 
-         do i = 1, ubound(f,3)
          do j = 1, ubound(f,4)
+         do i = 1, ubound(f,3)
             powa = 1.0_dp
             sum1 = 0.0_dp
             sum2 = 0.0_dp
@@ -361,9 +361,9 @@ contains
 
       if( abs(x) <= 1.0_dp ) then
 
-         do i = 1, ubound(f,3)
-         do j = 1, ubound(f,4)
          do k = 1, ubound(f,5)
+         do j = 1, ubound(f,4)
+         do i = 1, ubound(f,3)
             powa = 1.0_dp
             sum1 = 0.0_dp
             sum2 = 0.0_dp
@@ -388,9 +388,9 @@ contains
 
       else
 
-         do i = 1, ubound(f,3)
-         do j = 1, ubound(f,4)
          do k = 1, ubound(f,5)
+         do j = 1, ubound(f,4)
+         do i = 1, ubound(f,3)
             powa = 1.0_dp
             sum1 = 0.0_dp
             sum2 = 0.0_dp
@@ -511,19 +511,19 @@ contains
                sum4 = 0.0_dp
                sum5 = 0.0_dp
                sum6 = 0.0_dp
-               powa = 1.0_dp
-               do na = 0, ubound(f,1)
-                  powb = 1.0_dp
-                  do nb = 0, ubound(f,2)
+               powb = 1.0_dp
+               do nb = 0, ubound(f,2)
+                  powa = 1.0_dp
+                  do na = 0, ubound(f,1)
                      sum1 = sum1 + powa * powb * abs(f(na,nb,i))**2
                      sum2 = sum2 + real(na,dp) * powa * powb * abs(f(na,nb,i))**2
                      sum3 = sum3 + real(nb,dp) * powa * powb * abs(f(na,nb,i))**2
                      sum4 = sum4 + real(na,dp)**2 * powa * powb * abs(f(na,nb,i))**2
                      sum5 = sum5 + real(nb,dp)**2 * powa * powb * abs(f(na,nb,i))**2
                      sum6 = sum6 + real(na,dp) * real(nb,dp) * powa * powb * abs(f(na,nb,i))**2
-                     powb  = powb * x(2)
+                     powa  = powa * x(1)
                   enddo
-                  powa = powa * x(1)
+                  powb = powb * x(2)
                enddo
 
                c1d_GammaAB(1,1) = c1d_GammaAB(1,1) + sum2/sum1
@@ -576,19 +576,19 @@ contains
                sum4 = 0.0_dp
                sum5 = 0.0_dp
                sum6 = 0.0_dp
-               powa = 1.0_dp
-               do na = 0, ubound(f,1)
-                  powb = 1.0_dp
-                  do nb = ubound(f,2), 0, -1
+               powb = 1.0_dp
+               do nb = ubound(f,2), 0, -1
+                  powa = 1.0_dp
+                  do na = ubound(f,1)
                      sum1 = sum1 + powa * powb * abs(f(na,nb,i))**2
                      sum2 = sum2 + real(na,dp) * powa * powb * abs(f(na,nb,i))**2
                      sum3 = sum3 + real(nb,dp) * powa * powb * abs(f(na,nb,i))**2
                      sum4 = sum4 + real(na,dp)**2 * powa * powb * abs(f(na,nb,i))**2
                      sum5 = sum5 + real(nb,dp)**2 * powa * powb * abs(f(na,nb,i))**2
                      sum6 = sum6 + real(na,dp) * real(nb,dp) * powa * powb * abs(f(na,nb,i))**2
-                     powb  = powb/x(2)
+                     powa  = powa * x(1)
                   enddo
-                  powa = powa * x(1)
+                  powb = powb / x(2)
                enddo
 
                c1d_GammaAB(1,1) = c1d_GammaAB(1,1) + sum2/sum1
@@ -641,19 +641,19 @@ contains
                sum4 = 0.0_dp
                sum5 = 0.0_dp
                sum6 = 0.0_dp
-               powa = 1.0_dp
-               do na = ubound(f,1), 0,  -1
-                  powb = 1.0_dp
-                  do nb = 0, ubound(f,2)
+               powb = 1.0_dp
+               do nb = ubound(f,2)
+                  powa = 1.0_dp
+                  do na = ubound(f,1), 0, -1
                      sum1 = sum1 + powa * powb * abs(f(na,nb,i))**2
                      sum2 = sum2 + real(na,dp) * powa * powb * abs(f(na,nb,i))**2
                      sum3 = sum3 + real(nb,dp) * powa * powb * abs(f(na,nb,i))**2
                      sum4 = sum4 + real(na,dp)**2 * powa * powb * abs(f(na,nb,i))**2
                      sum5 = sum5 + real(nb,dp)**2 * powa * powb * abs(f(na,nb,i))**2
                      sum6 = sum6 + real(na,dp) * real(nb,dp) * powa * powb * abs(f(na,nb,i))**2
-                     powb  = powb * x(2)
+                     powa  = powa / x(1)
                   enddo
-                  powa = powa/x(1)
+                  powb = powb * x(2)
                enddo
 
                c1d_GammaAB(1,1) = c1d_GammaAB(1,1) + sum2/sum1
@@ -677,19 +677,19 @@ contains
             sum4 = 0.0_dp
             sum5 = 0.0_dp
             sum6 = 0.0_dp
-            powa = 1.0_dp
-            do na = ubound(f,1), 0, -1
-               powb = 1.0_dp
-               do nb = ubound(f,2), 0, -1
+            powb = 1.0_dp
+            do nb = ubound(f,2), 0, -1
+               powa = 1.0_dp
+               do na = ubound(f,1), 0, -1
                   sum1 = sum1 + powa * powb * abs(f(na,nb,i))**2
                   sum2 = sum2 + real(na,dp) * powa * powb * abs(f(na,nb,i))**2
                   sum3 = sum3 + real(nb,dp) * powa * powb * abs(f(na,nb,i))**2
                   sum4 = sum4 + real(na,dp)**2 * powa * powb * abs(f(na,nb,i))**2
                   sum5 = sum5 + real(nb,dp)**2 * powa * powb * abs(f(na,nb,i))**2
                   sum6 = sum6 + real(na,dp) * real(nb,dp) * powa * powb * abs(f(na,nb,i))**2
-                  powb = powb/x(2)
+                  powa = powa / x(2)
                enddo
-               powa = powa/x(1)
+               powb = powb / x(1)
             enddo
 
             c1d_GammaAB(1,1) = c1d_GammaAB(1,1) + sum2/sum1
@@ -731,8 +731,8 @@ contains
          ! a) x == 0 and y != 0
          if( x(1) == 0.0_dp .and. x(2) /= 0.0_dp ) then
 
-            do i = 1, ubound(f,3)
             do j = 1, ubound(f,4)
+            do i = 1, ubound(f,3)
                sum1 = 0.0_dp
                sum2 = 0.0_dp
                sum3 = 0.0_dp
@@ -759,8 +759,8 @@ contains
          ! b) x != 0 and y == 0        
          elseif( x(1) /= 0.0_dp .and. x(2) == 0.0_dp ) then
 
-            do i = 1, ubound(f,3)
             do j = 1, ubound(f,4)
+            do i = 1, ubound(f,3)
                sum1 = 0.0_dp
                sum2 = 0.0_dp
                sum3 = 0.0_dp
@@ -787,8 +787,8 @@ contains
          ! c) x == 0 and y == 0
          elseif( x(1) == 0.0_dp .and. x(2) == 0.0_dp ) then
 
-            do i = 1, ubound(f,3)
             do j = 1, ubound(f,4)
+            do i = 1, ubound(f,3)
                c2d_GammaAB(2,1) = c2d_GammaAB(2,1) + abs(f(1,0,i,j))**2/abs(f(0,0,i,j))**2
                c2d_GammaAB(3,2) = c2d_GammaAB(3,2) + abs(f(0,1,i,j))**2/abs(f(0,0,i,j))**2
             enddo ! i
@@ -797,27 +797,27 @@ contains
          ! d) x != 0 and y != 0
          else
            
-            do i = 1, ubound(f,3)
             do j = 1, ubound(f,4)
+            do i = 1, ubound(f,3)
                sum1 = 0.0_dp
                sum2 = 0.0_dp
                sum3 = 0.0_dp
                sum4 = 0.0_dp
                sum5 = 0.0_dp
                sum6 = 0.0_dp
-               powa = 1.0_dp
-               do na = 0, ubound(f,1)
-                  powb = 1.0_dp
-                  do nb = 0, ubound(f,2)
+               powb = 1.0_dp
+               do nb = 0, ubound(f,2)
+                  powa = 1.0_dp
+                  do na = 0, ubound(f,1)
                      sum1 = sum1 + powa * powb * abs(f(na,nb,i,j))**2
                      sum2 = sum2 + real(na,dp) * powa * powb * abs(f(na,nb,i,j))**2
                      sum3 = sum3 + real(nb,dp) * powa * powb * abs(f(na,nb,i,j))**2
                      sum4 = sum4 + real(na,dp)**2 * powa * powb * abs(f(na,nb,i,j))**2
                      sum5 = sum5 + real(nb,dp)**2 * powa * powb * abs(f(na,nb,i,j))**2
                      sum6 = sum6 + real(na,dp) * real(nb,dp) * powa * powb * abs(f(na,nb,i,j))**2
-                     powb  = powb * x(2)
+                     powa  = powa * x(1)
                   enddo
-                  powa = powa * x(1)
+                  powb = powb * x(2)
                enddo
 
                c2d_GammaAB(1,1) = c2d_GammaAB(1,1) + sum2/sum1
@@ -838,8 +838,8 @@ contains
          ! a) x = 0
          if( x(1) == 0.0_dp ) then
 
-            do i = 1, ubound(f,3)
             do j = 1, ubound(f,4)
+            do i = 1, ubound(f,3)
                sum1 = 0.0_dp
                sum2 = 0.0_dp
                sum3 = 0.0_dp
@@ -866,27 +866,27 @@ contains
          ! b) x != 0
          else
 
-            do i = 1, ubound(f,3)
             do j = 1, ubound(f,4)
+            do i = 1, ubound(f,3)
                sum1 = 0.0_dp
                sum2 = 0.0_dp
                sum3 = 0.0_dp
                sum4 = 0.0_dp
                sum5 = 0.0_dp
                sum6 = 0.0_dp
-               powa = 1.0_dp
-               do na = 0, ubound(f,1)
-                  powb = 1.0_dp
-                  do nb = ubound(f,2), 0, -1
+               powb = 1.0_dp
+               do nb = ubound(f,2), 0, -1
+                  powa = 1.0_dp
+                  do na = 0, ubound(f,1)
                      sum1 = sum1 + powa * powb * abs(f(na,nb,i,j))**2
                      sum2 = sum2 + real(na,dp) * powa * powb * abs(f(na,nb,i,j))**2
                      sum3 = sum3 + real(nb,dp) * powa * powb * abs(f(na,nb,i,j))**2
                      sum4 = sum4 + real(na,dp)**2 * powa * powb * abs(f(na,nb,i,j))**2
                      sum5 = sum5 + real(nb,dp)**2 * powa * powb * abs(f(na,nb,i,j))**2
                      sum6 = sum6 + real(na,dp) * real(nb,dp) * powa * powb * abs(f(na,nb,i,j))**2
-                     powb  = powb/x(2)
+                     powa  = powa * x(1)
                   enddo
-                  powa = powa * x(1)
+                  powb = powb / x(2)
                enddo
 
                c2d_GammaAB(1,1) = c2d_GammaAB(1,1) + sum2/sum1
@@ -907,8 +907,8 @@ contains
          ! a) y = 0
          if( x(2) == 0.0_dp ) then
 
-            do i = 1, ubound(f,3)
             do j = 1, ubound(f,4)
+            do i = 1, ubound(f,3)
                sum1 = 0.0_dp
                sum2 = 0.0_dp
                sum3 = 0.0_dp
@@ -935,27 +935,27 @@ contains
          ! b) y != 0
          else
 
-            do i = 1, ubound(f,3)
             do j = 1, ubound(f,4)
+            do i = 1, ubound(f,3)
                sum1 = 0.0_dp
                sum2 = 0.0_dp
                sum3 = 0.0_dp
                sum4 = 0.0_dp
                sum5 = 0.0_dp
                sum6 = 0.0_dp
-               powa = 1.0_dp
-               do na = ubound(f,1), 0,  -1
-                  powb = 1.0_dp
-                  do nb = 0, ubound(f,2)
+               powb = 1.0_dp
+               do nb = 0, ubound(f,2)
+                  powa = 1.0_dp
+                  do na = ubound(f,1), 0, -1
                      sum1 = sum1 + powa * powb * abs(f(na,nb,i,j))**2
                      sum2 = sum2 + real(na,dp) * powa * powb * abs(f(na,nb,i,j))**2
                      sum3 = sum3 + real(nb,dp) * powa * powb * abs(f(na,nb,i,j))**2
                      sum4 = sum4 + real(na,dp)**2 * powa * powb * abs(f(na,nb,i,j))**2
                      sum5 = sum5 + real(nb,dp)**2 * powa * powb * abs(f(na,nb,i,j))**2
                      sum6 = sum6 + real(na,dp) * real(nb,dp) * powa * powb * abs(f(na,nb,i,j))**2
-                     powb  = powb * x(2)
+                     powa  = powa / x(1)
                   enddo
-                  powa = powa/x(1)
+                  powb = powb * x(2)
                enddo
 
                c2d_GammaAB(1,1) = c2d_GammaAB(1,1) + sum2/sum1
@@ -973,27 +973,27 @@ contains
       ! 4) x > 1.0 and y > 1.0
       else 
 
-         do i = 1, ubound(f,3)
          do j = 1, ubound(f,4)
+         do i = 1, ubound(f,3)
             sum1 = 0.0_dp
             sum2 = 0.0_dp
             sum3 = 0.0_dp 
             sum4 = 0.0_dp
             sum5 = 0.0_dp
             sum6 = 0.0_dp
-            powa = 1.0_dp
-            do na = ubound(f,1), 0, -1
-               powb = 1.0_dp
-               do nb = ubound(f,2), 0, -1
+            powb = 1.0_dp
+            do nb = ubound(f,2), 0, -1
+               powa = 1.0_dp
+               do na = ubound(f,1), 0, -1
                   sum1 = sum1 + powa * powb * abs(f(na,nb,i,j))**2
                   sum2 = sum2 + real(na,dp) * powa * powb * abs(f(na,nb,i,j))**2
                   sum3 = sum3 + real(nb,dp) * powa * powb * abs(f(na,nb,i,j))**2
                   sum4 = sum4 + real(na,dp)**2 * powa * powb * abs(f(na,nb,i,j))**2
                   sum5 = sum5 + real(nb,dp)**2 * powa * powb * abs(f(na,nb,i,j))**2
                   sum6 = sum6 + real(na,dp) * real(nb,dp) * powa * powb * abs(f(na,nb,i,j))**2
-                  powb = powb/x(2)
+                  powa = powa / x(1)
                enddo
-               powa = powa/x(1)
+               powb = powb / x(2)
             enddo
 
             c2d_GammaAB(1,1) = c2d_GammaAB(1,1) + sum2/sum1
@@ -1036,9 +1036,9 @@ contains
          ! a) x == 0 and y != 0
          if( x(1) == 0.0_dp .and. x(2) /= 0.0_dp ) then
 
-            do i = 1, ubound(f,3)
-            do j = 1, ubound(f,4)
             do k = 1, ubound(f,5)
+            do j = 1, ubound(f,4)
+            do i = 1, ubound(f,3)
                sum1 = 0.0_dp
                sum2 = 0.0_dp
                sum3 = 0.0_dp
@@ -1066,9 +1066,9 @@ contains
          ! b) x != 0 and y == 0        
          elseif( x(1) /= 0.0_dp .and. x(2) == 0.0_dp ) then
 
-            do i = 1, ubound(f,3)
-            do j = 1, ubound(f,4)
             do k = 1, ubound(f,5)
+            do j = 1, ubound(f,4)
+            do i = 1, ubound(f,3)
                sum1 = 0.0_dp
                sum2 = 0.0_dp
                sum3 = 0.0_dp
@@ -1096,9 +1096,9 @@ contains
          ! c) x == 0 and y == 0
          elseif( x(1) == 0.0_dp .and. x(2) == 0.0_dp ) then
 
-            do i = 1, ubound(f,3)
-            do j = 1, ubound(f,4)
             do k = 1, ubound(f,5)
+            do j = 1, ubound(f,4)
+            do i = 1, ubound(f,3)
                c3d_GammaAB(2,1) = c3d_GammaAB(2,1) + abs(f(1,0,i,j,k))**2/abs(f(0,0,i,j,k))**2
                c3d_GammaAB(3,2) = c3d_GammaAB(3,2) + abs(f(0,1,i,j,k))**2/abs(f(0,0,i,j,k))**2
             enddo ! i
@@ -1108,28 +1108,28 @@ contains
          ! d) x != 0 and y != 0
          else
            
-            do i = 1, ubound(f,3)
-            do j = 1, ubound(f,4)
             do k = 1, ubound(f,5)
+            do j = 1, ubound(f,4)
+            do i = 1, ubound(f,3)
                sum1 = 0.0_dp
                sum2 = 0.0_dp
                sum3 = 0.0_dp
                sum4 = 0.0_dp
                sum5 = 0.0_dp
                sum6 = 0.0_dp
-               powa = 1.0_dp
-               do na = 0, ubound(f,1)
-                  powb = 1.0_dp
-                  do nb = 0, ubound(f,2)
+               powb = 1.0_dp
+               do nb = 0, ubound(f,2)
+                  powa = 1.0_dp
+                  do na = 0, ubound(f,1)
                      sum1 = sum1 + powa * powb * abs(f(na,nb,i,j,k))**2
                      sum2 = sum2 + real(na,dp) * powa * powb * abs(f(na,nb,i,j,k))**2
                      sum3 = sum3 + real(nb,dp) * powa * powb * abs(f(na,nb,i,j,k))**2
                      sum4 = sum4 + real(na,dp)**2 * powa * powb * abs(f(na,nb,i,j,k))**2
                      sum5 = sum5 + real(nb,dp)**2 * powa * powb * abs(f(na,nb,i,j,k))**2
                      sum6 = sum6 + real(na,dp) * real(nb,dp) * powa * powb * abs(f(na,nb,i,j,k))**2
-                     powb  = powb * x(2)
+                     powa = powa * x(1)
                   enddo
-                  powa = powa * x(1)
+                  powb = powb * x(2)
                enddo
 
                c3d_GammaAB(1,1) = c3d_GammaAB(1,1) + sum2/sum1
@@ -1151,9 +1151,9 @@ contains
          ! a) x = 0
          if( x(1) == 0.0_dp ) then
 
-            do i = 1, ubound(f,3)
-            do j = 1, ubound(f,4)
             do k = 1, ubound(f,5)
+            do j = 1, ubound(f,4)
+            do i = 1, ubound(f,3)
                sum1 = 0.0_dp
                sum2 = 0.0_dp
                sum3 = 0.0_dp
@@ -1181,28 +1181,28 @@ contains
          ! b) x != 0
          else
 
-            do i = 1, ubound(f,3)
-            do j = 1, ubound(f,4)
             do k = 1, ubound(f,5)
+            do j = 1, ubound(f,4)
+            do i = 1, ubound(f,3)
                sum1 = 0.0_dp
                sum2 = 0.0_dp
                sum3 = 0.0_dp
                sum4 = 0.0_dp
                sum5 = 0.0_dp
                sum6 = 0.0_dp
-               powa = 1.0_dp
-               do na = 0, ubound(f,1)
-                  powb = 1.0_dp
-                  do nb = ubound(f,2), 0, -1
+               powb = 1.0_dp
+               do nb = ubound(f,2), 0, -1
+                  powa = 1.0_dp
+                  do na = 0, ubound(f,1)
                      sum1 = sum1 + powa * powb * abs(f(na,nb,i,j,k))**2
                      sum2 = sum2 + real(na,dp) * powa * powb * abs(f(na,nb,i,j,k))**2
                      sum3 = sum3 + real(nb,dp) * powa * powb * abs(f(na,nb,i,j,k))**2
                      sum4 = sum4 + real(na,dp)**2 * powa * powb * abs(f(na,nb,i,j,k))**2
                      sum5 = sum5 + real(nb,dp)**2 * powa * powb * abs(f(na,nb,i,j,k))**2
                      sum6 = sum6 + real(na,dp) * real(nb,dp) * powa * powb * abs(f(na,nb,i,j,k))**2
-                     powb  = powb/x(2)
+                     powa = powa * x(1)
                   enddo
-                  powa = powa * x(1)
+                  powb = powb / x(2)
                enddo
 
                c3d_GammaAB(1,1) = c3d_GammaAB(1,1) + sum2/sum1
@@ -1224,9 +1224,9 @@ contains
          ! a) y = 0
          if( x(2) == 0.0_dp ) then
 
-            do i = 1, ubound(f,3)
-            do j = 1, ubound(f,4)
             do k = 1, ubound(f,5)
+            do j = 1, ubound(f,4)
+            do i = 1, ubound(f,3)
                sum1 = 0.0_dp
                sum2 = 0.0_dp
                sum3 = 0.0_dp
@@ -1254,28 +1254,28 @@ contains
          ! b) y != 0
          else
 
-            do i = 1, ubound(f,3)
-            do j = 1, ubound(f,4)
             do k = 1, ubound(f,5)
+            do j = 1, ubound(f,4)
+            do i = 1, ubound(f,3)
                sum1 = 0.0_dp
                sum2 = 0.0_dp
                sum3 = 0.0_dp
                sum4 = 0.0_dp
                sum5 = 0.0_dp
                sum6 = 0.0_dp
-               powa = 1.0_dp
-               do na = ubound(f,1), 0,  -1
-                  powb = 1.0_dp
-                  do nb = 0, ubound(f,2)
+               powb = 1.0_dp
+               do nb = 0, ubound(f,2)
+                  powa = 1.0_dp
+                  do na = ubound(f,1), 0, -1
                      sum1 = sum1 + powa * powb * abs(f(na,nb,i,j,k))**2
                      sum2 = sum2 + real(na,dp) * powa * powb * abs(f(na,nb,i,j,k))**2
                      sum3 = sum3 + real(nb,dp) * powa * powb * abs(f(na,nb,i,j,k))**2
                      sum4 = sum4 + real(na,dp)**2 * powa * powb * abs(f(na,nb,i,j,k))**2
                      sum5 = sum5 + real(nb,dp)**2 * powa * powb * abs(f(na,nb,i,j,k))**2
                      sum6 = sum6 + real(na,dp) * real(nb,dp) * powa * powb * abs(f(na,nb,i,j,k))**2
-                     powb  = powb * x(2)
+                     powa = powa / x(1)
                   enddo
-                  powa = powa/x(1)
+                  powb = powb * x(2)
                enddo
 
                c3d_GammaAB(1,1) = c3d_GammaAB(1,1) + sum2/sum1
@@ -1294,28 +1294,28 @@ contains
       ! 4) x > 1.0 and y > 1.0
       else 
 
-         do i = 1, ubound(f,3)
-         do j = 1, ubound(f,4)
          do k = 1, ubound(f,5)
+         do j = 1, ubound(f,4)
+         do i = 1, ubound(f,3)
             sum1 = 0.0_dp
             sum2 = 0.0_dp
             sum3 = 0.0_dp 
             sum4 = 0.0_dp
             sum5 = 0.0_dp
             sum6 = 0.0_dp
-            powa = 1.0_dp
-            do na = ubound(f,1), 0, -1
-               powb = 1.0_dp
-               do nb = ubound(f,2), 0, -1
+            powb = 1.0_dp
+            do nb = ubound(f,2), 0, -1
+               powa = 1.0_dp
+               do na = ubound(f,1), 0, -1
                   sum1 = sum1 + powa * powb * abs(f(na,nb,i,j,k))**2
                   sum2 = sum2 + real(na,dp) * powa * powb * abs(f(na,nb,i,j,k))**2
                   sum3 = sum3 + real(nb,dp) * powa * powb * abs(f(na,nb,i,j,k))**2
                   sum4 = sum4 + real(na,dp)**2 * powa * powb * abs(f(na,nb,i,j,k))**2
                   sum5 = sum5 + real(nb,dp)**2 * powa * powb * abs(f(na,nb,i,j,k))**2
                   sum6 = sum6 + real(na,dp) * real(nb,dp) * powa * powb * abs(f(na,nb,i,j,k))**2
-                  powb = powb/x(2)
+                  powa = powa / x(1)
                enddo
-               powa = powa/x(1)
+               powb = powb / x(2)
             enddo
 
             c3d_GammaAB(1,1) = c3d_GammaAB(1,1) + sum2/sum1
@@ -1366,16 +1366,16 @@ contains
                sum1 = 0.0_dp
                sum2 = 0.0_dp
                sum3 = 0.0_dp
-               powa = 1.0_dp
-               do na = 0, ubound(f,1)
-                  powb = 1.0_dp
-                  do nb = 0, ubound(f,2)
+               powb = 1.0_dp
+               do nb = 0, ubound(f,2)
+                  powa = 1.0_dp
+                  do na = 0, ubound(f,1)
                      sum1 = sum1 + powa * powb * abs(f(na,nb,i))**2
                      sum2 = sum2 + powa * powb * real(na,dp)*abs(f(na,nb,i))**2
                      sum3 = sum3 + powa * powb * real(nb,dp)*abs(f(na,nb,i))**2
-                     powb = powb*x(2)
+                     powa = powa * x(1)
                   enddo
-                  powa = powa*x(1)
+                  powb = powb * x(2)
                enddo
 
                fx(1) = fx(1) + sum2/sum1
@@ -1389,16 +1389,16 @@ contains
                sum1 = 0.0_dp
                sum2 = 0.0_dp
                sum3 = 0.0_dp
-               powa = 1.0_dp
-               do na = 0, ubound(f,1)
-                  powb = 1.0_dp
-                  do nb = ubound(f,2), 0, -1
+               powb = 1.0_dp
+               do nb = ubound(f,2), 0, -1
+                  powa = 1.0_dp
+                  do na = 0, ubound(f,1)
                      sum1 = sum1 + powa * powb * abs(f(na,nb,i))**2
                      sum2 = sum2 + powa * powb * real(na,dp)*abs(f(na,nb,i))**2
                      sum3 = sum3 + powa * powb * real(nb,dp)*abs(f(na,nb,i))**2
-                     powb = powb/x(2)
+                     powa = powa * x(1)
                   enddo
-                  powa = powa*x(1)
+                  powb = powb / x(2)
                enddo
 
                fx(1) = fx(1) + sum2/sum1
@@ -1412,16 +1412,16 @@ contains
                sum1 = 0.0_dp
                sum2 = 0.0_dp
                sum3 = 0.0_dp
-               powa = 1.0_dp
-               do na = ubound(f,1), 0, -1
-                  powb = 1.0_dp
-                  do nb = 0, ubound(f,2)
+               powb = 1.0_dp
+               do nb = 0, ubound(f,2)
+                  powa = 1.0_dp
+                  do na = ubound(f,1), 0, -1
                      sum1 = sum1 + powa * powb * abs(f(na,nb,i))**2
                      sum2 = sum2 + powa * powb * real(na,dp)*abs(f(na,nb,i))**2
                      sum3 = sum3 + powa * powb * real(nb,dp)*abs(f(na,nb,i))**2
-                     powb = powb*x(2)
+                     powa = powa / x(1)
                   enddo
-                  powa = powa/x(1)
+                  powb = powb * x(2)
                enddo
 
                fx(1) = fx(1) + sum2/sum1
@@ -1435,16 +1435,16 @@ contains
                sum1 = 0.0_dp
                sum2 = 0.0_dp
                sum3 = 0.0_dp
-               powa = 1.0_dp
-               do na = ubound(f,1), 0, -1
-                  powb = 1.0_dp
-                  do nb = ubound(f,2), 0, -1
+               powb = 1.0_dp
+               do nb = ubound(f,2), 0, -1
+                  powa = 1.0_dp
+                  do na = ubound(f,1), 0, -1
                      sum1 = sum1 + powa * powb * abs(f(na,nb,i))**2
                      sum2 = sum2 + powa * powb * real(na,dp)*abs(f(na,nb,i))**2
                      sum3 = sum3 + powa * powb * real(nb,dp)*abs(f(na,nb,i))**2
-                     powb = powb/x(2)
+                     powa = powa / x(1)
                   enddo
-                  powa = powa/x(1)
+                  powb = powb / x(2)
                enddo
 
                fx(1) = fx(1) + sum2/sum1
@@ -1484,21 +1484,21 @@ contains
 
          if( abs(x(1)) <= 1.0_dp .and. abs(x(2)) <= 1.0_dp ) then
      
-            do i = 1, ubound(f,3)
             do j = 1, ubound(f,4)
+            do i = 1, ubound(f,3)
                sum1 = 0.0_dp
                sum2 = 0.0_dp
                sum3 = 0.0_dp
-               powa = 1.0_dp
-               do na = 0, ubound(f,1)
-                  powb = 1.0_dp
-                  do nb = 0, ubound(f,2)
+               powb = 1.0_dp
+               do nb = 0, ubound(f,2)
+                  powa = 1.0_dp
+                  do na = 0, ubound(f,1)
                      sum1 = sum1 + powa * powb * abs(f(na,nb,i,j))**2
                      sum2 = sum2 + powa * powb * real(na,dp)*abs(f(na,nb,i,j))**2
                      sum3 = sum3 + powa * powb * real(nb,dp)*abs(f(na,nb,i,j))**2
-                     powb = powb*x(2)
+                     powa = powa * x(1)
                   enddo
-                  powa = powa*x(1)
+                  powb = powb * x(2)
                enddo
 
                fx(1) = fx(1) + sum2/sum1
@@ -1509,21 +1509,21 @@ contains
 
          elseif( abs(x(1)) <= 1.0_dp .and. abs(x(2)) > 1.0_dp ) then
 
-            do i = 1, ubound(f,3)
             do j = 1, ubound(f,4)
+            do i = 1, ubound(f,3)
                sum1 = 0.0_dp
                sum2 = 0.0_dp
                sum3 = 0.0_dp
-               powa = 1.0_dp
-               do na = 0, ubound(f,1)
-                  powb = 1.0_dp
-                  do nb = ubound(f,2), 0, -1
+               powb = 1.0_dp
+               do nb = ubound(f,2), 0, -1
+                  powa = 1.0_dp
+                  do na = 0, ubound(f,1)
                      sum1 = sum1 + powa * powb * abs(f(na,nb,i,j))**2
                      sum2 = sum2 + powa * powb * real(na,dp)*abs(f(na,nb,i,j))**2
                      sum3 = sum3 + powa * powb * real(nb,dp)*abs(f(na,nb,i,j))**2
-                     powb = powb/x(2)
+                     powa = powa * x(1)
                   enddo
-                  powa = powa*x(1)
+                  powb = powb / x(2)
                enddo
 
                fx(1) = fx(1) + sum2/sum1
@@ -1534,21 +1534,21 @@ contains
 
          elseif( abs(x(1)) > 1.0_dp .and. abs(x(2)) <= 1.0_dp ) then
 
-            do i = 1, ubound(f,3)
             do j = 1, ubound(f,4)
+            do i = 1, ubound(f,3)
                sum1 = 0.0_dp
                sum2 = 0.0_dp
                sum3 = 0.0_dp
-               powa = 1.0_dp
-               do na = ubound(f,1), 0, -1
-                  powb = 1.0_dp
-                  do nb = 0, ubound(f,2)
+               powb = 1.0_dp
+               do nb = 0, ubound(f,2)
+                  powa = 1.0_dp
+                  do na = ubound(f,1), 0, -1
                      sum1 = sum1 + powa * powb * abs(f(na,nb,i,j))**2
                      sum2 = sum2 + powa * powb * real(na,dp)*abs(f(na,nb,i,j))**2
                      sum3 = sum3 + powa * powb * real(nb,dp)*abs(f(na,nb,i,j))**2
-                     powb = powb*x(2)
+                     powa = powa / x(1)
                   enddo
-                  powa = powa/x(1)
+                  powb = powb * x(2)
                enddo
 
                fx(1) = fx(1) + sum2/sum1
@@ -1559,21 +1559,21 @@ contains
 
          else
 
-            do i = 1, ubound(f,3)
             do j = 1, ubound(f,4)
+            do i = 1, ubound(f,3)
                sum1 = 0.0_dp
                sum2 = 0.0_dp
                sum3 = 0.0_dp
-               powa = 1.0_dp
-               do na = ubound(f,1), 0, -1
-                  powb = 1.0_dp
-                  do nb = ubound(f,2), 0, -1
+               powb = 1.0_dp
+               do nb = ubound(f,2), 0, -1
+                  powa = 1.0_dp
+                  do na = ubound(f,1), 0, -1
                      sum1 = sum1 + powa * powb * abs(f(na,nb,i,j))**2
                      sum2 = sum2 + powa * powb * real(na,dp)*abs(f(na,nb,i,j))**2
                      sum3 = sum3 + powa * powb * real(nb,dp)*abs(f(na,nb,i,j))**2
-                     powb = powb/x(2)
+                     powa = powa / x(1)
                   enddo
-                  powa = powa/x(1)
+                  powb = powb / x(2)
                enddo
 
                fx(1) = fx(1) + sum2/sum1
@@ -1614,22 +1614,22 @@ contains
 
          if( abs(x(1)) <= 1.0_dp .and. abs(x(2)) <= 1.0_dp ) then
      
-            do i = 1, ubound(f,3)
-            do j = 1, ubound(f,4)
             do k = 1, ubound(f,5)
+            do j = 1, ubound(f,4)
+            do i = 1, ubound(f,3)
                sum1 = 0.0_dp
                sum2 = 0.0_dp
                sum3 = 0.0_dp
-               powa = 1.0_dp
-               do na = 0, ubound(f,1)
-                  powb = 1.0_dp
-                  do nb = 0, ubound(f,2)
+               powb = 1.0_dp
+               do nb = 0, ubound(f,2)
+                  powa = 1.0_dp
+                  do na = 0, ubound(f,1)
                      sum1 = sum1 + powa * powb * abs(f(na,nb,i,j,k))**2
                      sum2 = sum2 + powa * powb * real(na,dp)*abs(f(na,nb,i,j,k))**2
                      sum3 = sum3 + powa * powb * real(nb,dp)*abs(f(na,nb,i,j,k))**2
-                     powb = powb*x(2)
+                     powa = powa * x(1)
                   enddo
-                  powa = powa*x(1)
+                  powb = powb * x(2)
                enddo
 
                fx(1) = fx(1) + sum2/sum1
@@ -1641,22 +1641,22 @@ contains
 
          elseif( abs(x(1)) <= 1.0_dp .and. abs(x(2)) > 1.0_dp ) then
 
-            do i = 1, ubound(f,3)
-            do j = 1, ubound(f,4)
             do k = 1, ubound(f,5)
+            do j = 1, ubound(f,4)
+            do i = 1, ubound(f,3)
                sum1 = 0.0_dp
                sum2 = 0.0_dp
                sum3 = 0.0_dp
-               powa = 1.0_dp
-               do na = 0, ubound(f,1)
-                  powb = 1.0_dp
-                  do nb = ubound(f,2), 0, -1
+               powb = 1.0_dp
+               do nb = ubound(f,2), 0, -1
+                  powa = 1.0_dp
+                  do na = 0, ubound(f,1)
                      sum1 = sum1 + powa * powb * abs(f(na,nb,i,j,k))**2
                      sum2 = sum2 + powa * powb * real(na,dp)*abs(f(na,nb,i,j,k))**2
                      sum3 = sum3 + powa * powb * real(nb,dp)*abs(f(na,nb,i,j,k))**2
-                     powb = powb/x(2)
+                     powa = powa * x(1)
                   enddo
-                  powa = powa*x(1)
+                  powb = powb / x(2)
                enddo
 
                fx(1) = fx(1) + sum2/sum1
@@ -1668,22 +1668,22 @@ contains
 
          elseif( abs(x(1)) > 1.0_dp .and. abs(x(2)) <= 1.0_dp ) then
 
-            do i = 1, ubound(f,3)
-            do j = 1, ubound(f,4)
             do k = 1, ubound(f,5)
+            do j = 1, ubound(f,4)
+            do i = 1, ubound(f,3)
                sum1 = 0.0_dp
                sum2 = 0.0_dp
                sum3 = 0.0_dp
-               powa = 1.0_dp
-               do na = ubound(f,1), 0, -1
-                  powb = 1.0_dp
-                  do nb = 0, ubound(f,2)
+               powb = 1.0_dp
+               do nb = 0, ubound(f,2)
+                  powa = 1.0_dp
+                  do na = ubound(f,1), 0, -1
                      sum1 = sum1 + powa * powb * abs(f(na,nb,i,j,k))**2
                      sum2 = sum2 + powa * powb * real(na,dp)*abs(f(na,nb,i,j,k))**2
                      sum3 = sum3 + powa * powb * real(nb,dp)*abs(f(na,nb,i,j,k))**2
-                     powb = powb*x(2)
+                     powa = powa / x(1)
                   enddo
-                  powa = powa/x(1)
+                  powb = powb * x(2)
                enddo
 
                fx(1) = fx(1) + sum2/sum1
@@ -1695,22 +1695,22 @@ contains
 
          else
 
-            do i = 1, ubound(f,3)
-            do j = 1, ubound(f,4)
             do k = 1, ubound(f,5)
+            do j = 1, ubound(f,4)
+            do i = 1, ubound(f,3)
                sum1 = 0.0_dp
                sum2 = 0.0_dp
                sum3 = 0.0_dp
-               powa = 1.0_dp
-               do na = ubound(f,1), 0, -1
-                  powb = 1.0_dp
-                  do nb = ubound(f,2), 0, -1
+               powb = 1.0_dp
+               do nb = ubound(f,2), 0, -1
+                  powa = 1.0_dp
+                  do na = ubound(f,1), 0, -1
                      sum1 = sum1 + powa * powb * abs(f(na,nb,i,j,k))**2
                      sum2 = sum2 + powa * powb * real(na,dp)*abs(f(na,nb,i,j,k))**2
                      sum3 = sum3 + powa * powb * real(nb,dp)*abs(f(na,nb,i,j,k))**2
-                     powb = powb/x(2)
+                     powa = powa / x(1)
                   enddo
-                  powa = powa/x(1)
+                  powb = powb / x(2)
                enddo
 
                fx(1) = fx(1) + sum2/sum1
@@ -3010,15 +3010,15 @@ end subroutine
       real( kind = dp ) :: powa, powb, tmp
 
       do i = 1, ubound(f,3)
-         powa = 1.0_dp
+         powb = 1.0_dp
          tmp = 0.0_dp
-         do na = 0, ubound(f,1)
-            powb = 1.0_dp
-            do nb = 0, ubound(f,2)
+         do nb = 0, ubound(f,2)
+            powa = 1.0_dp
+            do na = 0, ubound(f,1)
                tmp = tmp + powa * powb * abs(f(na,nb,i))**2
-               powb = powb * sig(2)
+               powa = powa * sig(1)
             enddo
-            powa = powa * sig(1)
+            powb = powb * sig(2)
          enddo
          vout(i) = 1.0_dp/tmp
       enddo
@@ -3035,17 +3035,17 @@ end subroutine
       integer i, j, na, nb
       real( kind = dp ) :: powa, powb, tmp
 
-      do i = 1, ubound(f,3)
-         do j = 1, ubound(f,4)
-            powa = 1.0_dp
+      do j = 1, ubound(f,4)
+         do i = 1, ubound(f,3)
+            powb = 1.0_dp
             tmp = 0.0_dp
-            do na = 0, ubound(f,1)
-               powb = 1.0_dp
-               do nb = 0, ubound(f,2)
+            do nb = 0, ubound(f,2)
+               powa = 1.0_dp
+               do na = 0, ubound(f,1)
                   tmp = tmp + powa * powb * abs(f(na,nb,i,j))**2
-                  powb = powb * sig(2)
+                  powa = powa * sig(1)
                enddo
-               powa = powa * sig(1)
+               powb = powb * sig(2)
             enddo
             vout(i,j) = 1.0_dp/tmp
          enddo
@@ -3063,18 +3063,18 @@ end subroutine
       integer i, j, k, na, nb
       real( kind = dp ) :: powa, powb, tmp
 
-      do i = 1, ubound(f,3)
+      do k = 1, ubound(f,5)
          do  j = 1, ubound(f,4)
-            do k = 1, ubound(f,5)
-               powa = 1.0_dp
+            do i = 1, ubound(f,3)
+               powb = 1.0_dp
                tmp = 0.0_dp
-               do na = 0, ubound(f,1)
-                  powb = 1.0_dp
-                  do nb = 0, ubound(f,2)
+               do nb = 0, ubound(f,2)
+                  powa = 1.0_dp
+                  do na = 0, ubound(f,1)
                      tmp = tmp + powa * powb * abs(f(na,nb,i,j,k))**2
-                     powb = powb * sig(2)
+                     powa = powa * sig(1)
                   enddo
-                  powa = powa * sig(1)
+                  powb = powb * sig(2)
                enddo
                vout(i,j,k) = 1.0_dp/tmp
             enddo
@@ -3132,14 +3132,14 @@ end subroutine
 
       if( info  == 0 ) then
          do i = 1, ubound(f,3)
-            powa = 1.0_dp
-            do na = 0, ubound(f,1)
-               powb = 1.0_dp
-               do nb = 0, ubound(f,2)
+            powb = 1.0_dp
+            do nb = 0, ubound(f,2)
+               powa = 1.0_dp
+               do na = 0, ubound(f,1)
                   f(na,nb,i) = f(na,nb,i) * sqrt(norm(i)) * powa * powb
-                  powb = powb * sqrt(mu(2))
+                  powa = powa * sqrt(mu(1))
                enddo
-               powa = powa * sqrt(mu(1))
+               powb = powb * sqrt(mu(2))
             enddo
          enddo
       endif
@@ -3189,16 +3189,16 @@ end subroutine
  
 
       if( info  == 0 ) then
-         do i = 1, ubound(f,3)
          do j = 1, ubound(f,4)
-            powa = 1.0_dp
-            do na = 0, ubound(f,1)
-               powb = 1.0_dp
-               do nb = 0, ubound(f,2)
+         do i = 1, ubound(f,3)
+            powb = 1.0_dp
+            do nb = 0, ubound(f,2)
+               powa = 1.0_dp
+               do na = 0, ubound(f,1)
                   f(na,nb,i,j) = f(na,nb,i,j) * sqrt(norm(i,j)) * powa * powb
-                  powb = powb * sqrt(mu(2))
+                  powa = powa * sqrt(mu(1))
                enddo
-               powa = powa * sqrt(mu(1))
+               powb = powb * sqrt(mu(2))
             enddo
          enddo ! i
          enddo ! j
@@ -3249,17 +3249,17 @@ end subroutine
  
 
       if( info  == 0 ) then
-         do i = 1, ubound(f,3)
-         do j = 1, ubound(f,4)
          do k = 1, ubound(f,5)
-            powa = 1.0_dp
-            do na = 0, ubound(f,1)
-               powb = 1.0_dp
-               do nb = 0, ubound(f,2)
+         do j = 1, ubound(f,4)
+         do i = 1, ubound(f,3)
+            powb = 1.0_dp
+            do nb = 0, ubound(f,2)
+               powa = 1.0_dp
+               do na = 0, ubound(f,1)
                   f(na,nb,i,j,k) = f(na,nb,i,j,k) * sqrt(norm(i,j,k)) * powa * powb
-                  powb = powb * sqrt(mu(2))
+                  powa = powa * sqrt(mu(1))
                enddo
-               powa = powa * sqrt(mu(1))
+               powb = powb * sqrt(mu(2))
             enddo
          enddo ! i
          enddo ! j

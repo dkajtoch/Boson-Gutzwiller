@@ -78,8 +78,8 @@ module solvers
          ArrayOrderA(i) = 0.0_dp*re
          ArrayOrderB(i) = 0.0_dp*re
 
-         do na = 0, ubound(f,1)
-            do nb = 0, ubound(f,2)
+         do nb = 0, ubound(f,2)
+            do na = 0, ubound(f,1)
                
                if( na > 0 ) then
                   ArrayOrderA(i) = ArrayOrderA(i) + SQRT( real(na,dp) ) * conjg( f(na-1,nb,i) ) * f(na,nb,i)
@@ -109,8 +109,8 @@ module solvers
             ordB = ArrayOrderB( i-1 ) + ArrayOrderB( i+1 )
          endif
 
-         do na = 0, ubound(f,1)
-            do nb = 0, ubound(f,2)
+         do nb = 0, ubound(f,2)
+            do na = 0, ubound(f,1)
 
                ! chop
                if( abs( real( f(na,nb,i) ) ) < chopCutoff ) then
@@ -169,14 +169,14 @@ module solvers
       endif
 
       ! collect order parameters
-      do i = 1, ubound(f,3)
-         do j = 1, ubound(f,4)
+      do j = 1, ubound(f,4)
+         do i = 1, ubound(f,3)
          
             ArrayOrderA(i,j) = 0.0_dp*re
             ArrayOrderB(i,j) = 0.0_dp*re
 
-            do na = 0, ubound(f,1)
-               do nb = 0, ubound(f,2)
+            do nb = 0, ubound(f,2)
+               do na = 0, ubound(f,1)
                
                   if( na > 0 ) then
                      ArrayOrderA(i,j) = ArrayOrderA(i,j) + SQRT( real(na,dp) ) * conjg( f(na-1,nb,i,j) ) * f(na,nb,i,j)
@@ -192,8 +192,8 @@ module solvers
       enddo
 
       ! solve coupled system of equations
-      do i = 1, ubound(f,3)
-         do j = 1, ubound(f,4)
+      do j = 1, ubound(f,4)
+         do i = 1, ubound(f,3)
 
             ! calculate nearest-neighbour order parameter (periodic boundary conditions)
             ordA = (0.0_dp, 0.0_dp)
@@ -222,8 +222,8 @@ module solvers
             endif
 
             
-            do na = 0, ubound(f,1)
-               do nb = 0, ubound(f,2)
+            do nb = 0, ubound(f,2)
+               do na = 0, ubound(f,1)
 
                   ! chop
                   if( abs( real( f(na,nb,i,j) ) ) < chopCutoff ) then
@@ -282,15 +282,15 @@ module solvers
       endif
 
       ! collect order parameters
-      do i = 1, ubound(f,3)
+      do k = 1, ubound(f,5)
          do j = 1, ubound(f,4)
-            do k = 1, ubound(f,5)
+            do i = 1, ubound(f,3)
          
                ArrayOrderA(i,j,k) = 0.0_dp*re
                ArrayOrderB(i,j,k) = 0.0_dp*re
 
-               do na = 0, ubound(f,1)
-                  do nb = 0, ubound(f,2)
+               do nb = 0, ubound(f,2)
+                  do na = 0, ubound(f,1)
                
                      if( na > 0 ) then
                         ArrayOrderA(i,j,k) = ArrayOrderA(i,j,k) + SQRT( real(na,dp) ) * conjg( f(na-1,nb,i,j,k) ) * f(na,nb,i,j,k)
@@ -307,9 +307,9 @@ module solvers
       enddo
 
       ! solve coupled system of equations
-      do i = 1, ubound(f,3)
+      do k = 1, ubound(f,5)
          do j = 1, ubound(f,4)
-            do k = 1, ubound(f,5)
+            do i = 1, ubound(f,3)
 
                ! calculate nearest-neighbour order parameter (periodic boundary conditions)
                ordA = (0.0_dp, 0.0_dp)
@@ -348,8 +348,8 @@ module solvers
                   ordB = ordB + ArrayOrderB( i, j, k+1 ) + ArrayOrderB( i, j, k-1 )
                endif
                                       
-               do na = 0, ubound(f,1)
-                  do nb = 0, ubound(f,2)
+               do nb = 0, ubound(f,2)
+                  do na = 0, ubound(f,1)
 
                      ! chop
                      if( abs( real( f(na,nb,i,j,k) ) ) < chopCutoff ) then
@@ -460,8 +460,8 @@ module solvers
             cnt = 0
             error = 0.0_dp
             do i = 1, ubound(f,3)
-               do na = 0, ubound(f,1)
-                  do nb = 0, ubound(f,2)
+               do nb = 0, ubound(f,2)
+                  do na = 0, ubound(f,1)
 
                      ! absolute error
                      ierr = abs( ( f(nA,nB,i) - fpom(nA,nB,i) ) )
@@ -553,10 +553,10 @@ module solvers
 
             cnt = 0
             error = 0.0_dp
-            do i = 1, ubound(f,3)
-               do j = 1, ubound(f,4)
-                  do na = 0, ubound(f,1)
-                     do nb = 0, ubound(f,2)
+            do j = 1, ubound(f,4)
+               do i = 1, ubound(f,3)
+                  do nb = 0, ubound(f,2)
+                     do na = 0, ubound(f,1)
                         ierr = abs( ( f(nA,nB,i,j) - fpom(nA,nB,i,j) ) )
                         if (ierr .gt. error) then
                            error = ierr
@@ -656,11 +656,11 @@ module solvers
 
             cnt = 0
             error = 0.0_dp
-            do i = 1, ubound(f,3)
+            do k = 1, ubound(f,5)
                do j = 1, ubound(f,4)
-                  do k = 1, ubound(f,5)
-                     do na = 0, ubound(f,1)
-                        do nb = 0, ubound(f,2)
+                  do i = 1, ubound(f,3)
+                     do nb = 0, ubound(f,2)
+                        do na = 0, ubound(f,1)
                            ierr = abs( ( f(nA,nB,i,j,k) - fpom(nA,nB,i,j,k) ) )
                            if (ierr .gt. error) then
                               error = ierr
@@ -750,8 +750,8 @@ module solvers
             cnt = 0
             error = 0.0_dp
             do i = 1, ubound(f,3)
-               do na = 0, ubound(f,1)
-                  do nb = 0, ubound(f,2)
+               do nb = 0, ubound(f,2)
+                  do na = 0, ubound(f,1)
                      ierr = abs( ( f(nA,nB,i) - fpom(nA,nB,i) ) )
                      if (ierr .gt. error) then
                         error = ierr
@@ -840,10 +840,10 @@ module solvers
 
             cnt = 0
             error = 0.0_dp
-            do i = 1, ubound(f,3)
-               do j = 1, ubound(f,4)
-                  do na = 0, ubound(f,1)
-                     do nb = 0, ubound(f,2)
+            do j = 1, ubound(f,4)
+               do i = 1, ubound(f,3)
+                  do nb = 0, ubound(f,2)
+                     do na = 0, ubound(f,1)
                         ierr = abs( ( f(nA,nB,i,j) - fpom(nA,nB,i,j) ) )
                         if (ierr .gt. error) then
                            error = ierr
@@ -935,11 +935,11 @@ module solvers
 
             cnt = 0 
             error = 0.0_dp
-            do i = 1, ubound(f,3)
+            do k = 1, ubound(f,5)
                do j = 1, ubound(f,4)
-                  do k = 1, ubound(f,5)
-                     do na = 0, ubound(f,1)
-                        do nb = 0, ubound(f,2)
+                  do i = 1, ubound(f,3)
+                     do nb = 0, ubound(f,2)
+                        do na = 0, ubound(f,1)
                            ierr = abs( ( f(nA,nB,i,j,k) - fpom(nA,nB,i,j,k) ) )
                            if (ierr .gt. error) then
                               error = ierr
@@ -1009,9 +1009,9 @@ module solvers
 
       call init_random_seed()
 
-      do na = 0, ubound(f,1)
+      do 1 = 0, ubound(f,3)
          do nb = 0, ubound(f,2)
-            do i = 1, ubound(f,3)
+            do na = 0, ubound(f,1)
                call random_number( ran )
                f(na,nb,i) = ran(1)*re + im*ran(2) 
             enddo
@@ -1032,10 +1032,10 @@ module solvers
       
       call init_random_seed()
 
-      do na = 0, ubound(f,1)
-         do nb = 0, ubound(f,2)
-            do i = 1, ubound(f,3)
-               do j = 1, ubound(f,4)
+      do j = 1, ubound(f,4)
+         do i = 1, ubound(f,3)
+            do na = 0, ubound(f,2)
+               do nb = 0, ubound(f,1)
                   call random_number( ran )
                   f(na,nb,i,j) = ran(1)*re + im*ran(2)
                enddo
@@ -1057,11 +1057,11 @@ module solvers
 
       call init_random_seed()
 
-      do na = 0, ubound(f,1)
-         do nb = 0, ubound(f,2)
+      do k = 1, ubound(f,5)
+         do j = 1, ubound(f,4)
             do i = 1, ubound(f,3)
-               do j = 1, ubound(f,4)
-                  do k = 1, ubound(f,5)
+               do na = 0, ubound(f,2)
+                  do nb = 0, ubound(f,1)
                      call random_number( ran )
                      f(na,nb,i,j,k) = ran(1)*re + im*ran(2)
                   enddo
@@ -1129,9 +1129,9 @@ module solvers
 
       call init_random_seed()
 
-      do na = 0, ubound(f,1)
+      do i = 1, ubound(f,3)
          do nb = 0, ubound(f,2)
-            do i = 1, ubound(f,3)
+            do na = 0, ubound(f,1)
                call random_number( ran )
                f(na,nb,i) = ran(1)*re + im*ran(2) 
             enddo
@@ -1154,10 +1154,10 @@ module solvers
 
       call init_random_seed()
 
-      do na = 0, ubound(f,1)
-         do nb = 0, ubound(f,2)
-            do i = 1, ubound(f,3)
-               do j = 1, ubound(f,4)
+      do j = 1, ubound(f,4)
+         do i = 1, ubound(f,3)
+            do nb = 0, ubound(f,2)
+               do na = 0, ubound(f,1)
                   call random_number( ran )
                   f(na,nb,i,j) = ran(1)*re + im*ran(2)
                enddo
@@ -1181,11 +1181,11 @@ module solvers
 
       call init_random_seed()
 
-      do na = 0, ubound(f,1)
-         do nb = 0, ubound(f,2)
+      do k = 1, ubound(f,5)
+         do j = 1, ubound(f,4)
             do i = 1, ubound(f,3)
-               do j = 1, ubound(f,4)
-                  do k = 1, ubound(f,5)
+               do nb = 0, ubound(f,2)
+                  do na = 0, ubound(f,1)
                      call random_number( ran )
                      f(na,nb,i,j,k) = ran(1)*re + im*ran(2)
                   enddo
