@@ -114,7 +114,7 @@ module solvers
             k(na,i) = mlt * real(na,dp) * ( mu - u/2.0_dp * (real(na,dp) - 1.0_dp) ) * f(na,i)
 
             if( na < ubound(f,1) ) then
-               k(na,i) = k(na,i) + mlt * ja * ord * SQRT( real(na+1,dp) ) * f(na+1,i)
+               k(na,i) = k(na,i) + mlt * ja * conjg(ord) * SQRT( real(na+1,dp) ) * f(na+1,i)
             endif
             if( na > 0 ) then
                k(na,i) = k(na,i) + mlt * ja * ord * SQRT( real(na,dp) ) * f(na-1,i)
@@ -202,7 +202,7 @@ module solvers
                k(na,i,j) = mlt * real(na,dp) * ( mu - u/2.0_dp * (real(na,dp) - 1.0_dp) ) * f(na,i,j)
 
                if( na < ubound(f,1) ) then
-                  k(na,i,j) = k(na,i,j) + mlt * ja * ord * SQRT( real(na+1,dp) ) * f(na+1,i,j)
+                  k(na,i,j) = k(na,i,j) + mlt * ja * conjg(ord) * SQRT( real(na+1,dp) ) * f(na+1,i,j)
                endif
                if( na > 0 ) then
                   k(na,i,j) = k(na,i,j) + mlt * ja * ord * SQRT( real(na,dp) ) * f(na-1,i,j)
@@ -302,7 +302,7 @@ module solvers
                   kv(na,i,j,k) = mlt * real(na,dp) * ( mu - u/2.0_dp * (real(na,dp) - 1.0_dp) ) * f(na,i,j,k)
 
                   if( na < ubound(f,1) ) then
-                     kv(na,i,j,k) = kv(na,i,j,k) + mlt * ja * ord * SQRT( real(na+1,dp) ) * f(na+1,i,j,k)
+                     kv(na,i,j,k) = kv(na,i,j,k) + mlt * ja * conjg(ord) * SQRT( real(na+1,dp) ) * f(na+1,i,j,k)
                   endif
                   if( na > 0 ) then
                      kv(na,i,j,k) = kv(na,i,j,k) + mlt * ja * ord * SQRT( real(na,dp) ) * f(na-1,i,j,k)
