@@ -126,14 +126,14 @@ module solvers
                                     uab * real(na,dp) * real(nb,dp) ) * f(na,nb,i)
 
                if( na < ubound(f,1) ) then
-                  k(na,nb,i) = k(na,nb,i) + mlt * ja * ordA * SQRT( real(na+1,dp) ) * f(na+1,nb,i)
+                  k(na,nb,i) = k(na,nb,i) + mlt * ja * conjg(ordA) * SQRT( real(na+1,dp) ) * f(na+1,nb,i)
                endif
                if( na > 0 ) then
                   k(na,nb,i) = k(na,nb,i) + mlt * ja * ordA * SQRT( real(na,dp) ) * f(na-1,nb,i)
                endif
 
                if( nb < ubound(f,2) ) then
-                  k(na,nb,i) = k(na,nb,i) + mlt * jb * ordB * SQRT( real(nb+1,dp) ) * f(na,nb+1,i)
+                  k(na,nb,i) = k(na,nb,i) + mlt * jb * conjg(ordB) * SQRT( real(nb+1,dp) ) * f(na,nb+1,i)
                endif
                if( nb > 0 ) then
                   k(na,nb,i) = k(na,nb,i) + mlt * jb * ordB * SQRT( real(nb,dp) ) * f(na,nb-1,i)
@@ -200,22 +200,22 @@ module solvers
             ordB = (0.0_dp, 0.0_dp)
 
             if( i == 1 ) then
-               ordA = ordA + ArrayOrderA( 2, j ) + ArrayOrderA( size(f,3), j )
-               ordB = ordB + ArrayOrderB( 2, j ) + ArrayOrderB( size(f,3), j )
+               ordA = ordA + ArrayOrderA( 2, j ) + ArrayOrderA( ubound(f,3), j )
+               ordB = ordB + ArrayOrderB( 2, j ) + ArrayOrderB( ubound(f,3), j )
             elseif( i == ubound(f,3) ) then
-               ordA = ordA + ArrayOrderA( 1, j ) + ArrayOrderA( size(f,3)-1, j )
-               ordB = ordB + ArrayOrderB( 1, j ) + ArrayOrderB( size(f,3)-1, j )
+               ordA = ordA + ArrayOrderA( 1, j ) + ArrayOrderA( ubound(f,3)-1, j )
+               ordB = ordB + ArrayOrderB( 1, j ) + ArrayOrderB( ubound(f,3)-1, j )
             else
                ordA = ordA + ArrayOrderA( i+1, j ) + ArrayOrderA( i-1, j )
                ordB = ordB + ArrayOrderB( i+1, j ) + ArrayOrderB( i-1, j )
             endif
 
             if( j == 1 ) then
-               ordA = ordA + ArrayOrderA( i, 2 ) + ArrayOrderA( i, size(f,4) )
-               ordB = ordB + ArrayOrderB( i, 2 ) + ArrayOrderB( i, size(f,4) )
+               ordA = ordA + ArrayOrderA( i, 2 ) + ArrayOrderA( i, ubound(f,4) )
+               ordB = ordB + ArrayOrderB( i, 2 ) + ArrayOrderB( i, ubound(f,4) )
             elseif( i == ubound(f,3) ) then
-               ordA = ordA + ArrayOrderA( i, 1 ) + ArrayOrderA( i, size(f,4)-1 )
-               ordB = ordB + ArrayOrderB( i, 1 ) + ArrayOrderB( i, size(f,4)-1 )
+               ordA = ordA + ArrayOrderA( i, 1 ) + ArrayOrderA( i, ubound(f,4)-1 )
+               ordB = ordB + ArrayOrderB( i, 1 ) + ArrayOrderB( i, ubound(f,4)-1 )
             else
                ordA = ordA + ArrayOrderA( i, j+1 ) + ArrayOrderA( i, j-1 )
                ordB = ordB + ArrayOrderB( i, j+1 ) + ArrayOrderB( i, j-1 )
@@ -237,19 +237,19 @@ module solvers
                                          real(nb,dp) * ( mub - ub/2.0_dp * (real(nb,dp) - 1.0_dp) ) - &
                                          uab * real(na,dp) * real(nb,dp) ) * f(na,nb,i,j)
 
-                  if( na < ubound(f,1) ) then
-                     k(na,nb,i,j) = k(na,nb,i,j) + mlt * ja * ordA * SQRT( real(na+1,dp) ) * f(na+1,nb,i,j)
-                  endif
-                  if( na > 0 ) then
+                 if( na < ubound(f,1) ) then
+                     k(na,nb,i,j) = k(na,nb,i,j) + mlt * ja * conjg(ordA) * SQRT( real(na+1,dp) ) * f(na+1,nb,i,j)
+                 endif
+                 if( na > 0 ) then
                      k(na,nb,i,j) = k(na,nb,i,j) + mlt * ja * ordA * SQRT( real(na,dp) ) * f(na-1,nb,i,j)
-                  endif
+                 endif
 
-                  if( nb < ubound(f,2) ) then
-                     k(na,nb,i,j) = k(na,nb,i,j) + mlt * jb * ordB * SQRT( real(nb+1,dp) ) * f(na,nb+1,i,j)
-                  endif
-                  if( nb > 0 ) then
-                     k(na,nb,i,j) = k(na,nb,i,j) + mlt * jb * ordB * SQRT( real(nb,dp) ) * f(na,nb-1,i,j)
-                  endif
+                 if( nb < ubound(f,2) ) then
+                    k(na,nb,i,j) = k(na,nb,i,j) + mlt * jb * conjg(ordB) * SQRT( real(nb+1,dp) ) * f(na,nb+1,i,j)
+                 endif
+                 if( nb > 0 ) then
+                    k(na,nb,i,j) = k(na,nb,i,j) + mlt * jb * ordB * SQRT( real(nb,dp) ) * f(na,nb-1,i,j)
+                 endif
 
                enddo
             enddo
@@ -364,14 +364,14 @@ module solvers
                                                uab * real(na,dp) * real(nb,dp) ) * f(na,nb,i,j,k)
 
                      if( na < ubound(f,1) ) then
-                        kv(na,nb,i,j,k) = kv(na,nb,i,j,k) + mlt * ja * ordA * SQRT( real(na+1,dp) ) * f(na+1,nb,i,j,k)
+                        kv(na,nb,i,j,k) = kv(na,nb,i,j,k) + mlt * ja * conjg(ordA) * SQRT( real(na+1,dp) ) * f(na+1,nb,i,j,k)
                      endif
                      if( na > 0 ) then
                         kv(na,nb,i,j,k) = kv(na,nb,i,j,k) + mlt * ja * ordA * SQRT( real(na,dp) ) * f(na-1,nb,i,j,k)
                      endif
 
                      if( nb < ubound(f,2) ) then
-                        kv(na,nb,i,j,k) = kv(na,nb,i,j,k) + mlt * jb * ordB * SQRT( real(nb+1,dp) ) * f(na,nb+1,i,j,k)
+                        kv(na,nb,i,j,k) = kv(na,nb,i,j,k) + mlt * jb * conjg(ordB) * SQRT( real(nb+1,dp) ) * f(na,nb+1,i,j,k)
                      endif
                      if( nb > 0 ) then
                         kv(na,nb,i,j,k) = kv(na,nb,i,j,k) + mlt * jb * ordB * SQRT( real(nb,dp) ) * f(na,nb-1,i,j,k)
@@ -541,7 +541,7 @@ module solvers
 
          ! normalize vector
          call const_mean( f, mna, mnb, info )
-         
+
          if( info /= 0 ) then
             ! suppress stdout if quietON
             if( .not. quietON ) print *, 'const_mean info = ', info
@@ -1009,7 +1009,7 @@ module solvers
 
       call init_random_seed()
 
-      do 1 = 0, ubound(f,3)
+      do i = 1, ubound(f,3)
          do nb = 0, ubound(f,2)
             do na = 0, ubound(f,1)
                call random_number( ran )
