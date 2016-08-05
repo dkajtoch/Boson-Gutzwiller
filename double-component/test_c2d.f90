@@ -18,15 +18,15 @@ program test_c2d
    ja   = 0.3_dp
    jb   = 0.3_dp
    ua   = 1.0_dp
-   ub   = 0.95_dp
-   uab  = 0.879_dp
+   ub   = 95.47_dp/100.44_dp
+   uab  = 80.0_dp/100.44_dp
 
    allocate( f(0:nmax, 0:nmax, 1:M, 1:M) )
 
    ! check random inital state preparation
-   mea = 0.2_dp * real(M**2,dp)
-   meb = 0.8_dp * real(M**2,dp)
-   call InitRandomNC( f, mea, meb )
+   mea = 0.0_dp * real(M**2,dp)
+   meb = 1.0_dp * real(M**2,dp)
+   call InitUniformNC( f, mea, meb )
 
    normf = norm( f, 1, 1 )
    meanaf = 0.0_dp

@@ -579,7 +579,7 @@ contains
                powb = 1.0_dp
                do nb = ubound(f,2), 0, -1
                   powa = 1.0_dp
-                  do na = ubound(f,1)
+                  do na = 0, ubound(f,1)
                      sum1 = sum1 + powa * powb * abs(f(na,nb,i))**2
                      sum2 = sum2 + real(na,dp) * powa * powb * abs(f(na,nb,i))**2
                      sum3 = sum3 + real(nb,dp) * powa * powb * abs(f(na,nb,i))**2
@@ -642,7 +642,7 @@ contains
                sum5 = 0.0_dp
                sum6 = 0.0_dp
                powb = 1.0_dp
-               do nb = ubound(f,2)
+               do nb = 0, ubound(f,2)
                   powa = 1.0_dp
                   do na = ubound(f,1), 0, -1
                      sum1 = sum1 + powa * powb * abs(f(na,nb,i))**2
