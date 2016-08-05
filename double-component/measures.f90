@@ -3,7 +3,7 @@ module measures
    use parameters, only: dp, re, im
 
    private
-   public MeanA, MeanB, MeanAB, VarA, VarB, norm, normalize, OrderA, OrderB, TotEnergy
+   public MeanA, MeanB, MeanAB, VarA, VarB, norm, normalize, OrderA, OrderB, TotEnergy, ChemPot
 
    ! | ---------------------------------------- |
    ! | For better memeory layout it is better   |
@@ -91,8 +91,8 @@ contains
       integer  na, nb
 
       c1d_MeanA = 0.0_dp
-      do na = 0, ubound(f,1)
-         do nb = 0, ubound(f,2)
+      do nb = 0, ubound(f,2)
+         do na = 0, ubound(f,1)
             c1d_MeanA = c1d_MeanA + real( na,dp ) * abs(f(na,nb,i))**2
          enddo
       enddo
@@ -110,8 +110,8 @@ contains
       integer  na, nb
 
       c2d_MeanA = 0.0_dp
-      do na = 0, ubound(f,1)
-         do nb = 0, ubound(f,2)
+      do nb = 0, ubound(f,2)
+         do na = 0, ubound(f,1)
             c2d_MeanA = c2d_MeanA + real( na,dp ) * abs(f(na,nb,i,j))**2
          enddo
       enddo
@@ -129,8 +129,8 @@ contains
       integer  na, nb
 
       c3d_MeanA = 0.0_dp
-      do na = 0, ubound(f,1)
-         do nb = 0, ubound(f,2)
+      do nb = 0, ubound(f,2)
+         do na = 0, ubound(f,1)
             c3d_MeanA = c3d_MeanA + real( na,dp ) * abs(f(na,nb,i,j,k))**2
          enddo
       enddo
@@ -151,8 +151,8 @@ contains
       integer  na, nb
 
       c1d_MeanB = 0.0_dp
-      do na = 0, ubound(f,1)
-         do nb = 0, ubound(f,2)
+      do nb = 0, ubound(f,2)
+         do na = 0, ubound(f,1)
             c1d_MeanB = c1d_MeanB + real( nb,dp ) * abs(f(na,nb,i))**2
          enddo
       enddo
@@ -170,8 +170,8 @@ contains
       integer  na, nb
 
       c2d_MeanB = 0.0_dp
-      do na = 0, ubound(f,1)
-         do nb = 0, ubound(f,2)
+      do nb = 0, ubound(f,2)
+         do na = 0, ubound(f,1)
             c2d_MeanB = c2d_MeanB + real( nb,dp ) * abs(f(na,nb,i,j))**2
          enddo
       enddo
@@ -189,8 +189,8 @@ contains
       integer  na, nb
 
       c3d_MeanB = 0.0_dp
-      do na = 0, ubound(f,1)
-         do nb = 0, ubound(f,2)
+      do nb = 0, ubound(f,2)
+         do na = 0, ubound(f,1)
             c3d_MeanB = c3d_MeanB + real( nb,dp ) * abs(f(na,nb,i,j,k))**2
          enddo
       enddo
@@ -211,8 +211,8 @@ contains
       integer  na, nb
 
       c1d_MeanAB = 0.0_dp
-      do na = 0, ubound(f,1)
-         do nb = 0, ubound(f,2)
+      do nb = 0, ubound(f,2)
+         do na = 0, ubound(f,1)
             c1d_MeanAB = c1d_MeanAB + real( na*nb,dp ) * abs(f(na,nb,i))**2
          enddo
       enddo
@@ -230,8 +230,8 @@ contains
       integer  na, nb
 
       c2d_MeanAB = 0.0_dp
-      do na = 0, ubound(f,1)
-         do nb = 0, ubound(f,2)
+      do nb = 0, ubound(f,2)
+         do na = 0, ubound(f,1)
             c2d_MeanAB = c2d_MeanAB + real( na*nb,dp ) * abs(f(na,nb,i,j))**2
          enddo
       enddo
@@ -249,8 +249,8 @@ contains
       integer  na, nb
 
       c3d_MeanAB = 0.0_dp
-      do na = 0, ubound(f,1)
-         do nb = 0, ubound(f,2)
+      do nb = 0, ubound(f,2)
+         do na = 0, ubound(f,1)
             c3d_MeanAB = c3d_MeanAB + real( na*nb,dp ) * abs(f(na,nb,i,j,k))**2
          enddo
       enddo
@@ -274,8 +274,8 @@ contains
       c1d_VarA = 0.0_dp
       suma   = 0.0_dp
 
-      do na = 0, ubound(f,1)
-         do nb = 0, ubound(f,2)
+      do nb = 0, ubound(f,2)
+         do na = 0, ubound(f,1)
             suma   = suma + real( na,dp ) * abs(f(na,nb,i))**2
             c1d_VarA = c1d_VarA + real( na*na,dp ) * abs(f(na,nb,i))**2
          enddo
@@ -299,8 +299,8 @@ contains
       c2d_VarA = 0.0_dp
       suma   = 0.0_dp
 
-      do na = 0, ubound(f,1)
-         do nb = 0, ubound(f,2)
+      do nb = 0, ubound(f,2)
+         do na = 0, ubound(f,1)
             suma   = suma + real( na,dp ) * abs(f(na,nb,i,j))**2
             c2d_VarA = c2d_VarA + real( na*na,dp ) * abs(f(na,nb,i,j))**2
          enddo
@@ -324,8 +324,8 @@ contains
       c3d_VarA = 0.0_dp
       suma   = 0.0_dp
 
-      do na = 0, ubound(f,1)
-         do nb = 0, ubound(f,2)
+      do nb = 0, ubound(f,2)
+         do na = 0, ubound(f,1)
             suma   = suma + real( na,dp ) * abs(f(na,nb,i,j,k))**2
             c3d_VarA = c3d_VarA + real( na*na,dp ) * abs(f(na,nb,i,j,k))**2
          enddo
@@ -352,8 +352,8 @@ contains
       c1d_VarB = 0.0_dp
       suma   = 0.0_dp
 
-      do na = 0, ubound(f,1)
-         do nb = 0, ubound(f,2)
+      do nb = 0, ubound(f,2)
+         do na = 0, ubound(f,1)
             suma   = suma + real( nb,dp ) * abs(f(na,nb,i))**2
             c1d_VarB = c1d_VarB + real( nb*nb,dp ) * abs(f(na,nb,i))**2
          enddo
@@ -377,8 +377,8 @@ contains
       c2d_VarB = 0.0_dp
       suma   = 0.0_dp
 
-      do na = 0, ubound(f,1)
-         do nb = 0, ubound(f,2)
+      do nb = 0, ubound(f,2)
+         do na = 0, ubound(f,1)
             suma   = suma + real( nb,dp ) * abs(f(na,nb,i,j))**2
             c2d_VarB = c2d_VarB + real( nb*nb,dp ) * abs(f(na,nb,i,j))**2
          enddo
@@ -402,8 +402,8 @@ contains
       c3d_VarB = 0.0_dp
       suma   = 0.0_dp
 
-      do na = 0, ubound(f,1)
-         do nb = 0, ubound(f,2)
+      do nb = 0, ubound(f,2)
+         do na = 0, ubound(f,1)
             suma   = suma + real( nb,dp ) * abs(f(na,nb,i,j,k))**2
             c3d_VarB = c3d_VarB + real( nb*nb,dp ) * abs(f(na,nb,i,j,k))**2
          enddo
@@ -428,8 +428,8 @@ contains
 
       c1d_norm = 0.0_dp
 
-      do na = 0, ubound(f,1)
-         do nb = 0, ubound(f,2)
+      do nb = 0, ubound(f,2)
+         do na = 0, ubound(f,1)
             c1d_norm = c1d_norm + abs(f(na,nb,i))**2
          enddo
       enddo
@@ -448,8 +448,8 @@ contains
 
       c2d_norm = 0.0_dp
 
-      do na = 0, ubound(f,1)
-         do nb = 0, ubound(f,2)
+      do nb = 0, ubound(f,2)
+         do na = 0, ubound(f,1)
             c2d_norm = c2d_norm + abs(f(na,nb,i,j))**2
          enddo
       enddo
@@ -468,8 +468,8 @@ contains
 
       c3d_norm = 0.0_dp
 
-      do na = 0, ubound(f,1)
-         do nb = 0, ubound(f,2)
+      do nb = 0, ubound(f,2)
+         do na = 0, ubound(f,1)
             c3d_norm = c3d_norm + abs(f(na,nb,i,j,k))**2
          enddo
       enddo
@@ -504,8 +504,8 @@ contains
       integer i, j
       real( kind = dp) nout
 
-      do i = 1, ubound(f,3)
-         do j = 1, ubound(f,4)
+      do j = 1, ubound(f,4)
+         do i = 1, ubound(f,3)
             nout = c2d_norm( f, i, j )
             f(:,:,i,j) = f(:,:,i,j)*1.0_dp/SQRT( nout )
          enddo
@@ -522,9 +522,9 @@ contains
       integer i, j, k
       real( kind = dp) nout
 
-      do i = 1, ubound(f,3)
+      do k = 1, ubound(f,5)
          do j = 1, ubound(f,4)
-            do k = 1, ubound(f,5)
+            do i = 1, ubound(f,3)
                nout = c3d_norm( f, i, j, k )
                f(:,:,i,j,k) = f(:,:,i,j,k)*1.0_dp/SQRT( nout )
             enddo
@@ -547,8 +547,8 @@ contains
 
       c1d_orderA = 0.0_dp*re
 
-      do na = 1, ubound(f,1)
-         do nb = 0, ubound(f,2)
+      do nb = 0, ubound(f,2)
+         do na = 1, ubound(f,1)
             c1d_orderA = c1d_orderA + SQRT( real( na,dp ) ) * conjg(f(na-1,nb,i)) * f(na,nb,i)
          enddo
       enddo
@@ -567,8 +567,8 @@ contains
 
       c2d_orderA = 0.0_dp*re
 
-      do na = 1, ubound(f,1)
-         do nb = 0, ubound(f,2)
+      do nb = 0, ubound(f,2)
+         do na = 1, ubound(f,1)
             c2d_orderA = c2d_orderA + SQRT( real( na,dp ) ) * conjg(f(na-1,nb,i,j)) * f(na,nb,i,j)
          enddo
       enddo
@@ -587,8 +587,8 @@ contains
 
       c3d_orderA = 0.0_dp*re
 
-      do na = 1, ubound(f,1)
-         do nb = 0, ubound(f,2)
+      do nb = 0, ubound(f,2)
+         do na = 1, ubound(f,1)
             c3d_orderA = c3d_orderA + SQRT( real( na,dp ) ) * conjg(f(na-1,nb,i,j,k)) * f(na,nb,i,j,k)
          enddo
       enddo
@@ -610,8 +610,8 @@ contains
 
       c1d_orderB = 0.0_dp*re
 
-      do na = 0, ubound(f,1)
-         do nb = 1, ubound(f,2)
+      do nb = 1, ubound(f,2)
+         do na = 0, ubound(f,1)
             c1d_orderB = c1d_orderB + SQRT( real( nb,dp ) ) * conjg(f(na,nb-1,i)) * f(na,nb,i)
          enddo
       enddo
@@ -630,8 +630,8 @@ contains
 
       c2d_orderB = 0.0_dp*re
 
-      do na = 0, ubound(f,1)
-         do nb = 1, ubound(f,2)
+      do nb = 1, ubound(f,2)
+         do na = 0, ubound(f,1)
             c2d_orderB = c2d_orderB + SQRT( real( nb,dp ) ) * conjg(f(na,nb-1,i,j)) * f(na,nb,i,j)
          enddo
       enddo
@@ -650,8 +650,8 @@ contains
 
       c3d_orderB = 0.0_dp*re
 
-      do na = 0, ubound(f,1)
-         do nb = 1, ubound(f,2)
+      do nb = 1, ubound(f,2)
+         do na = 0, ubound(f,1)
             c3d_orderB = c3d_orderB + SQRT( real( nb,dp ) ) * conjg(f(na,nb-1,i,j,k)) * f(na,nb,i,j,k)
          enddo
       enddo
@@ -685,8 +685,8 @@ contains
          ord = OrderB( f, i )
          ArrayOrderB(i) = ord
 
-         do na = 0, ubound(f,1)
-            do nb = 0, ubound(f,2)
+         do nb = 0, ubound(f,2)
+            do na = 0, ubound(f,1)
 
                c1d_TotEnergy = c1d_TotEnergy + ua/2.0_dp * real( na*(na-1),dp ) * abs(f(na,nb,i))**2
                c1d_TotEnergy = c1d_TotEnergy + ub/2.0_dp * real( nb*(nb-1),dp ) * abs(f(na,nb,i))**2
@@ -731,8 +731,8 @@ contains
 
       c2d_TotEnergy = 0.0_dp
 
-      do i = 1, ubound(f,3)
-         do j = 1, ubound(f,4)
+      do j = 1, ubound(f,4)
+         do i = 1, ubound(f,3)
 
             ! calculate order parameters
             ord = OrderA( f, i, j )
@@ -740,8 +740,8 @@ contains
             ord = OrderB( f, i, j )
             ArrayOrderB(i,j) = ord
 
-            do na = 0, ubound(f,1)
-               do nb = 0, ubound(f,2)
+            do nb = 0, ubound(f,2)
+               do na = 0, ubound(f,1)
 
                   c2d_TotEnergy = c2d_TotEnergy + ua/2.0_dp * real( na*(na-1),dp ) * abs(f(na,nb,i,j))**2
                   c2d_TotEnergy = c2d_TotEnergy + ub/2.0_dp * real( nb*(nb-1),dp ) * abs(f(na,nb,i,j))**2
@@ -753,8 +753,8 @@ contains
          enddo
       enddo
 
-      do i = 1, ubound(f,3)
-         do j = 1, ubound(f,4)
+      do j = 1, ubound(f,4)
+         do i = 1, ubound(f,3)
 
             if( i < ubound(f,3) ) then
 
@@ -801,9 +801,9 @@ contains
 
       c3d_TotEnergy = 0.0_dp
 
-      do i = 1, ubound(f,3)
+      do k = 1, ubound(f,5)
          do j = 1, ubound(f,4)
-            do k = 1, ubound(f,5)
+            do i = 1, ubound(f,3)
 
                ! calculate order parameters
                ord = OrderA( f, i, j, k )
@@ -811,8 +811,8 @@ contains
                ord = OrderB( f, i, j, k )
                ArrayOrderB(i,j,k) = ord
 
-               do na = 0, ubound(f,1)
-                  do nb = 0, ubound(f,2)
+               do nb = 0, ubound(f,2)
+                  do na = 0, ubound(f,1)
 
                      c3d_TotEnergy = c3d_TotEnergy + ua/2.0_dp * real( na*(na-1),dp ) * abs(f(na,nb,i,j,k))**2
                      c3d_TotEnergy = c3d_TotEnergy + ub/2.0_dp * real( nb*(nb-1),dp ) * abs(f(na,nb,i,j,k))**2
@@ -825,9 +825,9 @@ contains
          enddo
       enddo
 
-      do i = 1, ubound(f,3)
+      do k = 1, ubound(f,5)
          do j = 1, ubound(f,4)
-            do k = 1, ubound(f,5)
+            do i = 1, ubound(f,3)
 
                if( i < ubound(f,3) ) then
 
@@ -886,8 +886,8 @@ contains
       integer na, nb
 
       c1d_xiA = (0.0_dp, 0.0_dp)
-      do na = 1, ubound(f,1)
-         do nb = 0, ubound(f,2)
+      do nb = 0, ubound(f,2)
+         do na = 1, ubound(f,1)
             c1d_xiA = c1d_xiA + real(na,dp)*sqrt(real(na,dp)) * conjg(f(na-1,nb,i))*f(na,nb,i)
          enddo
       enddo
@@ -903,8 +903,8 @@ contains
       integer na, nb
 
       c1d_xiB = (0.0_dp, 0.0_dp)
-      do na = 0, ubound(f,1)
-         do nb = 1, ubound(f,2)
+      do nb = 1, ubound(f,2)
+         do na = 0, ubound(f,1)
             c1d_xiB = c1d_xiB + real(nb,dp)*sqrt(real(nb,dp)) * conjg(f(na,nb-1,i))*f(na,nb,i)
          enddo
       enddo
@@ -920,8 +920,8 @@ contains
       integer na, nb
 
       c1d_etaA = (0.0_dp, 0.0_dp)
-      do na = 0, ubound(f,1)
-         do nb = 1, ubound(f,2)
+      do nb = 1, ubound(f,2)
+         do na = 0, ubound(f,1)
             c1d_etaA = c1d_etaA + real(na,dp)*sqrt(real(nb,dp)) * conjg(f(na,nb-1,i))*f(na,nb,i)
          enddo
       enddo
@@ -937,8 +937,8 @@ contains
       integer na, nb
 
       c1d_etaB = (0.0_dp, 0.0_dp)
-      do na = 1, ubound(f,1)
-         do nb = 0, ubound(f,2)
+      do nb = 0, ubound(f,2)
+         do na = 1, ubound(f,1)
             c1d_etaB = c1d_etaB + real(nb,dp)*sqrt(real(na,dp)) * conjg(f(na-1,nb,i))*f(na,nb,i)
          enddo
       enddo
@@ -955,8 +955,8 @@ contains
       integer na, nb
 
       c2d_xiA = (0.0_dp, 0.0_dp)
-      do na = 1, ubound(f,1)
-         do nb = 0, ubound(f,2)
+      do nb = 0, ubound(f,2)
+         do na = 1, ubound(f,1)
             c2d_xiA = c2d_xiA + real(na,dp)*sqrt(real(na,dp)) * conjg(f(na-1,nb,i,j))*f(na,nb,i,j)
          enddo
       enddo
@@ -972,8 +972,8 @@ contains
       integer na, nb
 
       c2d_xiB = (0.0_dp, 0.0_dp)
-      do na = 0, ubound(f,1)
-         do nb = 1, ubound(f,2)
+      do nb = 1, ubound(f,2)
+         do na = 0, ubound(f,1)
             c2d_xiB = c2d_xiB + real(nb,dp)*sqrt(real(nb,dp)) * conjg(f(na,nb-1,i,j))*f(na,nb,i,j)
          enddo
       enddo
@@ -989,8 +989,8 @@ contains
       integer na, nb
 
       c2d_etaA = (0.0_dp, 0.0_dp)
-      do na = 0, ubound(f,1)
-         do nb = 1, ubound(f,2)
+      do nb = 1, ubound(f,2)
+         do na = 0, ubound(f,1)
             c2d_etaA = c2d_etaA + real(na,dp)*sqrt(real(nb,dp)) * conjg(f(na,nb-1,i,j))*f(na,nb,i,j)
          enddo
       enddo
@@ -1006,8 +1006,8 @@ contains
       integer na, nb
 
       c2d_etaB = (0.0_dp, 0.0_dp)
-      do na = 1, ubound(f,1)
-         do nb = 0, ubound(f,2)
+      do nb = 0, ubound(f,2)
+         do na = 1, ubound(f,1)
             c2d_etaB = c2d_etaB + real(nb,dp)*sqrt(real(na,dp)) * conjg(f(na-1,nb,i,j))*f(na,nb,i,j)
          enddo
       enddo
@@ -1024,8 +1024,8 @@ contains
       integer na, nb
 
       c3d_xiA = (0.0_dp, 0.0_dp)
-      do na = 1, ubound(f,1)
-         do nb = 0, ubound(f,2)
+      do nb = 0, ubound(f,2)
+         do na = 1, ubound(f,1)
             c3d_xiA = c3d_xiA + real(na,dp)*sqrt(real(na,dp)) * conjg(f(na-1,nb,i,j,k))*f(na,nb,i,j,k)
          enddo
       enddo
@@ -1041,8 +1041,8 @@ contains
       integer na, nb
 
       c3d_xiB = (0.0_dp, 0.0_dp)
-      do na = 0, ubound(f,1)
-         do nb = 1, ubound(f,2)
+      do nb = 1, ubound(f,2)
+         do na = 0, ubound(f,1)
             c3d_xiB = c3d_xiB + real(nb,dp)*sqrt(real(nb,dp)) * conjg(f(na,nb-1,i,j,k))*f(na,nb,i,j,k)
          enddo
       enddo
@@ -1058,8 +1058,8 @@ contains
       integer na, nb
 
       c3d_etaA = (0.0_dp, 0.0_dp)
-      do na = 0, ubound(f,1)
-         do nb = 1, ubound(f,2)
+      do nb = 1, ubound(f,2)
+         do na = 0, ubound(f,1)
             c3d_etaA = c3d_etaA + real(na,dp)*sqrt(real(nb,dp)) * conjg(f(na,nb-1,i,j,k))*f(na,nb,i,j,k)
          enddo
       enddo
@@ -1075,8 +1075,8 @@ contains
       integer na, nb
 
       c3d_etaB = (0.0_dp, 0.0_dp)
-      do na = 1, ubound(f,1)
-         do nb = 0, ubound(f,2)
+      do nb = 0, ubound(f,2)
+         do na = 1, ubound(f,1)
             c3d_etaB = c3d_etaB + real(nb,dp)*sqrt(real(na,dp)) * conjg(f(na-1,nb,i,j,k))*f(na,nb,i,j,k)
          enddo
       enddo
@@ -1141,8 +1141,8 @@ contains
          nna = 0.0_dp; nnb = 0.0_dp; na2 = 0.0_dp; nb2 = 0.0_dp; nab = 0.0_dp
          na3 = 0.0_dp; nb3 = 0.0_dp; nanb2 = 0.0_dp; na2nb = 0.0_dp
 
-         do na = 0, ubound(f,1)
-            do nb = 0, ubound(f,2)
+         do nb = 0, ubound(f,2)
+            do na = 0, ubound(f,1)
 
                ! density correlations
                nna  = nna + real(na,dp) * abs(f(na,nb,i))**2
@@ -1212,8 +1212,8 @@ contains
 
       coll_flucta = 0.0_dp; coll_fluctb = 0.0_dp; coll_fluctab = 0.0_dp
 
-      do i = 1, ubound(f,3)
       do j = 1, ubound(f,4)
+      do i = 1, ubound(f,3)
 
          ord = c2d_OrderA( f, i, j )
          ArrayOrderA(i,j) = ord
@@ -1233,8 +1233,8 @@ contains
       enddo ! i
       enddo ! j
 
-      do i = 1, ubound(f,3)
       do j = 1, ubound(f,4)
+      do i = 1, ubound(f,3)
 
          ! nearest neighbour
          if( i == 1 ) then
@@ -1262,8 +1262,8 @@ contains
          nna = 0.0_dp; nnb = 0.0_dp; na2 = 0.0_dp; nb2 = 0.0_dp; nab = 0.0_dp
          na3 = 0.0_dp; nb3 = 0.0_dp; nanb2 = 0.0_dp; na2nb = 0.0_dp
 
-         do na = 0, ubound(f,1)
-            do nb = 0, ubound(f,2)
+         do nb = 0, ubound(f,2)
+            do na = 0, ubound(f,1)
 
                ! density correlations
                nna  = nna + real(na,dp) * abs(f(na,nb,i,j))**2
@@ -1334,9 +1334,9 @@ contains
 
       coll_flucta = 0.0_dp; coll_fluctb = 0.0_dp; coll_fluctab = 0.0_dp
 
-      do i = 1, ubound(f,3)
-      do j = 1, ubound(f,4)
       do k = 1, ubound(f,5)
+      do j = 1, ubound(f,4)
+      do i = 1, ubound(f,3)
 
          ord = c3d_OrderA( f, i, j, k )
          ArrayOrderA(i,j,k) = ord
@@ -1357,9 +1357,9 @@ contains
       enddo ! j
       enddo ! k
 
-      do i = 1, ubound(f,3)
-      do j = 1, ubound(f,4)
       do k = 1, ubound(f,5)
+      do j = 1, ubound(f,4)
+      do i = 1, ubound(f,3)
 
          ! nearest neighbour
          if( i == 1 ) then
@@ -1398,8 +1398,8 @@ contains
          nna = 0.0_dp; nnb = 0.0_dp; na2 = 0.0_dp; nb2 = 0.0_dp; nab = 0.0_dp
          na3 = 0.0_dp; nb3 = 0.0_dp; nanb2 = 0.0_dp; na2nb = 0.0_dp
 
-         do na = 0, ubound(f,1)
-            do nb = 0, ubound(f,2)
+         do nb = 0, ubound(f,2)
+            do na = 0, ubound(f,1)
 
                ! density correlations
                nna  = nna + real(na,dp) * abs(f(na,nb,i,j,k))**2
