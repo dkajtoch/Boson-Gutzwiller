@@ -94,8 +94,8 @@ contains
 
       if( abs(x) <= 1.0_dp ) then
 
-         do i = 1, ubound(f,2)
          do j = 1, ubound(f,3)
+         do i = 1, ubound(f,2)
             powa = 1.0_dp
             sum1 = 0.0_dp
             sum2 = 0.0_dp
@@ -119,8 +119,8 @@ contains
 
       else
 
-         do i = 1, ubound(f,2)
          do j = 1, ubound(f,3)
+         do i = 1, ubound(f,2)
             powa = 1.0_dp
             sum1 = 0.0_dp
             sum2 = 0.0_dp
@@ -159,9 +159,9 @@ contains
 
       if( abs(x) <= 1.0_dp ) then
 
-         do i = 1, ubound(f,2)
-         do j = 1, ubound(f,3)
          do k = 1, ubound(f,4)
+         do j = 1, ubound(f,3)
+         do i = 1, ubound(f,2)
             powa = 1.0_dp
             sum1 = 0.0_dp
             sum2 = 0.0_dp
@@ -186,9 +186,9 @@ contains
 
       else
 
-         do i = 1, ubound(f,2)
-         do j = 1, ubound(f,3)
          do k = 1, ubound(f,4)
+         do j = 1, ubound(f,3)
+         do i = 1, ubound(f,2)
             powa = 1.0_dp
             sum1 = 0.0_dp
             sum2 = 0.0_dp
@@ -521,8 +521,8 @@ contains
       integer i, j, na
       real( kind = dp ) :: powa, tmp
 
-      do i = 1, ubound(f,2)
-         do j = 1, ubound(f,3)
+      do j = 1, ubound(f,3)
+         do i = 1, ubound(f,2)
             powa = 1.0_dp
             tmp = 0.0_dp
             do na = 0, ubound(f,1)
@@ -545,9 +545,9 @@ contains
       integer i, j, k, na
       real( kind = dp ) :: powa, tmp
 
-      do i = 1, ubound(f,2)
-         do  j = 1, ubound(f,3)
-            do k = 1, ubound(f,4)
+      do k = 1, ubound(f,4)
+         do j = 1, ubound(f,3)
+            do i = 1, ubound(f,2)
                powa = 1.0_dp
                tmp = 0.0_dp
                do na = 0, ubound(f,1)
@@ -631,8 +631,8 @@ contains
  
 
       if( info  == 0 ) then
-         do i = 1, ubound(f,2)
          do j = 1, ubound(f,3)
+         do i = 1, ubound(f,2)
             powa = 1.0_dp
             do na = 0, ubound(f,1)
                f(na,i,j) = f(na,i,j) * sqrt(norm(i,j)) * powa
@@ -671,9 +671,9 @@ contains
  
 
       if( info  == 0 ) then
-         do i = 1, ubound(f,2)
-         do j = 1, ubound(f,3)
          do k = 1, ubound(f,4)
+         do j = 1, ubound(f,3)
+         do i = 1, ubound(f,2)
             powa = 1.0_dp
             do na = 0, ubound(f,1)
                f(na,i,j,k) = f(na,i,j,k) * sqrt(norm(i,j,k)) * powa

@@ -264,8 +264,8 @@ contains
       integer i, j
       real( kind = dp) nout
 
-      do i = 1, ubound(f,2)
-         do j = 1, ubound(f,3)
+      do j = 1, ubound(f,3)
+         do i = 1, ubound(f,2)
             nout = c2d_norm( f, i, j )
             f(:,i,j) = f(:,i,j)*1.0_dp/SQRT( nout )
          enddo
@@ -282,9 +282,9 @@ contains
       integer i, j, k
       real( kind = dp) nout
 
-      do i = 1, ubound(f,2)
+      do k = 1, ubound(f,4)
          do j = 1, ubound(f,3)
-            do k = 1, ubound(f,4)
+            do i = 1, ubound(f,2)
                nout = c3d_norm( f, i, j, k )
                f(:,i,j,k) = f(:,i,j,k)*1.0_dp/SQRT( nout )
             enddo
@@ -413,8 +413,8 @@ contains
 
       c2d_TotEnergy = 0.0_dp
 
-      do i = 1, ubound(f,2)
-         do j = 1, ubound(f,3)
+      do j = 1, ubound(f,3)
+         do i = 1, ubound(f,2)
 
             ! calculate order parameters
             ord = Order( f, i, j )
@@ -427,8 +427,8 @@ contains
          enddo
       enddo
 
-      do i = 1, ubound(f,2)
-         do j = 1, ubound(f,3)
+      do j = 1, ubound(f,3)
+         do i = 1, ubound(f,2)
 
             if( i < ubound(f,2) ) then
 
@@ -471,9 +471,9 @@ contains
 
       c3d_TotEnergy = 0.0_dp
 
-      do i = 1, ubound(f,2)
+      do k = 1, ubound(f,4)
          do j = 1, ubound(f,3)
-            do k = 1, ubound(f,4)
+            do i = 1, ubound(f,2)
 
                ! calculate order parameters
                ord = Order( f, i, j, k )
@@ -487,9 +487,9 @@ contains
          enddo
       enddo
 
-      do i = 1, ubound(f,2)
+      do k = 1, ubound(f,4)
          do j = 1, ubound(f,3)
-            do k = 1, ubound(f,4)
+            do i = 1, ubound(f,2)
 
                if( i < ubound(f,2) ) then
 
@@ -597,8 +597,8 @@ contains
       allocate( ArrayOrder( size(f,2), size(f,3) ) )
 
       ! collect order parameters
-      do i = 1, ubound(f,2)
-         do j = 1, ubound(f,3)
+      do j = 1, ubound(f,3)
+         do i = 1, ubound(f,2)
             ArrayOrder(i,j) = c2d_Order( f, i, j )
          enddo
       enddo
@@ -607,8 +607,8 @@ contains
       tot2 = 0.0_dp
       tot3 = 0.0_dp
 
-      do i = 1, ubound(f,2)
       do j = 1, ubound(f,3)
+      do i = 1, ubound(f,2)
 
          ! nearest neighbour order parameter
          if( i == 1 ) then
@@ -662,9 +662,9 @@ contains
       allocate( ArrayOrder( size(f,2), size(f,3), size(f,4) ) )
 
       ! collect order parameters
-      do i = 1, ubound(f,2)
+      do k = 1, ubound(f,4)
          do j = 1, ubound(f,3)
-            do k = 1, ubound(f,4)
+            do i = 1, ubound(f,2)
                ArrayOrder(i,j,k) = c3d_Order( f, i, j, k )
             enddo
          enddo
@@ -674,9 +674,9 @@ contains
       tot2 = 0.0_dp
       tot3 = 0.0_dp
 
-      do i = 1, ubound(f,2)
-      do j = 1, ubound(f,3)
       do k = 1, ubound(f,4)
+      do j = 1, ubound(f,3)
+      do i = 1, ubound(f,2)
 
          ! nearest neighbour order parameter
          if( i == 1 ) then

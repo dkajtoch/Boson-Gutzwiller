@@ -149,8 +149,8 @@ module solvers
       endif
 
       ! collect order parameters
-      do i = 1, ubound(f,2)
-         do j = 1, ubound(f,3)
+      do j = 1, ubound(f,3)
+         do i = 1, ubound(f,2)
          
             ArrayOrder(i,j) = 0.0_dp*re
 
@@ -166,8 +166,8 @@ module solvers
       enddo
 
       ! solve coupled system of equtions
-      do i = 1, ubound(f,2)
-         do j = 1, ubound(f,3)
+      do j = 1, ubound(f,3)
+         do i = 1, ubound(f,2)
 
             ! calculate nearest-neighbour order parameter (periodic boundary conditions)
             ord = (0.0_dp, 0.0_dp)
@@ -238,9 +238,9 @@ module solvers
       endif
 
       ! collect order parameters
-      do i = 1, ubound(f,2)
+      do k = 1, ubound(f,4)
          do j = 1, ubound(f,3)
-            do k = 1, ubound(f,4)
+            do i = 1, ubound(f,2)
          
                ArrayOrder(i,j,k) = 0.0_dp*re
 
@@ -257,9 +257,9 @@ module solvers
       enddo
 
       ! solve coupled system of equtions
-      do i = 1, ubound(f,2)
+      do k = 1, ubound(f,4)
          do j = 1, ubound(f,3)
-            do k = 1, ubound(f,4)
+            do i = 1, ubound(f,2)
 
 
                ! calculate nearest-neighbour order parameter (periodic boundary conditions)
@@ -481,8 +481,8 @@ module solvers
 
             cnt = 0
             error = 0.0_dp
-            do i = 1, ubound(f,2)
-               do j = 1, ubound(f,3)
+            do j = 1, ubound(f,3)
+               do i = 1, ubound(f,2)
                   do na = 0, ubound(f,1)
                      ierr = abs( ( f(na,i,j) - fpom(na,i,j) ) )
                      if (ierr .gt. error) then
@@ -581,9 +581,9 @@ module solvers
 
             cnt = 0
             error = 0.0_dp
-            do i = 1, ubound(f,2)
+            do k = 1, ubound(f,4)
                do j = 1, ubound(f,3)
-                  do k = 1, ubound(f,4)
+                  do i = 1, ubound(f,2)
                      do na = 0, ubound(f,1)
                         ierr = abs( ( f(na,i,j,k) - fpom(na,i,j,k) ) )
                         if (ierr .gt. error) then
@@ -770,8 +770,8 @@ module solvers
 
             cnt = 0
             error = 0.0_dp
-            do i = 1, ubound(f,2)
-               do j = 1, ubound(f,3)
+            do j = 1, ubound(f,3)
+               do i = 1, ubound(f,2)
                   do na = 0, ubound(f,1)
                      ierr = abs( ( f(na,i,j) - fpom(na,i,j) ) )
                      if (ierr .gt. error) then
@@ -869,9 +869,9 @@ module solvers
 
             cnt = 0
             error = 0.0_dp
-            do i = 1, ubound(f,2)
+            do k = 1, ubound(f,4)
                do j = 1, ubound(f,3)
-                  do k = 1, ubound(f,4)
+                  do i = 1, ubound(f,2)
                      do na = 0, ubound(f,1)
                         ierr = abs( ( f(na,i,j,k) - fpom(na,i,j,k) ) )
                         if (ierr .gt. error) then
@@ -941,8 +941,8 @@ module solvers
 
       call init_random_seed()
 
-      do na = 0, ubound(f,1)
-         do i = 1, ubound(f,2)
+      do i = 1, ubound(f,2)
+         do na = 0, ubound(f,1)
             call random_number( ran )
             f(na,i) = ran(1)*re + im*ran(2) 
          enddo
@@ -962,9 +962,9 @@ module solvers
 
       call init_random_seed()
 
-      do na = 0, ubound(f,1)
-         do i = 1, ubound(f,2)
-            do j = 1, ubound(f,3)
+      do i = 1, ubound(f,3)
+         do j = 1, ubound(f,2)
+            do na = 0, ubound(f,1)
                call random_number( ran )
                f(na,i,j) = ran(1)*re + im*ran(2)
             enddo
@@ -985,10 +985,10 @@ module solvers
 
       call init_random_seed()
 
-      do na = 0, ubound(f,1)
-         do i = 1, ubound(f,2)
-            do j = 1, ubound(f,3)
-               do k = 1, ubound(f,4)
+      do k = 1, ubound(f,4)
+         do j = 1, ubound(f,3)
+            do i = 1, ubound(f,2)
+               do na = 0, ubound(f,1)
                   call random_number( ran )
                   f(na,i,j,k) = ran(1)*re + im*ran(2)
                enddo
@@ -1055,8 +1055,8 @@ module solvers
 
       call init_random_seed()
 
-      do na = 0, ubound(f,1)
-         do i = 1, ubound(f,2)
+      do i = 1, ubound(f,2)
+         do na = 0, ubound(f,1)
             call random_number( ran )
             f(na,i) = ran(1)*re + im*ran(2) 
          enddo
@@ -1078,9 +1078,9 @@ module solvers
 
       call init_random_seed()
 
-      do na = 0, ubound(f,1)
+      do j = 1, ubound(f,3)
          do i = 1, ubound(f,2)
-            do j = 1, ubound(f,3)
+            do na = 0, ubound(f,1)
                call random_number( ran )
                f(na,i,j) = ran(1)*re + im*ran(2)
             enddo
@@ -1103,10 +1103,10 @@ module solvers
 
       call init_random_seed()
 
-      do na = 0, ubound(f,1)
-         do i = 1, ubound(f,2)
-            do j = 1, ubound(f,3)
-               do k = 1, ubound(f,4)
+      do k = 1, ubound(f,4)
+         do j = 1, ubound(f,3)
+            do i = 1, ubound(f,2)
+               do na = 0, ubound(f,1)
                   call random_number( ran )
                   f(na,i,j,k) = ran(1)*re + im*ran(2)
                enddo
