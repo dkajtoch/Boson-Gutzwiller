@@ -15,8 +15,8 @@ program test_c3d
 
    M    = 5
    nmax = 8
-   ja   = 0.3_dp
-   jb   = 0.3_dp
+   ja   = 0.5_dp
+   jb   = 0.5_dp
    ua   = 1.0_dp
    ub   = 95.47_dp/100.44_dp
    uab  = 80.0_dp/100.44_dp

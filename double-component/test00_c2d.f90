@@ -1,4 +1,4 @@
-program test_c2d
+program test00_c2d
 
    use solvers
    use measures
