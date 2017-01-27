@@ -213,7 +213,7 @@ module solvers
             if( j == 1 ) then
                ordA = ordA + ArrayOrderA( i, 2 ) + ArrayOrderA( i, ubound(f,4) )
                ordB = ordB + ArrayOrderB( i, 2 ) + ArrayOrderB( i, ubound(f,4) )
-            elseif( i == ubound(f,3) ) then
+            elseif( j == ubound(f,4) ) then
                ordA = ordA + ArrayOrderA( i, 1 ) + ArrayOrderA( i, ubound(f,4)-1 )
                ordB = ordB + ArrayOrderB( i, 1 ) + ArrayOrderB( i, ubound(f,4)-1 )
             else
@@ -269,7 +269,7 @@ module solvers
       character(len=2), intent(in) :: mode
 
       ! local variables
-      integer i, j, k, na, nb, indx(6)
+      integer i, j, k, na, nb
       complex( kind = dp ) :: ordA, ordB, mlt
 
       if (mode .eq. 'EV') then

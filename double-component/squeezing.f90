@@ -3,12 +3,15 @@ module squeezing
    use parameters
 
    private
-   public SpinMatrix, SpinSqueezing
+   public SpinMatrix, SpinSqueezing, pi2coeff, Overlap
 
    interface SpinMatrix
       module procedure c1d_SpinMatrix
       module procedure c2d_SpinMatrix
       module procedure c3d_SpinMatrix
+      module procedure c1d_SpinMatrix2
+      module procedure c2d_SpinMatrix2
+      module procedure c3d_SpinMatrix2
    end interface
 
    interface SpinSqueezing
@@ -17,13 +20,615 @@ module squeezing
       module procedure c3d_SpinSqueezing
    end interface
 
+   interface Overlap
+      module procedure c1d_overlap
+      module procedure c2d_overlap
+      module procedure c3d_overlap
+   end interface
+
    contains
 
+   ! -------------------------------------------
+   ! overlap of two different Gutzwiller states
+   ! -------------------------------------------
+   function c1d_overlap( f, g ) result( vout )
+
+      implicit none
+      complex( kind = dp ), intent(in), allocatable :: f(:,:,:), g(:,:,:)
+      complex( kind = dp ) :: vout
+
+      integer i, na, nb
+      complex( kind = dp ) suma
+      logical :: cond
+
+      cond = .true.
+      do i = 1, 3
+         cond = cond .and. ( size(f,i) .eq. size(g,i) )
+      enddo
+
+      if( .not. cond ) then
+         vout = (0.0_dp, 0.0_dp)
+      else
+         vout = re
+
+         do i = 1, ubound(f,3)
+
+            suma = (0.0_dp, 0.0_dp)
+
+            do nb = 0, ubound(f,2)
+               do na = 0, ubound(f,1)
+                  suma = suma + conjg( f(na,nb,i) ) * g(na,nb,i)
+               enddo
+            enddo
+
+            vout = vout * suma
+
+         enddo! i
+
+      endif
+
+   end function
+
+   function c2d_overlap( f, g ) result( vout )
+
+      implicit none
+      complex( kind = dp ), intent(in), allocatable :: f(:,:,:,:), g(:,:,:,:)
+      complex( kind = dp ) :: vout
+
+      integer i, j, na, nb
+      complex( kind = dp ) suma
+      logical :: cond
+
+      cond = .true.
+      do i = 1, 4
+         cond = cond .and. ( size(f,i) .eq. size(g,i) )
+      enddo
+
+      if( .not. cond ) then
+         vout = (0.0_dp, 0.0_dp)
+      else
+         vout = re
+
+         do j = 1, ubound(f,4)
+         do i = 1, ubound(f,3)
+
+            suma = (0.0_dp, 0.0_dp)
+
+            do nb = 0, ubound(f,2)
+               do na = 0, ubound(f,1)
+                  suma = suma + conjg( f(na,nb,i,j) ) * g(na,nb,i,j)
+               enddo
+            enddo
+
+            vout = vout * suma
+
+         enddo! i
+         enddo! j
+
+      endif
+
+   end function
+
+   function c3d_overlap( f, g ) result( vout )
+
+      implicit none
+      complex( kind = dp ), intent(in), allocatable :: f(:,:,:,:,:), g(:,:,:,:,:)
+      complex( kind = dp ) :: vout
+
+      integer i, j, k, na, nb
+      complex( kind = dp ) suma
+      logical :: cond
+
+      cond = .true.
+      do i = 1, 5
+         cond = cond .and. ( size(f,i) .eq. size(g,i) )
+      enddo
+
+      if( .not. cond ) then
+         vout = (0.0_dp, 0.0_dp)
+      else
+         vout = re
+
+         do k = 1, ubound(f,5)
+         do j = 1, ubound(f,4)
+         do i = 1, ubound(f,3)
+
+            suma = (0.0_dp, 0.0_dp)
+
+            do nb = 0, ubound(f,2)
+               do na = 0, ubound(f,1)
+                  suma = suma + conjg( f(na,nb,i,j,k) ) * g(na,nb,i,j,k)
+               enddo
+            enddo
+
+            vout = vout * suma
+
+         enddo! i
+         enddo! j
+         enddo! k
+
+      endif
+
+   end function
+
+   function c1d_SpinMatrix2( f, g ) result (mat)
+
+      implicit none
+      complex( kind = dp ), intent(in), allocatable :: f(:,:,:), g(:,:,:)
+      complex( kind = dp ) mat(4,3)
+
+      ! local variables
+      integer i, na, nb
+      complex( kind = dp ) sumab, sumba, sumaa, sumbb
+      complex( kind = dp ) sum_aabb, sum_bbaa, sum_abab, &
+                           sum_aaab, sum_abaa, sum_abbb, &
+                           sum_bbba, sum_aaaa, sum_bbbb, &
+                           sx, sy, sz
+      real( kind = dp ) Msite
+      logical :: cond
+
+      cond = .true.
+      do i = 1, 3
+         cond = cond .and. ( size(f,i) .eq. size(g,i) )
+      enddo
+
+      if( .not. cond ) then
+         mat(:,:) = 0.0_dp * re
+      else
+
+      ! number of lattice sites
+      Msite = real( size(f,3), dp )
+
+      mat(:,:) = 0.0_dp * re
+
+      ! summation over lattice sites
+      do i = 1, ubound(f,3)
+
+         sumab = 0.0_dp * re
+         sumba = 0.0_dp * re
+         sumaa = 0.0_dp * re
+         sumbb = 0.0_dp * re
+         sum_aabb = 0.0_dp * re
+         sum_bbaa = 0.0_dp * re
+         sum_abab = 0.0_dp * re
+         sum_aaab = 0.0_dp * re
+         sum_abaa = 0.0_dp * re
+         sum_abbb = 0.0_dp * re
+         sum_bbba = 0.0_dp * re
+         sum_aaaa = 0.0_dp * re
+         sum_bbbb = 0.0_dp * re
+
+         do nb = 0, ubound(f,2)
+            do na = 0, ubound(f,1)
+
+               ! -----------------------------------------------------------------------------------
+               ! spin expectation value
+               ! -----------------------------------------------------------------------------------
+               sumaa    = sumaa + real(na,dp) * conjg( f(na,nb,i) ) * g(na,nb,i)
+               sumbb    = sumbb + real(nb,dp) * conjg( f(na,nb,i) ) * g(na,nb,i)
+               sum_abab = sum_abab + 2.0_dp * real(na,dp) * real(nb,dp) * conjg( f(na,nb,i) ) * g(na,nb,i)
+               sum_aaaa = sum_aaaa + real(na*(na-1),dp) * conjg( f(na,nb,i) ) * g(na,nb,i)
+               sum_bbbb = sum_bbbb + real(nb*(nb-1),dp) * conjg( f(na,nb,i) ) * g(na,nb,i)
+
+               if( na > 0 .and. nb < ubound(f,2) ) then
+                  sumab    = sumab + sqrt( real(na*(nb+1),dp) ) * &
+                                     conjg( f(na,nb,i) ) * g(na-1,nb+1,i)
+                  sum_aaab = sum_aaab + sqrt( real(na*(na-1)*(na-1)*(nb+1),dp) ) * &
+                                        conjg( f(na,nb,i) ) * g(na-1,nb+1,i)
+                  sum_abbb = sum_abbb + sqrt( real(na*nb*nb*(nb+1),dp) ) * &
+                                        conjg( f(na,nb,i) ) * g(na-1,nb+1,i)
+               endif
+
+               if( nb > 0 .and. na < ubound(f,1) ) then
+                  sumba    = sumba + sqrt( real(nb*(na+1),dp) ) * &
+                                     conjg( f(na,nb,i) ) * g(na+1,nb-1,i)
+                  sum_abaa = sum_abaa + sqrt( real(na*na*(na+1)*nb,dp) ) * &
+                                        conjg( f(na,nb,i) ) * g(na+1,nb-1,i)
+                  sum_bbba = sum_bbba + sqrt( real((na+1)*nb*(nb-1)*(nb-1),dp) ) * &
+                                        conjg( f(na,nb,i) ) * g(na+1,nb-1,i)
+               endif
+
+               if( na > 1 .and. nb < ubound(f,2)-1 ) then
+                  sum_aabb = sum_aabb + sqrt( real(na*(na-1)*(nb+1)*(nb+2),dp) ) * &
+                                        conjg( f(na,nb,i) ) * g(na-2,nb+2,i)
+               endif
+
+               if( nb > 1 .and. na < ubound(f,1)-1 ) then
+                  sum_bbaa = sum_bbaa + sqrt( real(nb*(nb-1)*(na+1)*(na+2),dp) ) * &
+                                        conjg( f(na,nb,i) ) * g(na+2,nb-2,i)
+               endif
+
+            enddo
+         enddo
+
+         sx = 0.5_dp * (sumab + sumba)
+         sy = 0.5_dp * im * (sumba - sumab)
+         sz = 0.5_dp * (sumaa - sumbb)
+
+         mat(1,1) = mat(1,1) + sx
+         mat(1,2) = mat(1,2) + sy
+         mat(1,3) = mat(1,3) + sz
+
+         ! Jx*Jx
+         mat(2,1) = mat(2,1) + 0.25_dp * (sumaa + sumbb + sum_aabb + sum_bbaa + sum_abab)
+         mat(2,1) = mat(2,1) - sx * sx
+         ! Jx*Jy
+         mat(2,2) = mat(2,2) + 0.25_dp * im * (sumaa - sumbb - sum_aabb + sum_bbaa)
+         mat(2,2) = mat(2,2) - sx * sy
+         ! Jx*Jz
+         mat(2,3) = mat(2,3) + 0.25_dp * (sumba - sumab + sum_aaab + sum_abaa - sum_abbb - sum_bbba)
+         mat(2,3) = mat(2,3) - sx * sz
+         ! Jy*Jx
+         mat(3,1) = mat(3,1) + 0.25_dp * im * (sumbb - sumaa + sum_bbaa - sum_aabb)
+         mat(3,1) = mat(3,1) - sy * sz
+         ! Jy*Jy
+         mat(3,2) = mat(3,2) + 0.25_dp * (sumaa + sumbb - sum_aabb - sum_bbaa + sum_abab)
+         mat(3,2) = mat(3,2) - sy * sy
+         ! Jy*Jz 
+         mat(3,3) = mat(3,3) + 0.25_dp * im * (sumab + sumba - sum_aaab + sum_abaa + sum_abbb - sum_bbba)
+         mat(3,3) = mat(3,3) - sy * sz
+         ! Jz*Jx
+         mat(4,1) = mat(4,1) + 0.25_dp * (sumab - sumba + sum_aaab + sum_abaa - sum_abbb - sum_bbba)
+         mat(4,1) = mat(4,1) - sz * sx
+         ! Jz*Jy
+         mat(4,2) = mat(4,2) + 0.25_dp * im * (sum_abaa + sum_abbb - sum_bbba - sum_aaab - sumab - sumba)
+         mat(4,2) = mat(4,2) - sz * sy
+         ! Jz*Jz
+         mat(4,3) = mat(4,3) + 0.25_dp * (sumaa + sumbb + sum_aaaa + sum_bbbb - sum_abab)
+         mat(4,3) = mat(4,3) - sz * sz
+
+      enddo
+
+      ! Jx*Jx
+      mat(2,1) = mat(2,1) + mat(1,1) * mat(1,1)
+      ! Jx*Jy
+      mat(2,2) = mat(2,2) + mat(1,1) * mat(1,2)
+      ! Jx*Jz
+      mat(2,3) = mat(2,3) + mat(1,1) * mat(1,3)
+      ! Jy*Jx
+      mat(3,1) = mat(3,1) + mat(1,2) * mat(1,1)
+      ! Jy*Jy
+      mat(3,2) = mat(3,2) + mat(1,2) * mat(1,2)
+      ! Jy*Jz 
+      mat(3,3) = mat(3,3) + mat(1,2) * mat(1,3)
+      ! Jz*Jx
+      mat(4,1) = mat(4,1) + mat(1,3) * mat(1,1)
+      ! Jz*Jy
+      mat(4,2) = mat(4,2) + mat(1,3) * mat(1,2)
+      ! Jz*Jz
+      mat(4,3) = mat(4,3) + mat(1,3) * mat(1,3)
+
+
+      mat(1,:) = mat(1,:) / Msite
+
+      mat(2:4,:) = mat(2:4,:) / Msite**2
+
+      endif
+
+   end function
+
+   function c2d_SpinMatrix2( f, g ) result (mat)
+
+      implicit none
+      complex( kind = dp ), intent(in), allocatable :: f(:,:,:,:), g(:,:,:,:)
+      complex( kind = dp ) mat(4,3)
+
+      ! local variables
+      integer i, j, na, nb
+      complex( kind = dp ) sumab, sumba, sumaa, sumbb
+      complex( kind = dp ) sum_aabb, sum_bbaa, sum_abab, &
+                           sum_aaab, sum_abaa, sum_abbb, &
+                           sum_bbba, sum_aaaa, sum_bbbb, &
+                           sx, sy, sz
+      real( kind = dp ) Msite
+      logical :: cond
+
+      cond = .true.
+      do i = 1, 4
+         cond = cond .and. ( size(f,i) .eq. size(g,i) )
+      enddo
+      
+      if( .not. cond ) then
+         mat(:,:) = 0.0_dp * re
+      else
+
+      ! number of lattice sites
+      Msite = real( size(f,3)*size(f,4), dp )
+
+      mat(:,:) = 0.0_dp * re
+
+      ! summation over lattice sites
+      do j = 1, ubound(f,4)
+      do i = 1, ubound(f,3)
+
+         sumab = 0.0_dp * re
+         sumba = 0.0_dp * re
+         sumaa = 0.0_dp * re
+         sumbb = 0.0_dp * re
+         sum_aabb = 0.0_dp * re
+         sum_bbaa = 0.0_dp * re
+         sum_abab = 0.0_dp * re
+         sum_aaab = 0.0_dp * re
+         sum_abaa = 0.0_dp * re
+         sum_abbb = 0.0_dp * re
+         sum_bbba = 0.0_dp * re
+         sum_aaaa = 0.0_dp * re
+         sum_bbbb = 0.0_dp * re
+
+         do nb = 0, ubound(f,2)
+            do na = 0, ubound(f,1)
+
+               ! -----------------------------------------------------------------------------------
+               ! spin expectation value
+               ! -----------------------------------------------------------------------------------
+               sumaa    = sumaa + real(na,dp) * conjg( f(na,nb,i,j) ) * g(na,nb,i,j)
+               sumbb    = sumbb + real(nb,dp) * conjg( f(na,nb,i,j) ) * g(na,nb,i,j)
+               sum_abab = sum_abab + 2.0_dp * real(na,dp) * real(nb,dp) * conjg( f(na,nb,i,j) ) * g(na,nb,i,j)
+               sum_aaaa = sum_aaaa + real(na*(na-1),dp) * conjg( f(na,nb,i,j) ) * g(na,nb,i,j)
+               sum_bbbb = sum_bbbb + real(nb*(nb-1),dp) * conjg( f(na,nb,i,j) ) * g(na,nb,i,j)
+
+               if( na > 0 .and. nb < ubound(f,2) ) then
+                  sumab    = sumab + sqrt( real(na*(nb+1),dp) ) * &
+                                     conjg( f(na,nb,i,j) ) * g(na-1,nb+1,i,j)
+                  sum_aaab = sum_aaab + sqrt( real(na*(na-1)*(na-1)*(nb+1),dp) ) * &
+                                        conjg( f(na,nb,i,j) ) * g(na-1,nb+1,i,j)
+                  sum_abbb = sum_abbb + sqrt( real(na*nb*nb*(nb+1),dp) ) * &
+                                        conjg( f(na,nb,i,j) ) * g(na-1,nb+1,i,j)
+               endif
+
+               if( nb > 0 .and. na < ubound(f,1) ) then
+                  sumba    = sumba + sqrt( real(nb*(na+1),dp) ) * &
+                                     conjg( f(na,nb,i,j) ) * g(na+1,nb-1,i,j)
+                  sum_abaa = sum_abaa + sqrt( real(na*na*(na+1)*nb,dp) ) * &
+                                        conjg( f(na,nb,i,j) ) * g(na+1,nb-1,i,j)
+                  sum_bbba = sum_bbba + sqrt( real((na+1)*nb*(nb-1)*(nb-1),dp) ) * &
+                                        conjg( f(na,nb,i,j) ) * g(na+1,nb-1,i,j)
+               endif
+
+               if( na > 1 .and. nb < ubound(f,2)-1 ) then
+                  sum_aabb = sum_aabb + sqrt( real(na*(na-1)*(nb+1)*(nb+2),dp) ) * &
+                                        conjg( f(na,nb,i,j) ) * g(na-2,nb+2,i,j)
+               endif
+
+               if( nb > 1 .and. na < ubound(f,1)-1 ) then
+                  sum_bbaa = sum_bbaa + sqrt( real(nb*(nb-1)*(na+1)*(na+2),dp) ) * &
+                                        conjg( f(na,nb,i,j) ) * g(na+2,nb-2,i,j)
+               endif
+
+            enddo
+         enddo
+
+         sx = 0.5_dp * (sumab + sumba)
+         sy = 0.5_dp * im * (sumba - sumab)
+         sz = 0.5_dp * (sumaa - sumbb)
+
+         mat(1,1) = mat(1,1) + sx
+         mat(1,2) = mat(1,2) + sy
+         mat(1,3) = mat(1,3) + sz
+
+         ! Jx*Jx
+         mat(2,1) = mat(2,1) + 0.25_dp * (sumaa + sumbb + sum_aabb + sum_bbaa + sum_abab)
+         mat(2,1) = mat(2,1) - sx * sx
+         ! Jx*Jy
+         mat(2,2) = mat(2,2) + 0.25_dp * im * (sumaa - sumbb - sum_aabb + sum_bbaa)
+         mat(2,2) = mat(2,2) - sx * sy
+         ! Jx*Jz
+         mat(2,3) = mat(2,3) + 0.25_dp * (sumba - sumab + sum_aaab + sum_abaa - sum_abbb - sum_bbba)
+         mat(2,3) = mat(2,3) - sx * sz
+         ! Jy*Jx
+         mat(3,1) = mat(3,1) + 0.25_dp * im * (sumbb - sumaa + sum_bbaa - sum_aabb)
+         mat(3,1) = mat(3,1) - sy * sz
+         ! Jy*Jy
+         mat(3,2) = mat(3,2) + 0.25_dp * (sumaa + sumbb - sum_aabb - sum_bbaa + sum_abab)
+         mat(3,2) = mat(3,2) - sy * sy
+         ! Jy*Jz 
+         mat(3,3) = mat(3,3) + 0.25_dp * im * (sumab + sumba - sum_aaab + sum_abaa + sum_abbb - sum_bbba)
+         mat(3,3) = mat(3,3) - sy * sz
+         ! Jz*Jx
+         mat(4,1) = mat(4,1) + 0.25_dp * (sumab - sumba + sum_aaab + sum_abaa - sum_abbb - sum_bbba)
+         mat(4,1) = mat(4,1) - sz * sx
+         ! Jz*Jy
+         mat(4,2) = mat(4,2) + 0.25_dp * im * (sum_abaa + sum_abbb - sum_bbba - sum_aaab - sumab - sumba)
+         mat(4,2) = mat(4,2) - sz * sy
+         ! Jz*Jz
+         mat(4,3) = mat(4,3) + 0.25_dp * (sumaa + sumbb + sum_aaaa + sum_bbbb - sum_abab)
+         mat(4,3) = mat(4,3) - sz * sz
+
+      enddo !i
+      enddo !j
+
+      ! Jx*Jx
+      mat(2,1) = mat(2,1) + mat(1,1) * mat(1,1)
+      ! Jx*Jy
+      mat(2,2) = mat(2,2) + mat(1,1) * mat(1,2)
+      ! Jx*Jz
+      mat(2,3) = mat(2,3) + mat(1,1) * mat(1,3)
+      ! Jy*Jx
+      mat(3,1) = mat(3,1) + mat(1,2) * mat(1,1)
+      ! Jy*Jy
+      mat(3,2) = mat(3,2) + mat(1,2) * mat(1,2)
+      ! Jy*Jz 
+      mat(3,3) = mat(3,3) + mat(1,2) * mat(1,3)
+      ! Jz*Jx
+      mat(4,1) = mat(4,1) + mat(1,3) * mat(1,1)
+      ! Jz*Jy
+      mat(4,2) = mat(4,2) + mat(1,3) * mat(1,2)
+      ! Jz*Jz
+      mat(4,3) = mat(4,3) + mat(1,3) * mat(1,3)
+
+
+      mat(1,:) = mat(1,:) / Msite
+
+      mat(2:4,:) = mat(2:4,:) / Msite**2
+
+      endif
+
+   end function
+
+   function c3d_SpinMatrix2( f, g ) result (mat)
+
+      implicit none
+      complex( kind = dp ), intent(in), allocatable :: f(:,:,:,:,:), g(:,:,:,:,:)
+      complex( kind = dp ) mat(4,3)
+
+      ! local variables
+      integer i, j, k, na, nb
+      complex( kind = dp ) sumab, sumba, sumaa, sumbb
+      complex( kind = dp ) sum_aabb, sum_bbaa, sum_abab, &
+                           sum_aaab, sum_abaa, sum_abbb, &
+                           sum_bbba, sum_aaaa, sum_bbbb, &
+                           sx, sy, sz
+      real( kind = dp ) Msite
+      logical :: cond
+
+      cond = .true.
+      do i = 1, 5
+         cond = cond .and. ( size(f,i) .eq. size(g,i) )
+      enddo
+
+      if( .not. cond ) then
+         mat(:,:) = 0.0_dp * re
+      else
+
+      ! number of lattice sites
+      Msite = real( size(f,3)*size(f,4)*size(f,5), dp )
+
+      mat(:,:) = 0.0_dp * re
+
+      ! summation over lattice sites
+      do k = 1, ubound(f,5)
+      do j = 1, ubound(f,4)
+      do i = 1, ubound(f,3)
+
+         sumab = 0.0_dp * re
+         sumba = 0.0_dp * re
+         sumaa = 0.0_dp * re
+         sumbb = 0.0_dp * re
+         sum_aabb = 0.0_dp * re
+         sum_bbaa = 0.0_dp * re
+         sum_abab = 0.0_dp * re
+         sum_aaab = 0.0_dp * re
+         sum_abaa = 0.0_dp * re
+         sum_abbb = 0.0_dp * re
+         sum_bbba = 0.0_dp * re
+         sum_aaaa = 0.0_dp * re
+         sum_bbbb = 0.0_dp * re
+
+         do nb = 0, ubound(f,2)
+            do na = 0, ubound(f,1)
+
+               ! -----------------------------------------------------------------------------------
+               ! spin expectation value
+               ! -----------------------------------------------------------------------------------
+               sumaa    = sumaa + real(na,dp) * conjg( f(na,nb,i,j,k) ) * g(na,nb,i,j,k)
+               sumbb    = sumbb + real(nb,dp) * conjg( f(na,nb,i,j,k) ) * g(na,nb,i,j,k)
+               sum_abab = sum_abab + 2.0_dp * real(na,dp) * real(nb,dp) * conjg( f(na,nb,i,j,k) ) * g(na,nb,i,j,k)
+               sum_aaaa = sum_aaaa + real(na*(na-1),dp) * conjg( f(na,nb,i,j,k) ) * g(na,nb,i,j,k)
+               sum_bbbb = sum_bbbb + real(nb*(nb-1),dp) * conjg( f(na,nb,i,j,k) ) * g(na,nb,i,j,k)
+
+               if( na > 0 .and. nb < ubound(f,2) ) then
+                  sumab    = sumab + sqrt( real(na*(nb+1),dp) ) * &
+                                     conjg( f(na,nb,i,j,k) ) * g(na-1,nb+1,i,j,k)
+                  sum_aaab = sum_aaab + sqrt( real(na*(na-1)*(na-1)*(nb+1),dp) ) * &
+                                        conjg( f(na,nb,i,j,k) ) * g(na-1,nb+1,i,j,k)
+                  sum_abbb = sum_abbb + sqrt( real(na*nb*nb*(nb+1),dp) ) * &
+                                        conjg( f(na,nb,i,j,k) ) * g(na-1,nb+1,i,j,k)
+               endif
+
+               if( nb > 0 .and. na < ubound(f,1) ) then
+                  sumba    = sumba + sqrt( real(nb*(na+1),dp) ) * &
+                                     conjg( f(na,nb,i,j,k) ) * g(na+1,nb-1,i,j,k)
+                  sum_abaa = sum_abaa + sqrt( real(na*na*(na+1)*nb,dp) ) * &
+                                        conjg( f(na,nb,i,j,k) ) * g(na+1,nb-1,i,j,k)
+                  sum_bbba = sum_bbba + sqrt( real((na+1)*nb*(nb-1)*(nb-1),dp) ) * &
+                                        conjg( f(na,nb,i,j,k) ) * g(na+1,nb-1,i,j,k)
+               endif
+
+               if( na > 1 .and. nb < ubound(f,2)-1 ) then
+                  sum_aabb = sum_aabb + sqrt( real(na*(na-1)*(nb+1)*(nb+2),dp) ) * &
+                                        conjg( f(na,nb,i,j,k) ) * g(na-2,nb+2,i,j,k)
+               endif
+
+               if( nb > 1 .and. na < ubound(f,1)-1 ) then
+                  sum_bbaa = sum_bbaa + sqrt( real(nb*(nb-1)*(na+1)*(na+2),dp) ) * &
+                                        conjg( f(na,nb,i,j,k) ) * g(na+2,nb-2,i,j,k)
+               endif
+
+            enddo
+         enddo
+
+         sx = 0.5_dp * (sumab + sumba)
+         sy = 0.5_dp * im * (sumba - sumab)
+         sz = 0.5_dp * (sumaa - sumbb)
+
+         mat(1,1) = mat(1,1) + sx
+         mat(1,2) = mat(1,2) + sy
+         mat(1,3) = mat(1,3) + sz
+
+         ! Jx*Jx
+         mat(2,1) = mat(2,1) + 0.25_dp * (sumaa + sumbb + sum_aabb + sum_bbaa + sum_abab)
+         mat(2,1) = mat(2,1) - sx * sx
+         ! Jx*Jy
+         mat(2,2) = mat(2,2) + 0.25_dp * im * (sumaa - sumbb - sum_aabb + sum_bbaa)
+         mat(2,2) = mat(2,2) - sx * sy
+         ! Jx*Jz
+         mat(2,3) = mat(2,3) + 0.25_dp * (sumba - sumab + sum_aaab + sum_abaa - sum_abbb - sum_bbba)
+         mat(2,3) = mat(2,3) - sx * sz
+         ! Jy*Jx
+         mat(3,1) = mat(3,1) + 0.25_dp * im * (sumbb - sumaa + sum_bbaa - sum_aabb)
+         mat(3,1) = mat(3,1) - sy * sz
+         ! Jy*Jy
+         mat(3,2) = mat(3,2) + 0.25_dp * (sumaa + sumbb - sum_aabb - sum_bbaa + sum_abab)
+         mat(3,2) = mat(3,2) - sy * sy
+         ! Jy*Jz 
+         mat(3,3) = mat(3,3) + 0.25_dp * im * (sumab + sumba - sum_aaab + sum_abaa + sum_abbb - sum_bbba)
+         mat(3,3) = mat(3,3) - sy * sz
+         ! Jz*Jx
+         mat(4,1) = mat(4,1) + 0.25_dp * (sumab - sumba + sum_aaab + sum_abaa - sum_abbb - sum_bbba)
+         mat(4,1) = mat(4,1) - sz * sx
+         ! Jz*Jy
+         mat(4,2) = mat(4,2) + 0.25_dp * im * (sum_abaa + sum_abbb - sum_bbba - sum_aaab - sumab - sumba)
+         mat(4,2) = mat(4,2) - sz * sy
+         ! Jz*Jz
+         mat(4,3) = mat(4,3) + 0.25_dp * (sumaa + sumbb + sum_aaaa + sum_bbbb - sum_abab)
+         mat(4,3) = mat(4,3) - sz * sz
+
+      enddo !i
+      enddo !j
+      enddo !k
+
+      ! Jx*Jx
+      mat(2,1) = mat(2,1) + mat(1,1) * mat(1,1)
+      ! Jx*Jy
+      mat(2,2) = mat(2,2) + mat(1,1) * mat(1,2)
+      ! Jx*Jz
+      mat(2,3) = mat(2,3) + mat(1,1) * mat(1,3)
+      ! Jy*Jx
+      mat(3,1) = mat(3,1) + mat(1,2) * mat(1,1)
+      ! Jy*Jy
+      mat(3,2) = mat(3,2) + mat(1,2) * mat(1,2)
+      ! Jy*Jz 
+      mat(3,3) = mat(3,3) + mat(1,2) * mat(1,3)
+      ! Jz*Jx
+      mat(4,1) = mat(4,1) + mat(1,3) * mat(1,1)
+      ! Jz*Jy
+      mat(4,2) = mat(4,2) + mat(1,3) * mat(1,2)
+      ! Jz*Jz
+      mat(4,3) = mat(4,3) + mat(1,3) * mat(1,3)
+
+
+      mat(1,:) = mat(1,:) / Msite
+
+      mat(2:4,:) = mat(2:4,:) / Msite**2
+
+      endif
+
+   end function
    ! -------------------------------------------------------------------------------------------
    ! Spin correlation matrix 
    ! -------------------------------------------------------------------------------------------
 
-   function c1d_SpinMatrix( f ) result mat
+   function c1d_SpinMatrix( f ) result (mat)
 
       implicit none
       complex( kind = dp ), intent(in), allocatable :: f(:,:,:)
@@ -41,24 +646,24 @@ module squeezing
       ! number of lattice sites
       Msite = real( size(f,3), dp )
 
-      sumab = 0.0_dp
-      sumba = 0.0_dp
-      sumaa = 0.0_dp
-      sumbb = 0.0_dp
-      sum_aabb = 0.0_dp
-      sum_bbaa = 0.0_dp
-      sum_abab = 0.0_dp
-      sum_aaab = 0.0_dp
-      sum_abaa = 0.0_dp
-      sum_abbb = 0.0_dp
-      sum_bbba = 0.0_dp
-      sum_aaaa = 0.0_dp
-      sum_bbbb = 0.0_dp
-
-      mat(:,:) = 0.0_dp
+      mat(:,:) = 0.0_dp * re
 
       ! summation over lattice sites
       do i = 1, ubound(f,3)
+
+         sumab = 0.0_dp * re
+         sumba = 0.0_dp * re
+         sumaa = 0.0_dp * re
+         sumbb = 0.0_dp * re
+         sum_aabb = 0.0_dp * re
+         sum_bbaa = 0.0_dp * re
+         sum_abab = 0.0_dp * re
+         sum_aaab = 0.0_dp * re
+         sum_abaa = 0.0_dp * re
+         sum_abbb = 0.0_dp * re
+         sum_bbba = 0.0_dp * re
+         sum_aaaa = 0.0_dp * re
+         sum_bbbb = 0.0_dp * re
 
          do nb = 0, ubound(f,2)
             do na = 0, ubound(f,1)
@@ -66,14 +671,14 @@ module squeezing
                ! -----------------------------------------------------------------------------------
                ! spin expectation value
                ! -----------------------------------------------------------------------------------
-               sumaa    = sumaa + real(n,dp) * conjg( f(na,nb,i) ) * f(na,nb,i)
-               sumbb    = sumbb + real(m,dp) * conjg( f(na,nb,i) ) * f(na,nb,i)
-               sum_abab = sum_abab + 2.0_dp * real(n,dp) * real(m,dp) * conjg( f(na,nb,i) ) * f(na,nb,i)
+               sumaa    = sumaa + real(na,dp) * conjg( f(na,nb,i) ) * f(na,nb,i)
+               sumbb    = sumbb + real(nb,dp) * conjg( f(na,nb,i) ) * f(na,nb,i)
+               sum_abab = sum_abab + 2.0_dp * real(na,dp) * real(nb,dp) * conjg( f(na,nb,i) ) * f(na,nb,i)
                sum_aaaa = sum_aaaa + real(na*(na-1),dp) * conjg( f(na,nb,i) ) * f(na,nb,i)
                sum_bbbb = sum_bbbb + real(nb*(nb-1),dp) * conjg( f(na,nb,i) ) * f(na,nb,i)
 
-               if( na > 0 ) then
-                  sumab    = sumab + sqrt( real(na*(nb+1),dp) ) * 
+               if( na > 0 .and. nb < ubound(f,2) ) then
+                  sumab    = sumab + sqrt( real(na*(nb+1),dp) ) * &
                                      conjg( f(na,nb,i) ) * f(na-1,nb+1,i)
                   sum_aaab = sum_aaab + sqrt( real(na*(na-1)*(na-1)*(nb+1),dp) ) * &
                                         conjg( f(na,nb,i) ) * f(na-1,nb+1,i)
@@ -81,8 +686,8 @@ module squeezing
                                         conjg( f(na,nb,i) ) * f(na-1,nb+1,i)
                endif
 
-               if( nb > 0 ) then
-                  sumba    = sumba + sqrt( real(nb*(na+1),dp) ) * 
+               if( nb > 0 .and. na < ubound(f,1) ) then
+                  sumba    = sumba + sqrt( real(nb*(na+1),dp) ) * &
                                      conjg( f(na,nb,i) ) * f(na+1,nb-1,i)
                   sum_abaa = sum_abaa + sqrt( real(na*na*(na+1)*nb,dp) ) * &
                                         conjg( f(na,nb,i) ) * f(na+1,nb-1,i)
@@ -90,12 +695,12 @@ module squeezing
                                         conjg( f(na,nb,i) ) * f(na+1,nb-1,i)
                endif
 
-               if( na > 1 ) then
+               if( na > 1 .and. nb < ubound(f,2)-1 ) then
                   sum_aabb = sum_aabb + sqrt( real(na*(na-1)*(nb+1)*(nb+2),dp) ) * &
                                         conjg( f(na,nb,i) ) * f(na-2,nb+2,i)
                endif
 
-               if( nb > 1 ) then
+               if( nb > 1 .and. na < ubound(f,1)-1 ) then
                   sum_bbaa = sum_bbaa + sqrt( real(nb*(nb-1)*(na+1)*(na+2),dp) ) * &
                                         conjg( f(na,nb,i) ) * f(na+2,nb-2,i)
                endif
@@ -118,7 +723,7 @@ module squeezing
          mat(2,2) = mat(2,2) + 0.25_dp * im * (sumaa - sumbb - sum_aabb + sum_bbaa)
          mat(2,2) = mat(2,2) - sx * sy
          ! Jx*Jz
-         mat(2,3) = mat(2,3) + 0.25_dp * (sumba - sumab + sum_aaab + sum_abaa - sum_abbbb - sum_bbba)
+         mat(2,3) = mat(2,3) + 0.25_dp * (sumba - sumab + sum_aaab + sum_abaa - sum_abbb - sum_bbba)
          mat(2,3) = mat(2,3) - sx * sz
          ! Jy*Jx
          mat(3,1) = mat(3,1) + 0.25_dp * im * (sumbb - sumaa + sum_bbaa - sum_aabb)
@@ -167,7 +772,7 @@ module squeezing
 
    end function
 
-   function c2d_SpinMatrix( f ) result mat
+   function c2d_SpinMatrix( f ) result (mat)
 
       implicit none
       complex( kind = dp ), intent(in), allocatable :: f(:,:,:,:)
@@ -185,25 +790,25 @@ module squeezing
       ! number of lattice sites
       Msite = real( size(f,3)*size(f,4), dp )
 
-      sumab = 0.0_dp
-      sumba = 0.0_dp
-      sumaa = 0.0_dp
-      sumbb = 0.0_dp
-      sum_aabb = 0.0_dp
-      sum_bbaa = 0.0_dp
-      sum_abab = 0.0_dp
-      sum_aaab = 0.0_dp
-      sum_abaa = 0.0_dp
-      sum_abbb = 0.0_dp
-      sum_bbba = 0.0_dp
-      sum_aaaa = 0.0_dp
-      sum_bbbb = 0.0_dp
-
-      mat(:,:) = 0.0_dp
+      mat(:,:) = 0.0_dp * re
 
       ! summation over lattice sites
       do j = 1, ubound(f,4)
       do i = 1, ubound(f,3)
+
+         sumab = 0.0_dp * re
+         sumba = 0.0_dp * re
+         sumaa = 0.0_dp * re
+         sumbb = 0.0_dp * re
+         sum_aabb = 0.0_dp * re
+         sum_bbaa = 0.0_dp * re
+         sum_abab = 0.0_dp * re
+         sum_aaab = 0.0_dp * re
+         sum_abaa = 0.0_dp * re
+         sum_abbb = 0.0_dp * re
+         sum_bbba = 0.0_dp * re
+         sum_aaaa = 0.0_dp * re
+         sum_bbbb = 0.0_dp * re
 
          do nb = 0, ubound(f,2)
             do na = 0, ubound(f,1)
@@ -211,14 +816,14 @@ module squeezing
                ! -----------------------------------------------------------------------------------
                ! spin expectation value
                ! -----------------------------------------------------------------------------------
-               sumaa    = sumaa + real(n,dp) * conjg( f(na,nb,i,j) ) * f(na,nb,i,j)
-               sumbb    = sumbb + real(m,dp) * conjg( f(na,nb,i,j) ) * f(na,nb,i,j)
-               sum_abab = sum_abab + 2.0_dp * real(n,dp) * real(m,dp) * conjg( f(na,nb,i,j) ) * f(na,nb,i,j)
+               sumaa    = sumaa + real(na,dp) * conjg( f(na,nb,i,j) ) * f(na,nb,i,j)
+               sumbb    = sumbb + real(nb,dp) * conjg( f(na,nb,i,j) ) * f(na,nb,i,j)
+               sum_abab = sum_abab + 2.0_dp * real(na,dp) * real(nb,dp) * conjg( f(na,nb,i,j) ) * f(na,nb,i,j)
                sum_aaaa = sum_aaaa + real(na*(na-1),dp) * conjg( f(na,nb,i,j) ) * f(na,nb,i,j)
                sum_bbbb = sum_bbbb + real(nb*(nb-1),dp) * conjg( f(na,nb,i,j) ) * f(na,nb,i,j)
 
-               if( na > 0 ) then
-                  sumab    = sumab + sqrt( real(na*(nb+1),dp) ) * 
+               if( na > 0 .and. nb < ubound(f,2) ) then
+                  sumab    = sumab + sqrt( real(na*(nb+1),dp) ) * &
                                      conjg( f(na,nb,i,j) ) * f(na-1,nb+1,i,j)
                   sum_aaab = sum_aaab + sqrt( real(na*(na-1)*(na-1)*(nb+1),dp) ) * &
                                         conjg( f(na,nb,i,j) ) * f(na-1,nb+1,i,j)
@@ -226,8 +831,8 @@ module squeezing
                                         conjg( f(na,nb,i,j) ) * f(na-1,nb+1,i,j)
                endif
 
-               if( nb > 0 ) then
-                  sumba    = sumba + sqrt( real(nb*(na+1),dp) ) * 
+               if( nb > 0 .and. na < ubound(f,1) ) then
+                  sumba    = sumba + sqrt( real(nb*(na+1),dp) ) * &
                                      conjg( f(na,nb,i,j) ) * f(na+1,nb-1,i,j)
                   sum_abaa = sum_abaa + sqrt( real(na*na*(na+1)*nb,dp) ) * &
                                         conjg( f(na,nb,i,j) ) * f(na+1,nb-1,i,j)
@@ -235,12 +840,12 @@ module squeezing
                                         conjg( f(na,nb,i,j) ) * f(na+1,nb-1,i,j)
                endif
 
-               if( na > 1 ) then
+               if( na > 1 .and. nb < ubound(f,2)-1 ) then
                   sum_aabb = sum_aabb + sqrt( real(na*(na-1)*(nb+1)*(nb+2),dp) ) * &
                                         conjg( f(na,nb,i,j) ) * f(na-2,nb+2,i,j)
                endif
 
-               if( nb > 1 ) then
+               if( nb > 1 .and. na < ubound(f,1)-1 ) then
                   sum_bbaa = sum_bbaa + sqrt( real(nb*(nb-1)*(na+1)*(na+2),dp) ) * &
                                         conjg( f(na,nb,i,j) ) * f(na+2,nb-2,i,j)
                endif
@@ -263,7 +868,7 @@ module squeezing
          mat(2,2) = mat(2,2) + 0.25_dp * im * (sumaa - sumbb - sum_aabb + sum_bbaa)
          mat(2,2) = mat(2,2) - sx * sy
          ! Jx*Jz
-         mat(2,3) = mat(2,3) + 0.25_dp * (sumba - sumab + sum_aaab + sum_abaa - sum_abbbb - sum_bbba)
+         mat(2,3) = mat(2,3) + 0.25_dp * (sumba - sumab + sum_aaab + sum_abaa - sum_abbb - sum_bbba)
          mat(2,3) = mat(2,3) - sx * sz
          ! Jy*Jx
          mat(3,1) = mat(3,1) + 0.25_dp * im * (sumbb - sumaa + sum_bbaa - sum_aabb)
@@ -313,10 +918,10 @@ module squeezing
 
    end function
 
-   function c3d_SpinMatrix( f ) result mat
+   function c3d_SpinMatrix( f ) result (mat)
 
       implicit none
-      complex( kind = dp ), intent(in), allocatable :: f(:,:,:,:)
+      complex( kind = dp ), intent(in), allocatable :: f(:,:,:,:,:)
       complex( kind = dp ) mat(4,3)
 
       ! local variables
@@ -331,26 +936,26 @@ module squeezing
       ! number of lattice sites
       Msite = real( size(f,3)*size(f,4)*size(f,5), dp )
 
-      sumab = 0.0_dp
-      sumba = 0.0_dp
-      sumaa = 0.0_dp
-      sumbb = 0.0_dp
-      sum_aabb = 0.0_dp
-      sum_bbaa = 0.0_dp
-      sum_abab = 0.0_dp
-      sum_aaab = 0.0_dp
-      sum_abaa = 0.0_dp
-      sum_abbb = 0.0_dp
-      sum_bbba = 0.0_dp
-      sum_aaaa = 0.0_dp
-      sum_bbbb = 0.0_dp
-
-      mat(:,:) = 0.0_dp
+      mat(:,:) = 0.0_dp * re
 
       ! summation over lattice sites
       do k = 1, ubound(f,5)
       do j = 1, ubound(f,4)
       do i = 1, ubound(f,3)
+
+         sumab = 0.0_dp * re
+         sumba = 0.0_dp * re
+         sumaa = 0.0_dp * re
+         sumbb = 0.0_dp * re
+         sum_aabb = 0.0_dp * re
+         sum_bbaa = 0.0_dp * re
+         sum_abab = 0.0_dp * re
+         sum_aaab = 0.0_dp * re
+         sum_abaa = 0.0_dp * re
+         sum_abbb = 0.0_dp * re
+         sum_bbba = 0.0_dp * re
+         sum_aaaa = 0.0_dp * re
+         sum_bbbb = 0.0_dp * re
 
          do nb = 0, ubound(f,2)
             do na = 0, ubound(f,1)
@@ -358,14 +963,14 @@ module squeezing
                ! -----------------------------------------------------------------------------------
                ! spin expectation value
                ! -----------------------------------------------------------------------------------
-               sumaa    = sumaa + real(n,dp) * conjg( f(na,nb,i,j,k) ) * f(na,nb,i,j,k)
-               sumbb    = sumbb + real(m,dp) * conjg( f(na,nb,i,j,k) ) * f(na,nb,i,j,k)
-               sum_abab = sum_abab + 2.0_dp * real(n,dp) * real(m,dp) * conjg( f(na,nb,i,j,k) ) * f(na,nb,i,j,k)
+               sumaa    = sumaa + real(na,dp) * conjg( f(na,nb,i,j,k) ) * f(na,nb,i,j,k)
+               sumbb    = sumbb + real(nb,dp) * conjg( f(na,nb,i,j,k) ) * f(na,nb,i,j,k)
+               sum_abab = sum_abab + 2.0_dp * real(na,dp) * real(nb,dp) * conjg( f(na,nb,i,j,k) ) * f(na,nb,i,j,k)
                sum_aaaa = sum_aaaa + real(na*(na-1),dp) * conjg( f(na,nb,i,j,k) ) * f(na,nb,i,j,k)
                sum_bbbb = sum_bbbb + real(nb*(nb-1),dp) * conjg( f(na,nb,i,j,k) ) * f(na,nb,i,j,k)
 
-               if( na > 0 ) then
-                  sumab    = sumab + sqrt( real(na*(nb+1),dp) ) * 
+               if( na > 0 .and. nb < ubound(f,2) ) then
+                  sumab    = sumab + sqrt( real(na*(nb+1),dp) ) * &
                                      conjg( f(na,nb,i,j,k) ) * f(na-1,nb+1,i,j,k)
                   sum_aaab = sum_aaab + sqrt( real(na*(na-1)*(na-1)*(nb+1),dp) ) * &
                                         conjg( f(na,nb,i,j,k) ) * f(na-1,nb+1,i,j,k)
@@ -373,8 +978,8 @@ module squeezing
                                         conjg( f(na,nb,i,j,k) ) * f(na-1,nb+1,i,j,k)
                endif
 
-               if( nb > 0 ) then
-                  sumba    = sumba + sqrt( real(nb*(na+1),dp) ) * 
+               if( nb > 0 .and. na < ubound(f,1) ) then
+                  sumba    = sumba + sqrt( real(nb*(na+1),dp) ) * &
                                      conjg( f(na,nb,i,j,k) ) * f(na+1,nb-1,i,j,k)
                   sum_abaa = sum_abaa + sqrt( real(na*na*(na+1)*nb,dp) ) * &
                                         conjg( f(na,nb,i,j,k) ) * f(na+1,nb-1,i,j,k)
@@ -382,12 +987,12 @@ module squeezing
                                         conjg( f(na,nb,i,j,k) ) * f(na+1,nb-1,i,j,k)
                endif
 
-               if( na > 1 ) then
+               if( na > 1 .and. nb < ubound(f,2)-1 ) then
                   sum_aabb = sum_aabb + sqrt( real(na*(na-1)*(nb+1)*(nb+2),dp) ) * &
                                         conjg( f(na,nb,i,j,k) ) * f(na-2,nb+2,i,j,k)
                endif
 
-               if( nb > 1 ) then
+               if( nb > 1 .and. na < ubound(f,1)-1 ) then
                   sum_bbaa = sum_bbaa + sqrt( real(nb*(nb-1)*(na+1)*(na+2),dp) ) * &
                                         conjg( f(na,nb,i,j,k) ) * f(na+2,nb-2,i,j,k)
                endif
@@ -410,7 +1015,7 @@ module squeezing
          mat(2,2) = mat(2,2) + 0.25_dp * im * (sumaa - sumbb - sum_aabb + sum_bbaa)
          mat(2,2) = mat(2,2) - sx * sy
          ! Jx*Jz
-         mat(2,3) = mat(2,3) + 0.25_dp * (sumba - sumab + sum_aaab + sum_abaa - sum_abbbb - sum_bbba)
+         mat(2,3) = mat(2,3) + 0.25_dp * (sumba - sumab + sum_aaab + sum_abaa - sum_abbb - sum_bbba)
          mat(2,3) = mat(2,3) - sx * sz
          ! Jy*Jx
          mat(3,1) = mat(3,1) + 0.25_dp * im * (sumbb - sumaa + sum_bbaa - sum_aabb)
@@ -465,7 +1070,7 @@ module squeezing
    ! Spin squeezing functions
    ! ------------------------------------------------------------------------------------
 
-   function c1d_SpinSqueezing( f ) result vout
+   function c1d_SpinSqueezing( f ) result (vout)
       ! Not normalized to coherent state value
 
       implicit none
@@ -519,7 +1124,7 @@ module squeezing
 
    end function
 
-   function c2d_SpinSqueezing( f ) result vout
+   function c2d_SpinSqueezing( f ) result (vout)
       ! Not normalized to coherent state value
 
       implicit none
@@ -573,7 +1178,7 @@ module squeezing
 
    end function
 
-   function c3d_SpinSqueezing( f ) result vout
+   function c3d_SpinSqueezing( f ) result (vout)
       ! Not normalized to coherent state value
 
       implicit none
@@ -626,5 +1231,30 @@ module squeezing
       endif
 
    end function
+
+   subroutine pi2coeff( N, vout )
+
+      implicit none
+      integer, intent(in) :: N
+      real( kind = dp ), intent(inout), allocatable :: vout(:)
+
+      integer na
+
+      do na = 0, N
+
+         if( na .eq. 0 ) then
+            vout(na) = 1.0_dp
+         else
+            vout(na) = vout(na-1) * real(N-na+1, dp)/real(na, dp)
+         endif
+
+      enddo
+
+      ! take square root
+      do na = 0, N
+         vout(na) = sqrt(vout(na))
+      enddo
+
+   end subroutine
 
 end module

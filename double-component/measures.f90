@@ -1,3 +1,17 @@
+!
+! MODULE: measures
+!
+!> @author
+!> Dariusz Kajtoch
+!! Institute of Physics, Polish Academy of Sciences
+!
+! DESCRIPTION:
+!> Module containing all functions used to calculate various measures based on Gutzwiller coefficients
+!
+! REVISION HISTORY:
+!> @date 05 08 1991 - Initial version
+!
+
 module measures
 
    use parameters, only: dp, re, im
@@ -73,13 +87,17 @@ module measures
       module procedure c1d_ChemPot
       module procedure c2d_ChemPot
       module procedure c3d_ChemPot
-   end interface  
+   end interface 
 
 contains
 
 !  | ----------------------------------- |
 !  | Mean number of particles in comp. A |
 !  | ----------------------------------- |
+!> c1d_Mean
+!> @param[in] f, i
+!> @return real
+!
    function c1d_MeanA( f, i )
 
       implicit none
@@ -1104,6 +1122,7 @@ contains
       allocate( ArrayEtaA( size(f,3) ), ArrayEtaB( size(f,3) ) )
 
       coll_flucta = 0.0_dp; coll_fluctb = 0.0_dp; coll_fluctab = 0.0_dp
+      coeff_A = 0.0_dp; coeff_B = 0.0_dp
 
       do i = 1, ubound(f,3)
 
@@ -1211,6 +1230,7 @@ contains
       allocate( ArrayEtaB( size(f,3), size(f,4) ) )
 
       coll_flucta = 0.0_dp; coll_fluctb = 0.0_dp; coll_fluctab = 0.0_dp
+      coeff_A = 0.0_dp; coeff_B = 0.0_dp
 
       do j = 1, ubound(f,4)
       do i = 1, ubound(f,3)
@@ -1333,6 +1353,7 @@ contains
       allocate( ArrayEtaB( size(f,3), size(f,4), size(f,5) ) )
 
       coll_flucta = 0.0_dp; coll_fluctb = 0.0_dp; coll_fluctab = 0.0_dp
+      coeff_A = 0.0_dp; coeff_B = 0.0_dp
 
       do k = 1, ubound(f,5)
       do j = 1, ubound(f,4)
@@ -1445,5 +1466,6 @@ contains
       endif
 
    end function
+
 
 end module

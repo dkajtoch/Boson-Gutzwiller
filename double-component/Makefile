@@ -2,41 +2,29 @@ FC 		:= /opt/intel/compilers_and_libraries/linux/bin/intel64/ifort
 CFLAGS	:= -O3 -m64
 LFLAGS	:= 
 
-OBJS 		:= parameters.o fixed_mean.o measures.o solvers.o
-OBJS1		:= $(OBJS) test_c1d.o
-OBJS2		:= $(OBJS) test_c2d.o
-OBJS3		:= $(OBJS) test_c3d.o
+OBJS 		:= parameters.o fixed_mean.o measures.o solvers.o squeezing.o
 
-all: 		test_c1d test_c2d test_c3d
+debug: CFLAGS=-O0 -g -traceback -check all -check bounds -check uninit -ftrapuv -debug all -fpe3
+debug: all
 
-test_c1d: $(OBJS1)
-	$(FC) $(CFLAGS) -o $@.exec $(OBJS1) $(LFLAGS)
+all: 		test00_c1d test01_c1d test00_c2d test01_c2d test00_c3d
 
-test_c2d: $(OBJS2)
-	$(FC) $(CFLAGS) -o $@.exec $(OBJS2) $(LFLAGS)
+test00_c1d: $(OBJS) test00_c1d.o
+	$(FC) $(CFLAGS) -o $@.exec $^ $(LFLAGS)
 
-test_c3d: $(OBJS3)
-	$(FC) $(CFLAGS) -o $@.exec $(OBJS3) $(LFLAGS)
+test01_c1d: $(OBJS) test01_c1d.o
+	$(FC) $(CFLAGS) -o $@.exec $^ $(LFLAGS)
 
-parameters.o: parameters.f90
-	$(FC) $(CFLAGS) -c $<
+test00_c2d: $(OBJS) test00_c2d.o
+	$(FC) $(CFLAGS) -o $@.exec $^ $(LFLAGS)
 
-fixed_mean.o: fixed_mean.f90
-	$(FC) $(CFLAGS) -c $<
+test01_c2d: $(OBJS) test01_c2d.o
+	$(FC) $(CFLAGS) -o $@.exec $^ $(LFLAGS)
 
-measures.o: measures.f90
-	$(FC) $(CFLAGS) -c $<
+test00_c3d: $(OBJS) test00_c3d.o
+	$(FC) $(CFLAGS) -o $@.exec $^ $(LFLAGS)
 
-solvers.o: solvers.f90
-	$(FC) $(CFLAGS) -c $<
-
-test_c1d.o: test_c1d.f90
-	$(FC) $(CFLAGS) -c $<
-
-test_c2d.o: test_c2d.f90
-	$(FC) $(CFLAGS) -c $<
-
-test_c3d.o: test_c3d.f90
+%.o: %.f90
 	$(FC) $(CFLAGS) -c $<
 
 clean:
