@@ -26,7 +26,7 @@ program test00_c2d
    ! check random inital state preparation
    mea = 0.0_dp * real(M**2,dp)
    meb = 1.0_dp * real(M**2,dp)
-   call InitUniformNC( f, mea, meb )
+   call InitRandomNC( f, mea, meb )
 
    normf = norm( f, 1, 1 )
    meanaf = 0.0_dp

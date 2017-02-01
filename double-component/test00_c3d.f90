@@ -26,7 +26,7 @@ program test_c3d
    ! check random inital state preparation
    mea = 1.0_dp * real(M**3,dp)
    meb = 0.0_dp * real(M**3,dp)
-   call InitUniformNC( f, mea, meb )
+   call InitRandomNC( f, mea, meb )
 
    normf = norm( f, 1, 1, 1 )
    meanaf = 0.0_dp
