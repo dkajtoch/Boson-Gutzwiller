@@ -1,13 +1,26 @@
-FC 		:= /opt/intel/compilers_and_libraries/linux/bin/intel64/ifort
-CFLAGS	:= -O3 -m64
-LFLAGS	:= 
+gnu: FC=gfortran
+gnu: CFLAGS= -O3 -m64
+gnu: LFLAGS=
+gnu: all
 
-OBJS 		:= parameters.o fixed_mean.o measures.o solvers.o squeezing.o
+intel: FC=/opt/intel/compilers_and_libraries/linux/bin/intel64/ifort
+intel: CFLAGS= -O3 -m64
+intel: LFLAGS=
+intel: all
 
-debug: CFLAGS=-O0 -g -traceback -check all -check bounds -check uninit -ftrapuv -debug all -fpe3
-debug: all
+OBJS=parameters.o fixed_mean.o measures.o solvers.o squeezing.o
 
-all: 		test00_c1d test01_c1d test00_c2d test01_c2d test00_c3d
+intel_debug: FC=/opt/intel/compilers_and_libraries/linux/bin/intel64/ifort
+intel_debug: CFLAGS=-O0 -g -traceback -check all -check bounds -check uninit -ftrapuv -debug all -fpe3
+intel_debug: LFLAGS=
+intel_debug: all
+
+gnu_debug: FC=gfortran
+gnu_debug: CFLAGS=-g -Wall -Wextra -Warray-temporaries -Wconversion -fimplicit-none -fbacktrace -ffree-line-length-0 -fcheck=all -ffpe-trap=zero,overflow,underflow -finit-real=nan
+gnu_debug: LFLAGS=
+gnu_debug: all
+
+all: test00_c1d test01_c1d test00_c2d test01_c2d test00_c3d
 
 test00_c1d: $(OBJS) test00_c1d.o
 	$(FC) $(CFLAGS) -o $@.exec $^ $(LFLAGS)
