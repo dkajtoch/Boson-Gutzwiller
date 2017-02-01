@@ -391,6 +391,7 @@ contains
          do k = 1, ubound(f,5)
          do j = 1, ubound(f,4)
          do i = 1, ubound(f,3)
+
             powa = 1.0_dp
             sum1 = 0.0_dp
             sum2 = 0.0_dp
@@ -2040,6 +2041,11 @@ contains
 
          if( det .eq. 0.0_dp ) then
             print *, 'det equal to 0!'
+            print *, fk(1,1), fk(1,2)
+            print *, fk(2,1), fk(2,2)
+            print *, fk(3,1), fk(3,2)
+            print *, 'dx = ', dx
+            print *, 'dy = ', dy
             exit
          endif
 
@@ -2092,6 +2098,11 @@ contains
 
          if( det .eq. 0.0_dp ) then
             print *, 'det equal to 0!'
+            print *, fk(1,1), fk(1,2)
+            print *, fk(2,1), fk(2,2)
+            print *, fk(3,1), fk(3,2)
+            print *, 'dx = ', dx
+            print *, 'dy = ', dy
             exit
          endif
 
@@ -2144,6 +2155,11 @@ contains
 
          if( det .eq. 0.0_dp ) then
             print *, 'det equal to 0!'
+            print *, fk(1,1), fk(1,2)
+            print *, fk(2,1), fk(2,2)
+            print *, fk(3,1), fk(3,2)
+            print *, 'dx = ', dx
+            print *, 'dy = ', dy
             exit
          endif
 
