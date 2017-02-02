@@ -151,6 +151,10 @@ module squeezing
 
    end function
 
+   ! --------------------------------------------
+   ! Mean spin and covariance spin matrix
+   ! for two different Gutzwiller states
+   ! --------------------------------------------
    function c1d_SpinMatrix2( f, g ) result (mat)
 
       implicit none
@@ -625,9 +629,8 @@ module squeezing
 
    end function
    ! -------------------------------------------------------------------------------------------
-   ! Spin correlation matrix 
+   ! Spin correlation matrix for Gutzwiller state
    ! -------------------------------------------------------------------------------------------
-
    function c1d_SpinMatrix( f ) result (mat)
 
       implicit none
