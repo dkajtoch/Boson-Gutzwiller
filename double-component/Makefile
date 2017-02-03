@@ -5,7 +5,7 @@ gnu: all
 
 intel: FC=/opt/intel/compilers_and_libraries/linux/bin/intel64/ifort
 intel: MPIFC=/opt/intel/compilers_and_libraries/linux/mpi/bin64/mpiifort
-intel: CFLAGS= -O3 -m64
+intel: CFLAGS= -O3 -m64 -check bounds
 intel: LFLAGS=
 intel: all
 
