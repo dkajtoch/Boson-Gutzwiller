@@ -3,15 +3,22 @@ program test01_c3d
    use solvers
    use measures
    use parameters
+   use squeezing
 
    implicit none
    complex( kind = dp ), allocatable :: f(:,:,:,:,:)
    integer M, nmax
-   integer i, na, nb
+   integer i, j, k, na, nb
    real( kind = dp ) ja, jb, ua, ub, uab
-   real( kind = dp ) mea, meb, meab, flucta, fluctb, en
+   real( kind = dp ) mea, meb, meab, flucta, fluctb, en, sq
+   real( kind = dp ) phase_en, phase_sq
    real( kind = dp ) normf, meanaf, meanbf, meanabf, tmp
    complex( kind = dp ) orda, ordb
+
+   !random numbers
+   integer :: time(8)
+   integer :: seed(12)
+   real( kind = dp ) :: mua, mub, nu
 
    ! error handling
    integer iostat_int
@@ -68,16 +75,45 @@ program test01_c3d
       ordb = OrderB( f, 1, 1, 1 )
       ! total energy
       en = TotEnergy( f, ja, jb, ua, ub, uab )
+      ! Squeezing parameter
+      sq = SpinSqueezing( f )
 
+      ! gauge transformation 
+      call DATE_AND_TIME(values=time)     ! Get the current time 
+      seed(1) = time(4) * (360000*time(5) + 6000*time(6) + 100*time(7) + time(8)) 
+      CALL RANDOM_SEED(PUT=seed) 
+      CALL RANDOM_NUMBER(HARVEST = mua)
+      CALL RANDOM_NUMBER(HARVEST = mub)
+
+      do k=1, ubound(f,5)
+      do j=1, ubound(f,4)
+      do i=1, ubound(f,3)
+         CALL RANDOM_NUMBER(HARVEST = nu)
+         do nb=0, ubound(f,2)
+            do na=0, ubound(f,1)
+               f(na,nb,i,j,k) = f(na,nb,i,j,k) * ZEXP( (0.0_dp, 1.0_dp)* (mua * real(na,dp) + mub * real(nb,dp) + nu ) )
+            enddo
+         enddo
+      enddo
+      enddo
+      enddo
+
+      ! total energy
+      phase_en = TotEnergy( f, ja, jb, ua, ub, uab )
+      ! Squeezing parameter
+      phase_sq = SpinSqueezing( f )
 
       print *, '---------------------------------------------------------------'
-      print *, 'nmax   = ', nmax
+      print *, 'nmax           = ', nmax
       print *, '---------------------------------------------------------------'
-      print *, 'VarA   = ', flucta
-      print *, 'VarB   = ', fluctb
-      print *, 'OrdA   = ', orda
-      print *, 'OrdB   = ', ordb
-      print *, 'Energy = ', en
+      print *, 'VarA           = ', flucta
+      print *, 'VarB           = ', fluctb
+      print *, 'OrdA           = ', orda
+      print *, 'OrdB           = ', ordb
+      print *, 'Energy         = ', en
+      print *, 'PhaseEnergy    = ', phase_en
+      print *, 'Squeezing      = ', sq
+      print *, 'PhaseSqueezing = ', phase_sq
 
       deallocate(f)
 
@@ -103,16 +139,45 @@ program test01_c3d
       ordb = OrderB( f, 1, 1 ,1 )
       ! total energy
       en = TotEnergy( f, ja, jb, ua, ub, uab )
+      ! Squeezing parameter
+      sq = SpinSqueezing( f )
 
+      ! gauge transformation 
+      call DATE_AND_TIME(values=time)     ! Get the current time 
+      seed(1) = time(4) * (360000*time(5) + 6000*time(6) + 100*time(7) + time(8)) 
+      CALL RANDOM_SEED(PUT=seed) 
+      CALL RANDOM_NUMBER(HARVEST = mua)
+      CALL RANDOM_NUMBER(HARVEST = mub)
+
+      do k=1, ubound(f,5)
+      do j=1, ubound(f,4)
+      do i=1, ubound(f,3)
+         CALL RANDOM_NUMBER(HARVEST = nu)
+         do nb=0, ubound(f,2)
+            do na=0, ubound(f,1)
+               f(na,nb,i,j,k) = f(na,nb,i,j,k) * ZEXP( (0.0_dp, 1.0_dp)* (mua * real(na,dp) + mub * real(nb,dp) + nu ) )
+            enddo
+         enddo
+      enddo
+      enddo
+      enddo
+
+      ! total energy
+      phase_en = TotEnergy( f, ja, jb, ua, ub, uab )
+      ! Squeezing parameter
+      phase_sq = SpinSqueezing( f )
 
       print *, '---------------------------------------------------------------'
-      print *, 'nmax   = ', nmax
+      print *, 'nmax           = ', nmax
       print *, '---------------------------------------------------------------'
-      print *, 'VarA   = ', flucta
-      print *, 'VarB   = ', fluctb
-      print *, 'OrdA   = ', orda
-      print *, 'OrdB   = ', ordb
-      print *, 'Energy = ', en
+      print *, 'VarA           = ', flucta
+      print *, 'VarB           = ', fluctb
+      print *, 'OrdA           = ', orda
+      print *, 'OrdB           = ', ordb
+      print *, 'Energy         = ', en
+      print *, 'PhaseEnergy    = ', phase_en
+      print *, 'Squeezing      = ', sq
+      print *, 'PhaseSqueezing = ', phase_sq
 
       deallocate(f)
 
