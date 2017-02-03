@@ -659,13 +659,13 @@ module squeezing
                endif
 
                if( nb > 0 .and. na < ubound(f,1) ) then
-         !         sumba = sumba + conjg(f(na,nb,i)) * f(na,nb,i)
-         !         sumba    = sumba + sqrt( real(nb*(na+1),dp) ) * &
-          !                           conjg( f(na,nb,i) ) * f(na+1,nb-1,i)
+                  sumba = sumba + conjg(f(na,nb,i)) * f(na,nb,i)
+                  sumba    = sumba + sqrt( real(nb*(na+1),dp) ) * &
+                                     conjg( f(na,nb,i) ) * f(na+1,nb-1,i)
                   sum_abaa = sum_abaa + sqrt( real(na*na*(na+1)*nb,dp) ) * &
                                         conjg( f(na,nb,i) ) * f(na+1,nb-1,i)
-           !       sum_bbba = sum_bbba + sqrt( real((na+1)*nb*(nb-1)*(nb-1),dp) ) * &
-           !                             conjg( f(na,nb,i) ) * f(na+1,nb-1,i)
+                  sum_bbba = sum_bbba + sqrt( real((na+1)*nb*(nb-1)*(nb-1),dp) ) * &
+                                        conjg( f(na,nb,i) ) * f(na+1,nb-1,i)
                endif
 
                if( na > 1 .and. nb < ubound(f,2)-1 ) then
