@@ -12,7 +12,6 @@ program test01_c3d
    real( kind = dp ) ja, jb, ua, ub, uab
    real( kind = dp ) mea, meb, meab, flucta, fluctb, en, sq
    real( kind = dp ) phase_en, phase_sq
-   real( kind = dp ) normf, meanaf, meanbf, meanabf, tmp
    complex( kind = dp ) orda, ordb
 
    !random numbers
