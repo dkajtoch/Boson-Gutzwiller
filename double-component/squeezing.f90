@@ -168,7 +168,6 @@ module squeezing
                            sum_aaab, sum_abaa, sum_abbb, &
                            sum_bbba, sum_aaaa, sum_bbbb, &
                            sx, sy, sz
-      real( kind = dp ) Msite
       logical :: cond
 
       cond = .true.
@@ -179,9 +178,6 @@ module squeezing
       if( .not. cond ) then
          mat(:,:) = 0.0_dp * re
       else
-
-      ! number of lattice sites
-      Msite = real( size(f,3), dp )
 
       mat(:,:) = 0.0_dp * re
 
@@ -302,11 +298,6 @@ module squeezing
       ! Jz*Jz
       mat(4,3) = mat(4,3) + mat(1,3) * mat(1,3)
 
-
-      mat(1,:) = mat(1,:) / Msite
-
-      mat(2:4,:) = mat(2:4,:) / Msite**2
-
       endif
 
    end function
@@ -324,7 +315,6 @@ module squeezing
                            sum_aaab, sum_abaa, sum_abbb, &
                            sum_bbba, sum_aaaa, sum_bbbb, &
                            sx, sy, sz
-      real( kind = dp ) Msite
       logical :: cond
 
       cond = .true.
@@ -335,9 +325,6 @@ module squeezing
       if( .not. cond ) then
          mat(:,:) = 0.0_dp * re
       else
-
-      ! number of lattice sites
-      Msite = real( size(f,3)*size(f,4), dp )
 
       mat(:,:) = 0.0_dp * re
 
@@ -460,11 +447,6 @@ module squeezing
       ! Jz*Jz
       mat(4,3) = mat(4,3) + mat(1,3) * mat(1,3)
 
-
-      mat(1,:) = mat(1,:) / Msite
-
-      mat(2:4,:) = mat(2:4,:) / Msite**2
-
       endif
 
    end function
@@ -482,7 +464,6 @@ module squeezing
                            sum_aaab, sum_abaa, sum_abbb, &
                            sum_bbba, sum_aaaa, sum_bbbb, &
                            sx, sy, sz
-      real( kind = dp ) Msite
       logical :: cond
 
       cond = .true.
@@ -493,9 +474,6 @@ module squeezing
       if( .not. cond ) then
          mat(:,:) = 0.0_dp * re
       else
-
-      ! number of lattice sites
-      Msite = real( size(f,3)*size(f,4)*size(f,5), dp )
 
       mat(:,:) = 0.0_dp * re
 
@@ -620,11 +598,6 @@ module squeezing
       ! Jz*Jz
       mat(4,3) = mat(4,3) + mat(1,3) * mat(1,3)
 
-
-      mat(1,:) = mat(1,:) / Msite
-
-      mat(2:4,:) = mat(2:4,:) / Msite**2
-
       endif
 
    end function
@@ -644,10 +617,6 @@ module squeezing
                            sum_aaab, sum_abaa, sum_abbb, &
                            sum_bbba, sum_aaaa, sum_bbbb, &
                            sx, sy, sz
-      real( kind = dp ) Msite
-
-      ! number of lattice sites
-      Msite = real( size(f,3), dp )
 
       mat(:,:) = 0.0_dp * re
 
@@ -690,12 +659,13 @@ module squeezing
                endif
 
                if( nb > 0 .and. na < ubound(f,1) ) then
-                  sumba    = sumba + sqrt( real(nb*(na+1),dp) ) * &
-                                     conjg( f(na,nb,i) ) * f(na+1,nb-1,i)
+         !         sumba = sumba + conjg(f(na,nb,i)) * f(na,nb,i)
+         !         sumba    = sumba + sqrt( real(nb*(na+1),dp) ) * &
+          !                           conjg( f(na,nb,i) ) * f(na+1,nb-1,i)
                   sum_abaa = sum_abaa + sqrt( real(na*na*(na+1)*nb,dp) ) * &
                                         conjg( f(na,nb,i) ) * f(na+1,nb-1,i)
-                  sum_bbba = sum_bbba + sqrt( real((na+1)*nb*(nb-1)*(nb-1),dp) ) * &
-                                        conjg( f(na,nb,i) ) * f(na+1,nb-1,i)
+           !       sum_bbba = sum_bbba + sqrt( real((na+1)*nb*(nb-1)*(nb-1),dp) ) * &
+           !                             conjg( f(na,nb,i) ) * f(na+1,nb-1,i)
                endif
 
                if( na > 1 .and. nb < ubound(f,2)-1 ) then
@@ -768,11 +738,6 @@ module squeezing
       ! Jz*Jz
       mat(4,3) = mat(4,3) + mat(1,3) * mat(1,3)
 
-
-      mat(1,:) = mat(1,:) / Msite
-
-      mat(2:4,:) = mat(2:4,:) / Msite**2
-
    end function
 
    function c2d_SpinMatrix( f ) result (mat)
@@ -788,10 +753,6 @@ module squeezing
                            sum_aaab, sum_abaa, sum_abbb, &
                            sum_bbba, sum_aaaa, sum_bbbb, &
                            sx, sy, sz
-      real( kind = dp ) Msite
-
-      ! number of lattice sites
-      Msite = real( size(f,3)*size(f,4), dp )
 
       mat(:,:) = 0.0_dp * re
 
@@ -914,11 +875,6 @@ module squeezing
       ! Jz*Jz
       mat(4,3) = mat(4,3) + mat(1,3) * mat(1,3)
 
-
-      mat(1,:) = mat(1,:) / Msite
-
-      mat(2:4,:) = mat(2:4,:) / Msite**2
-
    end function
 
    function c3d_SpinMatrix( f ) result (mat)
@@ -934,10 +890,6 @@ module squeezing
                            sum_aaab, sum_abaa, sum_abbb, &
                            sum_bbba, sum_aaaa, sum_bbbb, &
                            sx, sy, sz
-      real( kind = dp ) Msite
-
-      ! number of lattice sites
-      Msite = real( size(f,3)*size(f,4)*size(f,5), dp )
 
       mat(:,:) = 0.0_dp * re
 
@@ -1061,11 +1013,6 @@ module squeezing
       mat(4,2) = mat(4,2) + mat(1,3) * mat(1,2)
       ! Jz*Jz
       mat(4,3) = mat(4,3) + mat(1,3) * mat(1,3)
-
-
-      mat(1,:) = mat(1,:) / Msite
-
-      mat(2:4,:) = mat(2:4,:) / Msite**2
 
    end function
 

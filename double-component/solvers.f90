@@ -50,7 +50,19 @@ module solvers
 !  | Update Gutzwiller coeffcients using right-hand | 
 !  | side of Gutzwiller equation                    |
 !  | ---------------------------------------------- |
-   subroutine c1d_solve( f, k, ArrayOrderA, ArrayOrderB, ja, jb, ua, ub, uab, mua, mub, mode )
+   subroutine c1d_solve(f, & ! input vector of Gutzwiller coefficients 
+                        k, & ! output vector after Runge-Kutta step
+                        ArrayOrderA, & ! vector of orders parameters for component A
+                        ArrayOrderB, & ! vector of orders paramaters for component B
+                        ja, & ! hoping integral for component A
+                        jb, &
+                        ua, &
+                        ub, &
+                        uab, &
+                        mua, &
+                        mub, &
+                        mode &
+                       )
 
       implicit none
       complex( kind = dp), intent(inout), allocatable :: f(:,:,:)

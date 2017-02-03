@@ -18,7 +18,8 @@ program test01_c3d
    character(256) iomsg_char
 
    ! import from namelist
-   namelist /BHparams/ M, ja, jb, ua, ub, uab, mea, meb
+   namelist /BHparams/ M, ja, jb, ua, ub, uab
+   namelist /MEAN/ mea, meb
 
    open(138, file='BH_input.nml', iostat=iostat_int, iomsg=iomsg_char)
    if(iostat_int /= 0) then
@@ -26,6 +27,7 @@ program test01_c3d
       close(138)
    else
       read(138, BHparams)
+      read(138, MEAN)
       close(138)
    endif
 
