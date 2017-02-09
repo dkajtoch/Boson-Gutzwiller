@@ -260,7 +260,7 @@ module squeezing
          mat(2,3) = mat(2,3) - sx * sz
          ! Jy*Jx
          mat(3,1) = mat(3,1) + 0.25_dp * im * (sumbb - sumaa + sum_bbaa - sum_aabb)
-         mat(3,1) = mat(3,1) - sy * sz
+         mat(3,1) = mat(3,1) - sy * sx
          ! Jy*Jy
          mat(3,2) = mat(3,2) + 0.25_dp * (sumaa + sumbb - sum_aabb - sum_bbaa + sum_abab)
          mat(3,2) = mat(3,2) - sy * sy
@@ -408,7 +408,7 @@ module squeezing
          mat(2,3) = mat(2,3) - sx * sz
          ! Jy*Jx
          mat(3,1) = mat(3,1) + 0.25_dp * im * (sumbb - sumaa + sum_bbaa - sum_aabb)
-         mat(3,1) = mat(3,1) - sy * sz
+         mat(3,1) = mat(3,1) - sy * sx
          ! Jy*Jy
          mat(3,2) = mat(3,2) + 0.25_dp * (sumaa + sumbb - sum_aabb - sum_bbaa + sum_abab)
          mat(3,2) = mat(3,2) - sy * sy
@@ -558,7 +558,7 @@ module squeezing
          mat(2,3) = mat(2,3) - sx * sz
          ! Jy*Jx
          mat(3,1) = mat(3,1) + 0.25_dp * im * (sumbb - sumaa + sum_bbaa - sum_aabb)
-         mat(3,1) = mat(3,1) - sy * sz
+         mat(3,1) = mat(3,1) - sy * sx
          ! Jy*Jy
          mat(3,2) = mat(3,2) + 0.25_dp * (sumaa + sumbb - sum_aabb - sum_bbaa + sum_abab)
          mat(3,2) = mat(3,2) - sy * sy
@@ -700,7 +700,7 @@ module squeezing
          mat(2,3) = mat(2,3) - sx * sz
          ! Jy*Jx
          mat(3,1) = mat(3,1) + 0.25_dp * im * (sumbb - sumaa + sum_bbaa - sum_aabb)
-         mat(3,1) = mat(3,1) - sy * sz
+         mat(3,1) = mat(3,1) - sy * sx
          ! Jy*Jy
          mat(3,2) = mat(3,2) + 0.25_dp * (sumaa + sumbb - sum_aabb - sum_bbaa + sum_abab)
          mat(3,2) = mat(3,2) - sy * sy
@@ -836,7 +836,7 @@ module squeezing
          mat(2,3) = mat(2,3) - sx * sz
          ! Jy*Jx
          mat(3,1) = mat(3,1) + 0.25_dp * im * (sumbb - sumaa + sum_bbaa - sum_aabb)
-         mat(3,1) = mat(3,1) - sy * sz
+         mat(3,1) = mat(3,1) - sy * sx
          ! Jy*Jy
          mat(3,2) = mat(3,2) + 0.25_dp * (sumaa + sumbb - sum_aabb - sum_bbaa + sum_abab)
          mat(3,2) = mat(3,2) - sy * sy
@@ -974,7 +974,7 @@ module squeezing
          mat(2,3) = mat(2,3) - sx * sz
          ! Jy*Jx
          mat(3,1) = mat(3,1) + 0.25_dp * im * (sumbb - sumaa + sum_bbaa - sum_aabb)
-         mat(3,1) = mat(3,1) - sy * sz
+         mat(3,1) = mat(3,1) - sy * sx
          ! Jy*Jy
          mat(3,2) = mat(3,2) + 0.25_dp * (sumaa + sumbb - sum_aabb - sum_bbaa + sum_abab)
          mat(3,2) = mat(3,2) - sy * sy
