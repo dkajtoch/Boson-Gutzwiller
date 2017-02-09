@@ -2040,12 +2040,18 @@ contains
          det = fk(2,1)*fk(3,2) - fk(3,1)*fk(2,2)
 
          if( det .eq. 0.0_dp ) then
-            print *, 'det equal to 0!'
-            print *, fk(1,1), fk(1,2)
-            print *, fk(2,1), fk(2,2)
-            print *, fk(3,1), fk(3,2)
-            print *, 'dx = ', dx
-            print *, 'dy = ', dy
+            print *, '-----------------------------------------------------------------'
+            print *, '           Exception in c1d_root2d Newton method'
+            print *, '-----------------------------------------------------------------'
+            print *, 'det equal to 0! in mna, mnb = ', mna, mnb
+            print *, 'f1(x), f2(x) = ', fk(1,1), fk(1,2)
+            print *, 'Df1/x, Df1/y = ', fk(2,1), fk(2,2)
+            print *, 'Df2/x, Df2/y = ', fk(3,1), fk(3,2)
+            print *, '|dx/x| = ', abs(dx/x(1))
+            print *, '|dy/y| = ', abs(dy/x(2))
+            print *, '-----------------------------------------------------------------'
+            print *, 'Leaving...'
+            print *, '-----------------------------------------------------------------'
             exit
          endif
 
@@ -2097,12 +2103,18 @@ contains
          det = fk(2,1)*fk(3,2) - fk(3,1)*fk(2,2)
 
          if( det .eq. 0.0_dp ) then
-            print *, 'det equal to 0!'
-            print *, fk(1,1), fk(1,2)
-            print *, fk(2,1), fk(2,2)
-            print *, fk(3,1), fk(3,2)
-            print *, 'dx = ', dx
-            print *, 'dy = ', dy
+            print *, '-----------------------------------------------------------------'
+            print *, '           Exception in c2d_root2d Newton method'
+            print *, '-----------------------------------------------------------------'
+            print *, 'det equal to 0! in mna, mnb = ', mna, mnb
+            print *, 'f1(x), f2(x) = ', fk(1,1), fk(1,2)
+            print *, 'Df1/x, Df1/y = ', fk(2,1), fk(2,2)
+            print *, 'Df2/x, Df2/y = ', fk(3,1), fk(3,2)
+            print *, '|dx/x| = ', abs(dx/x(1))
+            print *, '|dy/y| = ', abs(dy/x(2))
+            print *, '-----------------------------------------------------------------'
+            print *, 'Leaving...'
+            print *, '-----------------------------------------------------------------'
             exit
          endif
 
@@ -2154,12 +2166,18 @@ contains
          det = fk(2,1)*fk(3,2) - fk(3,1)*fk(2,2)
 
          if( det .eq. 0.0_dp ) then
-            print *, 'det equal to 0!'
-            print *, fk(1,1), fk(1,2)
-            print *, fk(2,1), fk(2,2)
-            print *, fk(3,1), fk(3,2)
-            print *, 'dx = ', dx
-            print *, 'dy = ', dy
+            print *, '-----------------------------------------------------------------'
+            print *, '           Exception in c3d_root2d Newton method'
+            print *, '-----------------------------------------------------------------'
+            print *, 'det equal to 0! in mna, mnb = ', mna, mnb
+            print *, 'f1(x), f2(x) = ', fk(1,1), fk(1,2)
+            print *, 'Df1/x, Df1/y = ', fk(2,1), fk(2,2)
+            print *, 'Df2/x, Df2/y = ', fk(3,1), fk(3,2)
+            print *, '|dx/x| = ', abs(dx/x(1))
+            print *, '|dy/y| = ', abs(dy/x(2))
+            print *, '-----------------------------------------------------------------'
+            print *, 'Leaving...'
+            print *, '-----------------------------------------------------------------'
             exit
          endif
 
