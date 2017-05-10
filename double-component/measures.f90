@@ -89,7 +89,158 @@ module measures
       module procedure c3d_ChemPot
    end interface 
 
+   interface G2correlator
+      module procedure c1d_G2correlator
+      module procedure c2d_G2correlator
+      module procedure c3d_G2correlator
+   end interface
+
+   interface G3correlator
+      module procedure c1d_G3correlator
+      module procedure c2d_G3correlator
+      module procedure c3d_G3correlator
+   end interface
+
 contains
+
+!  | --------------------------------------- |
+!  | Unnormalized g^(2) correlation function |
+!  | returns vector with 3 values g_{aa}^(2) |
+!  | g_{ab}^(2) and g_{bb}^(2)               |
+!  | --------------------------------------- |
+   function c1d_G2correlator( f, i ) result (vout)
+
+      implicit none
+      complex( kind = dp ), intent(in), allocatable :: f(:,:,:)
+      integer, intent(in) :: i
+      real( kind = dp ) :: vout(3)
+
+      ! local variables
+      integer  na, nb
+
+      vout(:) = 0.0_dp
+      do nb = 0, ubound(f,2)
+         do na = 0, ubound(f,1)
+            vout(1) = vout(1) + real( na*(na-1), dp ) * abs(f(na,nb,i))**2
+            vout(2) = vout(2) + real( na*nb, dp ) * abs(f(na,nb,i))**2
+            vout(3) = vout(3) + real( nb*(nb-1), dp ) * abs(f(na,nb,i))**2
+         enddo
+      enddo
+
+   end function
+
+   function c2d_G2correlator( f, i, j ) result (vout)
+
+      implicit none
+      complex( kind = dp ), intent(in), allocatable :: f(:,:,:,:)
+      integer, intent(in) :: i, j
+      real( kind = dp ) :: vout(3)
+
+      ! local variables
+      integer  na, nb
+
+      vout(:) = 0.0_dp
+      do nb = 0, ubound(f,2)
+         do na = 0, ubound(f,1)
+            vout(1) = vout(1) + real( na*(na-1), dp ) * abs(f(na,nb,i,j))**2
+            vout(2) = vout(2) + real( na*nb, dp ) * abs(f(na,nb,i,j))**2
+            vout(3) = vout(3) + real( nb*(nb-1), dp ) * abs(f(na,nb,i,j))**2
+         enddo
+      enddo
+
+   end function
+
+   function c3d_G2correlator( f, i, j, k ) result (vout)
+
+      implicit none
+      complex( kind = dp ), intent(in), allocatable :: f(:,:,:,:,:)
+      integer, intent(in) :: i, j, k
+      real( kind = dp ) :: vout(3)
+
+      ! local variables
+      integer  na, nb
+
+      vout(:) = 0.0_dp
+      do nb = 0, ubound(f,2)
+         do na = 0, ubound(f,1)
+            vout(1) = vout(1) + real( na*(na-1), dp ) * abs(f(na,nb,i,j,k))**2
+            vout(2) = vout(2) + real( na*nb, dp ) * abs(f(na,nb,i,j,k))**2
+            vout(3) = vout(3) + real( nb*(nb-1), dp ) * abs(f(na,nb,i,j,k))**2
+         enddo
+      enddo
+
+   end function
+
+!  | ---------------------------------------- |
+!  | Unnormalized g^(3) correlation function  |
+!  | returns vector with 4 values g_{aaa}^(3) |
+!  | g_{aab}^(3), g_{abb}^(3) and g_{bbb}^(3) |
+!  | ---------------------------------------- |
+   function c1d_G3correlator( f, i ) result (vout)
+
+      implicit none
+      complex( kind = dp ), intent(in), allocatable :: f(:,:,:)
+      integer, intent(in) :: i
+      real( kind = dp ) :: vout(4)
+
+      ! local variables
+      integer  na, nb
+
+      vout(:) = 0.0_dp
+      do nb = 0, ubound(f,2)
+         do na = 0, ubound(f,1)
+            vout(1) = vout(1) + real( na*(na-1)*(na-2), dp ) * abs(f(na,nb,i))**2
+            vout(2) = vout(2) + real( na*(na-1)*nb, dp ) * abs(f(na,nb,i))**2
+            vout(3) = vout(3) + real( na*nb*(nb-1), dp ) * abs(f(na,nb,i))**2
+            vout(4) = vout(4) + real( nb*(nb-1)*(nb-2), dp ) * abs(f(na,nb,i))**2
+         enddo
+      enddo
+
+   end function
+
+   function c2d_G3correlator( f, i, j ) result (vout)
+
+      implicit none
+      complex( kind = dp ), intent(in), allocatable :: f(:,:,:,:)
+      integer, intent(in) :: i, j
+      real( kind = dp ) :: vout(4)
+
+      ! local variables
+      integer  na, nb
+
+      vout(:) = 0.0_dp
+      do nb = 0, ubound(f,2)
+         do na = 0, ubound(f,1)
+            vout(1) = vout(1) + real( na*(na-1)*(na-1), dp ) * abs(f(na,nb,i,j))**2
+            vout(2) = vout(2) + real( na*(na-1)*nb, dp ) * abs(f(na,nb,i,j))**2
+            vout(3) = vout(3) + real( na*nb*(nb-1), dp ) * abs(f(na,nb,i,j))**2
+            vout(4) = vout(4) + real( nb*(nb-1)*(nb-1), dp ) * abs(f(na,nb,i,j))**2
+         enddo
+      enddo
+
+   end function
+
+   function c3d_G3correlator( f, i, j, k ) result (vout)
+
+      implicit none
+      complex( kind = dp ), intent(in), allocatable :: f(:,:,:,:,:)
+      integer, intent(in) :: i, j, k
+      real( kind = dp ) :: vout(4)
+
+      ! local variables
+      integer  na, nb
+
+      vout(:) = 0.0_dp
+      do nb = 0, ubound(f,2)
+         do na = 0, ubound(f,1)
+            vout(1) = vout(1) + real( na*(na-1)*(na-2), dp ) * abs(f(na,nb,i,j,k))**2
+            vout(2) = vout(2) + real( na*(na-1)*nb, dp ) * abs(f(na,nb,i,j,k))**2
+            vout(3) = vout(3) + real( na*nb*(nb-1), dp ) * abs(f(na,nb,i,j,k))**2
+            vout(4) = vout(4) + real( nb*(nb-1)*(nb-2), dp ) * abs(f(na,nb,i,j,k))**2
+         enddo
+      enddo
+
+   end function
 
 !  | ----------------------------------- |
 !  | Mean number of particles in comp. A |
