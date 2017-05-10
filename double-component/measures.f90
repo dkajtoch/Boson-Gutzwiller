@@ -211,10 +211,10 @@ contains
       vout(:) = 0.0_dp
       do nb = 0, ubound(f,2)
          do na = 0, ubound(f,1)
-            vout(1) = vout(1) + real( na*(na-1)*(na-1), dp ) * abs(f(na,nb,i,j))**2
+            vout(1) = vout(1) + real( na*(na-1)*(na-2), dp ) * abs(f(na,nb,i,j))**2
             vout(2) = vout(2) + real( na*(na-1)*nb, dp ) * abs(f(na,nb,i,j))**2
             vout(3) = vout(3) + real( na*nb*(nb-1), dp ) * abs(f(na,nb,i,j))**2
-            vout(4) = vout(4) + real( nb*(nb-1)*(nb-1), dp ) * abs(f(na,nb,i,j))**2
+            vout(4) = vout(4) + real( nb*(nb-1)*(nb-2), dp ) * abs(f(na,nb,i,j))**2
          enddo
       enddo
 
