@@ -17,7 +17,7 @@ module measures
    use parameters, only: dp, re, im
 
    private
-   public MeanA, MeanB, MeanAB, VarA, VarB, norm, normalize, OrderA, OrderB, TotEnergy, ChemPot
+   public MeanA, MeanB, MeanAB, VarA, VarB, norm, normalize, OrderA, OrderB, TotEnergy, ChemPot, G2correlator, G3correlator
 
    ! | ---------------------------------------- |
    ! | For better memeory layout it is better   |
