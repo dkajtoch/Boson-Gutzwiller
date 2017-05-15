@@ -1,0 +1,23 @@
+&BHparams
+   L     = 5, 
+   nmax  = 8, 
+   ua    = 100.4, 
+   ub    = 100.4, 
+   uab   = 95.0 
+&END
+
+&SQparams
+   dmean = 1.0, 
+   jmax  = 0.5, 
+   dj    = 0.005
+&END
+
+&FLparams
+   fileTotalEnergy   = 'Energy3D_M=5_ua=100p4_ub=100p4_uab=95p0.bin',
+   fileOrderA        = 'OrderA3D_M=5_ua=100p4_ub=100p4_uab=95p0.bin',
+   fileOrderB        = 'OrderB3D_M=5_ua=100p4_ub=100p4_uab=95p0.bin',
+   fileFlucA         = 'FlucA3D_M=5_ua=100p4_ub=100p4_uab=95p0.bin',
+   fileFlucB         = 'FlucB3D_M=5_ua=100p4_ub=100p4_uab=95p0.bin',
+   fileCorr2         = 'G2correlator3D_M=5_ua=100p4_ub=100p4_uab=95p0.bin',
+   fileCorr3         = 'G3correlator3D_M=5_ua=100p4_ub=100p4_uab=95p0.bin'
+&END

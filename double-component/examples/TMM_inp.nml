@@ -1,0 +1,14 @@
+&BHparams
+   L = 5,
+   nmax = 8,
+   ua = 100.4,
+   ub = 100.4,
+   uab = 95.0
+&END
+
+&TMMparams
+   dmean = 0.01,
+   jmax = 0.5,
+   dj = 0.005,
+   file = "TwoModeModel3d_M=5_ua=100p4_ub=100p4_uab=95p0.bin"
+&END
