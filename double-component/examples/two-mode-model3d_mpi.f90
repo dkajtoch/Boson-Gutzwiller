@@ -60,7 +60,7 @@ if( comsize < 9 ) then
    call process_split( Num, comsize, num_units, disp, rank )
    ja = jmax - real(disp, dp) * dj
    jb = ja
-   disp = disp * 10
+   disp = disp * 10 * SIZEOF( ja )
 
    call MPI_FILE_SET_VIEW(fh, disp, MPI_DOUBLE_PRECISION, MPI_DOUBLE_PRECISION,&
                            "native", MPI_INFO_NULL, ierr)
@@ -182,10 +182,10 @@ else
    call process_split( Num, mean_size, num_units, disp, mean_rank )
    ja = jmax - real(disp, dp) * dj
    jb = ja
-   disp = disp * 10
+   disp = disp * 10 * SIZEOF( en )
 
    if( mean_id /= 0 ) then
-      disp = disp + (mean_id + 1)
+      disp = disp + (mean_id + 1) * SIZEOF( en )
    endif
 
    select case (mean_id)
@@ -237,7 +237,7 @@ else
 
       ja = ja - dj
       jb = jb - dj
-      disp = disp + 10
+      disp = disp + 10 * SIZEOF( ja )
 
    enddo
 

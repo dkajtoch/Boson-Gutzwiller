@@ -54,7 +54,7 @@ Num = int(jmax/dj)
 call process_split( Num, comsize, num_units, disp, rank )
 ja = jmax - real(disp, dp) * dj
 jb = ja
-disp = disp * 8
+disp = disp * 8 * SIZEOF( ja )
 
 call MPI_FILE_SET_VIEW(fh, disp, MPI_DOUBLE_PRECISION, MPI_DOUBLE_PRECISION,&
                         "native", MPI_INFO_NULL, ierr)
@@ -76,7 +76,7 @@ do i = 1, num_units
 
    ja = ja - dj
    jb = jb - dj
-   disp = disp + 8
+   disp = disp + 8 * SIZEOF( ja )
 
 enddo
 
