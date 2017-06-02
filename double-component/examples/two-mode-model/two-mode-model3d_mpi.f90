@@ -237,12 +237,7 @@ else
 
       ja = ja - dj
       jb = jb - dj
-
-      if( mean_id == 0 ) then
-         disp = disp + 9 * SIZEOF( ja )
-      else
-         disp = disp + 10 * SIZEOF( ja )
-      endif
+      disp = disp + 10 * SIZEOF( ja )
 
    enddo
 
