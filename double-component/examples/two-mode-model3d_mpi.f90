@@ -13,7 +13,7 @@ integer fh
 integer mean_id, mean_size, mean_rank, num_units, i, MPI_COMM_MEAN
 integer(kind=MPI_OFFSET_KIND) disp
 
-character(len=100) :: file
+character(len=200) :: file
 integer L, nmax
 real( kind = dp ) ja, jb, ua, ub, uab, mea, meb, meaBase, mebBase
 real( kind = dp ) dmean, jmax, dj
@@ -237,7 +237,12 @@ else
 
       ja = ja - dj
       jb = jb - dj
-      disp = disp + 10 * SIZEOF( ja )
+
+      if( mean_id == 0 ) then
+         disp = disp + 9 * SIZEOF( ja )
+      else
+         disp = disp + 10 * SIZEOF( ja )
+      endif
 
    enddo
 
