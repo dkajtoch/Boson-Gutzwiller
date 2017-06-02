@@ -6,8 +6,8 @@ gnu: CFLAGS    = -O3 -m64
 gnu: LFLAGS    =
 gnu: all
 
-intel: FC			= ifort
-intel: MPIFC     = mpiifort
+intel: FC		  = ifort
+intel: MPIFC     = mpif90
 intel: CFLAGS    = -O3 -m64
 intel: LFLAGS    =
 intel: all
