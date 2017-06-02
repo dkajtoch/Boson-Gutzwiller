@@ -8,21 +8,21 @@ use parameters, only:dp
 implicit none
 
 ! for MPI processes
-integer ierr, comsize, rank, Num
+integer ierr, comsize, rank
 integer fh
 integer mean_id, mean_size, mean_rank, num_units, i, MPI_COMM_MEAN
 integer(kind=MPI_OFFSET_KIND) disp
 
 character(len=200) :: file
-integer L, nmax
+integer L, nmax, Np
 real( kind = dp ) ja, jb, ua, ub, uab, mea, meb, meaBase, mebBase
-real( kind = dp ) dmean, jmax, dj
+real( kind = dp ) dmean, jmax, jmin, dj
 real( kind = dp ) :: en
 complex( kind = dp ), allocatable :: f(:,:,:,:,:)
 
 ! namelists
 namelist /BHparams/ L, nmax, ua, ub, uab
-namelist /TMMparams/ dmean, jmax, dj, file
+namelist /TMMparams/ dmean, jmax, jmin, Np, file
 
 open(138, file='TMM_inp.nml')
 read(138, BHparams)
@@ -35,6 +35,9 @@ allocate( f(0:nmax,0:nmax,1:L,1:L,1:L) )
 ub  = ub/ua
 uab = uab/ua
 ua  = ua/ua
+
+! define hoping step size
+dj = (jmax - jmin)/real( Np-1, dp )
 
 ! mean number of particles
 meaBase = 0.5_dp * real( L**3, dp )
@@ -54,10 +57,8 @@ call MPI_FILE_OPEN( MPI_COMM_WORLD, trim(file), MPI_MODE_WRONLY + MPI_MODE_CREAT
 !  Split only hoping loop among processes
 ! -------------------------------------------------
 if( comsize < 9 ) then
-   ! Total number of points
-   Num = int(jmax/dj)
 
-   call process_split( Num, comsize, num_units, disp, rank )
+   call process_split( Np, comsize, num_units, disp, rank )
    ja = jmax - real(disp, dp) * dj
    jb = ja
    disp = disp * 10 * SIZEOF( ja )
@@ -165,21 +166,23 @@ if( comsize < 9 ) then
    enddo
 
 ! -------------------------------------------------
-! More than 9 pocesses 
+! More than 9 processes
 ! -------------------------------------------------
 else
    ! create group of processes
-   mean_id = mod(rank, 9)
-   call MPI_comm_split( MPI_COMM_WORLD, mean_id, rank, MPI_COMM_MEAN, ierr )
+   if( rank <= Np * 9 ) then
+      mean_id = mod(rank, 9)
+      call MPI_comm_split( MPI_COMM_WORLD, mean_id, rank, MPI_COMM_MEAN, ierr )
+   else
+      ! exclude processes with rank larger than maximum Np * 9
+      call MPI_comm_split( MPI_COMM_WORLD, MPI_UNDEFINED, rank, MPI_COMM_MEAN, ierr )
+   endif
 
    ! Total number of processes per each energy computation
    call MPI_comm_size( MPI_COMM_MEAN, mean_size, ierr )
    call MPI_comm_rank( MPI_COMM_MEAN, mean_rank, ierr )
 
-   ! Total number of points
-   Num = int(jmax/dj)
-
-   call process_split( Num, mean_size, num_units, disp, mean_rank )
+   call process_split( Np, mean_size, num_units, disp, mean_rank )
    ja = jmax - real(disp, dp) * dj
    jb = ja
    disp = disp * 10 * SIZEOF( en )

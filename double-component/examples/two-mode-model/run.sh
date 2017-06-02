@@ -21,11 +21,12 @@ do
    echo " " >> TMM_inp.nml
    # second list
    echo "&TMMparams" >> TMM_inp.nml
-   echo "   dmean = 0.1," >> TMM_inp.nml
-   echo "   jmax = 0.5,"  >> TMM_inp.nml
-   echo "   dj = 0.005,"  >> TMM_inp.nml
-   echo "   file = ../../../../Gutzwiller3D/TwoModeModel3D_M=${L}_ua=100p4_ub=100p4_uab=${a//[.]/p}.bin" >> TMM_inp.nml
-   echo "&END"            >> TMM_inp.nml
+   echo "   dmean = 0.1,"  >> TMM_inp.nml
+   echo "   jmax = 0.5,"   >> TMM_inp.nml
+   echo "   jmin = 0.025," >> TMM_inp.nml
+   echo "   Np = 100,"     >> TMM_inp.nml
+   echo "   file = \"../../../../Gutzwiller3D/TwoModeModel3D_M=${L}_ua=100p4_ub=100p4_uab=${a//[.]/p}.bin\"" >> TMM_inp.nml
+   echo "&END"             >> TMM_inp.nml
 
    # run program
    date
